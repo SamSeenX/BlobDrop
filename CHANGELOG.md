@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-11-10
+### Added
+- Ease-in suction merge animation (~200ms cubic curve) creating visual chain reaction anticipation.
+- Expanding circular `Shockwave` ripple effect upon merge completion.
+- Spawn pop elastic squash-and-stretch on newly created blobs.
+- Danger line bypass for actively merging blobs.
+
 ## [1.0.0] - 2026-11-10
 ### Added
 - Modular Vite project setup targeting ES2022 with production minification.

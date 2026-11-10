@@ -145,7 +145,7 @@ export class Engine {
     const dangerLimitY = 12;
     for (let i = 0; i < this.balls.length; i++) {
       const ball = this.balls[i];
-      if (ball.y - ball.radius <= dangerLimitY && Math.abs(ball.vy) < 0.6) {
+      if (!ball.isMerging && ball.y - ball.radius <= dangerLimitY && Math.abs(ball.vy) < 0.6) {
         this.triggerGameOver();
         break;
       }

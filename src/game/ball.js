@@ -1,7 +1,7 @@
 import { TIERS } from '../config/tiers.js';
 
 export class Ball {
-  constructor(x, y, tierIndex) {
+  constructor(x, y, tierIndex, isSpawning = false) {
     this.x = x;
     this.y = y;
     this.tierIndex = tierIndex;
@@ -9,19 +9,59 @@ export class Ball {
     this.radius = t.radius;
     this.mass = t.mass;
     this.vx = 0;
-    this.vy = 0;
-    this.scaleX = 1.15;
-    this.scaleY = 0.85;
+    this.vy = isSpawning ? -1.2 : 0;
+    this.scaleX = isSpawning ? 1.4 : 1.15;
+    this.scaleY = isSpawning ? 0.65 : 0.85;
     this.rotation = Math.random() * Math.PI * 2;
     this.angularVelocity = 0;
     this.age = 0;
     this.toRemove = false;
+
+    // Merge suction state
+    this.isMerging = false;
+    this.isMergeLeader = false;
+    this.mergeFrame = 0;
+    this.mergeDuration = 12;
+    this.startX = x;
+    this.startY = y;
+    this.targetX = x;
+    this.targetY = y;
+    this.nextTier = tierIndex;
+    this.alpha = 1;
+  }
+
+  startMerge(targetX, targetY, nextTier, isLeader) {
+    this.isMerging = true;
+    this.isMergeLeader = isLeader;
+    this.startX = this.x;
+    this.startY = this.y;
+    this.targetX = targetX;
+    this.targetY = targetY;
+    this.nextTier = nextTier;
+    this.mergeFrame = 0;
   }
 
   update(width, height) {
+    if (this.isMerging) {
+      this.mergeFrame++;
+      const t = Math.min(1, this.mergeFrame / this.mergeDuration);
+      // Ease-in cubic curve for magnetic suction
+      const easeIn = t * t * t;
+      this.x = this.startX + (this.targetX - this.startX) * easeIn;
+      this.y = this.startY + (this.targetY - this.startY) * easeIn;
+      const squish = Math.max(0.2, 1 - easeIn * 0.65);
+      this.scaleX = squish;
+      this.scaleY = squish;
+      this.alpha = Math.max(0.15, 1 - easeIn * 0.7);
+
+      if (this.mergeFrame >= this.mergeDuration) {
+        this.toRemove = true;
+      }
+      return;
+    }
+
     this.age++;
     this.vy += 0.42;
-
     this.vx *= 0.99;
     this.vy *= 0.99;
 
@@ -31,15 +71,14 @@ export class Ball {
     this.angularVelocity = this.vx / this.radius;
     this.rotation += this.angularVelocity;
 
-    // Smoothly transition from jello to rigid over 240 frames (~4s)
     const rigidityFactor = Math.min(1, this.age / 240);
-    this.scaleX += (1 - this.scaleX) * (0.05 + rigidityFactor * 0.15);
-    this.scaleY += (1 - this.scaleY) * (0.05 + rigidityFactor * 0.15);
+    this.scaleX += (1 - this.scaleX) * (0.08 + rigidityFactor * 0.15);
+    this.scaleY += (1 - this.scaleY) * (0.08 + rigidityFactor * 0.15);
 
     if (Math.abs(1 - this.scaleX) < 0.001) this.scaleX = 1;
     if (Math.abs(1 - this.scaleY) < 0.001) this.scaleY = 1;
 
-    // Wall collisions
+    // Boundary collisions
     const m = this.radius;
     if (this.x - m < 0) {
       this.x = m;
@@ -50,7 +89,6 @@ export class Ball {
       this.vx *= -0.35;
     }
 
-    // Floor collision (floor at height - 20)
     const floorY = height - 20 - this.radius;
     if (this.y > floorY) {
       this.y = floorY;
@@ -63,13 +101,15 @@ export class Ball {
 
   draw(ctx) {
     ctx.save();
+    if (this.alpha < 1) {
+      ctx.globalAlpha = this.alpha;
+    }
     ctx.translate(this.x, this.y);
     ctx.scale(this.scaleX, this.scaleY);
 
     const t = TIERS[this.tierIndex];
-
     ctx.shadowColor = t.glow;
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = this.isMerging ? 18 : 10;
 
     const grad = ctx.createRadialGradient(-4, -4, 2, 0, 0, this.radius);
     grad.addColorStop(0, '#ffffff');
@@ -81,14 +121,12 @@ export class Ball {
     ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Fixed surface shine
     ctx.shadowBlur = 0;
     ctx.fillStyle = 'rgba(255, 255, 255, 0.38)';
     ctx.beginPath();
     ctx.arc(-this.radius * 0.35, -this.radius * 0.35, this.radius * 0.28, 0, Math.PI * 2);
     ctx.fill();
 
-    // Number text
     ctx.fillStyle = '#07090e';
     ctx.font = `900 ${Math.max(11, this.radius * 0.48)}px 'Outfit', sans-serif`;
     ctx.textAlign = 'center';

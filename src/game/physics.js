@@ -1,6 +1,6 @@
 import { TIERS } from '../config/tiers.js';
 import { Ball } from './ball.js';
-import { Particle } from './particle.js';
+import { Particle, Shockwave } from './particle.js';
 import { audioManager } from '../audio/sound.js';
 
 export function resolveCollisions({ balls, particles, onMerge }) {
@@ -12,6 +12,7 @@ export function resolveCollisions({ balls, particles, onMerge }) {
       const b2 = balls[j];
 
       if (b1.toRemove || b2.toRemove) continue;
+      if (b1.isMerging || b2.isMerging) continue;
 
       const dx = b2.x - b1.x;
       const dy = b2.y - b1.y;
@@ -20,24 +21,15 @@ export function resolveCollisions({ balls, particles, onMerge }) {
 
       if (dist < minDist) {
         if (b1.tierIndex === b2.tierIndex && b1.tierIndex < TIERS.length - 1) {
-          const newX = (b1.x + b2.x) / 2;
-          const newY = (b1.y + b2.y) / 2;
+          const targetX = (b1.x + b2.x) / 2;
+          const targetY = (b1.y + b2.y) / 2;
           const nextTier = b1.tierIndex + 1;
 
-          b1.toRemove = true;
-          b2.toRemove = true;
-
-          for (let p = 0; p < 14; p++) {
-            particles.push(new Particle(newX, newY, TIERS[nextTier].color));
-          }
-          audioManager.play('merge');
-
-          if (onMerge) {
-            onMerge(b1.tierIndex);
-          }
-
-          newBalls.push(new Ball(newX, newY, nextTier));
+          // Initiate ease-in suction merge
+          b1.startMerge(targetX, targetY, nextTier, true);
+          b2.startMerge(targetX, targetY, nextTier, false);
         } else {
+          // Standard impulse resolution
           const overlap = minDist - dist;
           const nx = dx / (dist || 0.001);
           const ny = dy / (dist || 0.001);
@@ -59,6 +51,28 @@ export function resolveCollisions({ balls, particles, onMerge }) {
           b2.vy += p * b1.mass * ny;
         }
       }
+    }
+  }
+
+  // Handle completed merge animations
+  for (let i = 0; i < balls.length; i++) {
+    const b = balls[i];
+    if (b.isMerging && b.toRemove && b.isMergeLeader) {
+      const nextTier = b.nextTier;
+      const color = TIERS[nextTier].color;
+
+      // Spawn shockwave ring and burst particles
+      particles.push(new Shockwave(b.targetX, b.targetY, color, TIERS[nextTier].radius * 1.6));
+      for (let p = 0; p < 14; p++) {
+        particles.push(new Particle(b.targetX, b.targetY, color));
+      }
+
+      audioManager.play('merge');
+      if (onMerge) {
+        onMerge(b.tierIndex);
+      }
+
+      newBalls.push(new Ball(b.targetX, b.targetY, nextTier, true));
     }
   }
 
