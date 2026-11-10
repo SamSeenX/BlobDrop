@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-11-10
+### Added
+- Multi-pass (4x) iterative relaxation solver in `physics.js` eliminating pyramid stacking jitter.
+- Tangential contact friction damping to stop infinite rolling oscillations.
+- Separation of normal velocity restitution with soft deadband (0 bounce when resting).
+- AABB bounding box and squared-distance broadphase early rejection avoiding costly `Math.sqrt` calculations.
+- Velocity deadband and sleep thresholds on settling blobs in `ball.js`.
+
 ## [1.1.0] - 2026-11-10
 ### Added
 - Ease-in suction merge animation (~200ms cubic curve) creating visual chain reaction anticipation.
