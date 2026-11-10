@@ -20,7 +20,10 @@ export class UIManager {
     this.muteText = document.getElementById('muteText');
 
     this.milestoneOverlay = document.getElementById('milestoneOverlay');
-    this.milestoneCurrent = document.getElementById('milestoneCurrent');
+    this.milestoneEmoji = document.getElementById('milestoneEmoji');
+    this.milestoneTitle = document.getElementById('milestoneTitle');
+    this.milestoneDesc = document.getElementById('milestoneDesc');
+    this.milestoneDareBox = document.getElementById('milestoneDareBox');
     this.milestoneNext = document.getElementById('milestoneNext');
     this.milestoneNextRow = document.getElementById('milestoneNextRow');
     this.milestoneContinueBtn = document.getElementById('milestoneContinueBtn');
@@ -75,19 +78,8 @@ export class UIManager {
       this.comboBadge?.classList.add('hidden');
     });
 
-    eventBus.on('milestone:unlocked', ({ currentTier, nextTier }) => {
-      if (this.milestoneCurrent) this.milestoneCurrent.innerText = currentTier.name;
-      if (this.milestoneNext) {
-        if (nextTier) {
-          this.milestoneNext.innerText = nextTier.name;
-          this.milestoneNextRow?.classList.remove('hidden');
-        } else {
-          this.milestoneNextRow?.classList.add('hidden');
-        }
-      }
-      if (this.milestoneOverlay) {
-        this.milestoneOverlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-      }
+    eventBus.on('milestone:unlocked', ({ currentTier, nextTier, isWin4096, isGodlike8192 }) => {
+      this.handleMilestoneUI({ currentTier, nextTier, isWin4096, isGodlike8192 });
     });
 
     eventBus.on('game:started', () => {
@@ -105,6 +97,55 @@ export class UIManager {
       if (this.actionBtn) this.actionBtn.innerText = 'TRY AGAIN';
       this.gameOverlay?.classList.remove('opacity-0', 'pointer-events-none');
     });
+  }
+
+  handleMilestoneUI({ currentTier, nextTier, isWin4096, isGodlike8192 }) {
+    if (isWin4096) {
+      if (this.milestoneEmoji) this.milestoneEmoji.innerText = '🏆';
+      if (this.milestoneTitle) this.milestoneTitle.innerText = 'YOU WON 4096!';
+      if (this.milestoneDesc) {
+        this.milestoneDesc.innerHTML = 'Sensational victory! You crafted the legendary <strong>4096</strong> blob!';
+      }
+      this.milestoneDareBox?.classList.remove('hidden');
+      this.milestoneNextRow?.classList.add('hidden');
+      if (this.milestoneContinueBtn) {
+        this.milestoneContinueBtn.innerText = 'DARE ACCEPTED: GO FOR 8192!';
+        this.milestoneContinueBtn.classList.add('dare-btn-pulse');
+      }
+    } else if (isGodlike8192) {
+      if (this.milestoneEmoji) this.milestoneEmoji.innerText = '👑';
+      if (this.milestoneTitle) this.milestoneTitle.innerText = 'GODLIKE: 8192 UNLOCKED!';
+      if (this.milestoneDesc) {
+        this.milestoneDesc.innerHTML = 'UNBELIEVABLE! You conquered the ultimate <strong>8192</strong> blob!';
+      }
+      this.milestoneDareBox?.classList.add('hidden');
+      this.milestoneNextRow?.classList.add('hidden');
+      if (this.milestoneContinueBtn) {
+        this.milestoneContinueBtn.innerText = 'KEEP PLAYING';
+        this.milestoneContinueBtn.classList.remove('dare-btn-pulse');
+      }
+    } else {
+      if (this.milestoneEmoji) this.milestoneEmoji.innerText = '🎉';
+      if (this.milestoneTitle) this.milestoneTitle.innerText = 'MILESTONE UNLOCKED!';
+      if (this.milestoneDesc) {
+        this.milestoneDesc.innerHTML = `You just unlocked <strong class="milestone-current">${currentTier.name}</strong>`;
+      }
+      this.milestoneDareBox?.classList.add('hidden');
+      if (nextTier) {
+        if (this.milestoneNext) this.milestoneNext.innerText = nextTier.name;
+        this.milestoneNextRow?.classList.remove('hidden');
+      } else {
+        this.milestoneNextRow?.classList.add('hidden');
+      }
+      if (this.milestoneContinueBtn) {
+        this.milestoneContinueBtn.innerText = 'CONTINUE';
+        this.milestoneContinueBtn.classList.remove('dare-btn-pulse');
+      }
+    }
+
+    if (this.milestoneOverlay) {
+      this.milestoneOverlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+    }
   }
 
   updateBestDisplay(score) {

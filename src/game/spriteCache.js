@@ -5,19 +5,26 @@ class SpriteCache {
     this.cache = new Map();
   }
 
-  getSprite(tierIndex) {
-    if (this.cache.has(tierIndex)) {
-      return this.cache.get(tierIndex);
-    }
-    return this.generateSprite(tierIndex);
+  clear() {
+    this.cache.clear();
   }
 
-  generateSprite(tierIndex) {
+  getSprite(tierIndex, radius = null) {
+    const tier = TIERS[tierIndex];
+    if (!tier) return null;
+    const r = Math.round(radius || tier.radius);
+    const key = `${tierIndex}_${r}`;
+    if (this.cache.has(key)) {
+      return this.cache.get(key);
+    }
+    return this.generateSprite(tierIndex, r, key);
+  }
+
+  generateSprite(tierIndex, r, key) {
     const tier = TIERS[tierIndex];
     if (!tier) return null;
 
-    const r = tier.radius;
-    const padding = 8;
+    const padding = Math.max(4, Math.round(r * 0.15));
     const size = Math.ceil((r + padding) * 2);
     const center = size / 2;
 
@@ -53,13 +60,14 @@ class SpriteCache {
 
     // Tier number label
     ctx.fillStyle = '#07090e';
-    ctx.font = `900 ${Math.max(11, r * 0.48)}px 'Outfit', sans-serif`;
+    const fontSize = Math.max(9, Math.round(r * 0.46));
+    ctx.font = `900 ${fontSize}px 'Outfit', sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(tier.name, center, center + 1);
 
     const sprite = { canvas, offset: center };
-    this.cache.set(tierIndex, sprite);
+    this.cache.set(key, sprite);
     return sprite;
   }
 }

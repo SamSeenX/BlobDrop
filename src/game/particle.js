@@ -1,13 +1,13 @@
 export class Particle {
-  constructor(x, y, color) {
+  constructor(x, y, color, scale = 1) {
     this.x = x;
     this.y = y;
     this.color = color;
     const angle = Math.random() * Math.PI * 2;
-    const speed = 1.5 + Math.random() * 5;
+    const speed = (1.5 + Math.random() * 5) * scale;
     this.vx = Math.cos(angle) * speed;
     this.vy = Math.sin(angle) * speed;
-    this.radius = 2.5 + Math.random() * 3.5;
+    this.radius = (2.5 + Math.random() * 3.5) * scale;
     this.alpha = 1;
     this.decay = 0.02 + Math.random() * 0.03;
   }
@@ -30,14 +30,14 @@ export class Particle {
 }
 
 export class Shockwave {
-  constructor(x, y, color, maxRadius = 35) {
+  constructor(x, y, color, maxRadius = 35, scale = 1) {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.radius = 4;
+    this.radius = 4 * scale;
     this.maxRadius = maxRadius;
     this.alpha = 0.85;
-    this.growth = (maxRadius - 4) / 14;
+    this.growth = (maxRadius - 4 * scale) / 14;
   }
 
   update() {

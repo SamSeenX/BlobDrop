@@ -3,14 +3,17 @@
 ## In-Scope Features (Current)
 - [x] Vite dev and build workflow.
 - [x] Modular Vanilla JS architecture (< 200 lines per file).
-- [x] Milestone overlay modals for 1024, 2048, and 4096 with game pause.
+- [x] Responsive 2:3 aspect ratio normalization for fair competitive balance across all screen sizes.
+- [x] 4096 Victory celebration modal and 8192 dare challenge with Tier 12 ("8192") blob.
+- [x] Progressive Web App (PWA) support with offline Service Worker, web app manifest, and glowing vector SVG icon.
+- [x] Milestone overlay modals for 1024, 2048, 4096, and 8192 with game pause.
 - [x] Standardized ad container slots (300x100) on milestone and game over screens.
 - [x] Progressive sliding spawner phasing out low-tier blobs as higher tiers unlock.
-- [x] Center-top cannon aiming system with fade-off laser trajectory.
+- [x] Center-top cannon aiming system with fade-off laser trajectory and reload entry wobble animation.
 - [x] Wall bounce ricochet dynamics with energetic restitution (0.88).
 - [x] Hardware-accelerated offscreen sprite texture cache for guaranteed 60+ FPS.
 - [x] Inelastic momentum inheritance and relative-mass collision deflection.
-- [x] 12 blob tiers (2 to 4096) with dynamic mass, radii, and color gradients.
+- [x] 13 blob tiers (2 to 8192) with dynamic mass, radii, and color gradients.
 - [x] Dynamic audio synthesizer using Web Audio API.
 - [x] Chain combo score multiplier and high score tracking in `localStorage`.
 - [x] Safe-area inset handling and mobile touch ergonomics.

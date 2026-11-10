@@ -1,16 +1,18 @@
 import { TIERS } from '../config/tiers.js';
 import { spriteCache } from './spriteCache.js';
+import { updateMergeAnimation } from './ballMerge.js';
 
 export class Ball {
-  constructor(x, y, tierIndex, isSpawning = false, initialVx = 0, initialVy = 0) {
+  constructor(x, y, tierIndex, isSpawning = false, initialVx = 0, initialVy = 0, scale = 1) {
     this.x = x;
     this.y = y;
     this.tierIndex = tierIndex;
+    this.scale = scale;
     const t = TIERS[tierIndex];
-    this.radius = t.radius;
+    this.radius = t.radius * scale;
     this.mass = t.mass;
     this.vx = initialVx;
-    this.vy = Math.abs(initialVy) > 0.2 ? initialVy : (isSpawning ? -1.2 : 0);
+    this.vy = Math.abs(initialVy) > 0.2 ? initialVy : (isSpawning ? -1.2 * scale : 0);
     this.scaleX = isSpawning ? 1.4 : 1.15;
     this.scaleY = isSpawning ? 0.65 : 0.85;
     this.rotation = 0;
@@ -52,81 +54,22 @@ export class Ball {
     const floorY = height - 20 - m;
 
     if (this.isMerging) {
-      this.mergeFrame++;
-      this.vy += 0.35;
-      this.vx *= 0.985;
-      this.vy *= 0.99;
-      this.targetX += this.vx;
-      this.targetY += this.vy;
-
-      // Bound target center of mass to playfield
-      if (this.targetX - m < 0) {
-        this.targetX = m;
-        this.vx = Math.abs(this.vx) * 0.70;
-      } else if (this.targetX + m > width) {
-        this.targetX = width - m;
-        this.vx = -Math.abs(this.vx) * 0.70;
-      }
-
-      if (this.targetY > floorY) {
-        this.targetY = floorY;
-        this.vy = -Math.abs(this.vy) * 0.20;
-        this.vx *= 0.88;
-      } else if (this.targetY - m < 0) {
-        this.targetY = m;
-        this.vy = Math.abs(this.vy) * 0.5;
-      }
-
-      // Wobble & suction animation
-      if (this.mergeFrame <= this.wobbleDuration) {
-        const progress = this.mergeFrame / this.wobbleDuration;
-        const wobble = Math.sin(progress * Math.PI);
-        this.scaleX = 1 + wobble * 0.24;
-        this.scaleY = 1 - wobble * 0.20;
-        this.x = this.targetX + this.offsetX;
-        this.y = this.targetY + this.offsetY;
-      } else {
-        const suction = (this.mergeFrame - this.wobbleDuration) / (this.mergeDuration - this.wobbleDuration);
-        const easeIn = Math.min(1, suction) ** 3;
-        this.x = this.targetX + this.offsetX * (1 - easeIn);
-        this.y = this.targetY + this.offsetY * (1 - easeIn);
-        const squish = Math.max(0.18, 1 - easeIn * 0.72);
-        this.scaleX = squish;
-        this.scaleY = squish;
-        this.alpha = Math.max(0.15, 1 - easeIn * 0.8);
-
-        if (this.mergeFrame >= this.mergeDuration) this.toRemove = true;
-      }
-
-      // Guarded edge clamp during merge animation
-      if (this.x - m < 0) {
-        this.x = m;
-        this.vx = Math.abs(this.vx) * 0.70;
-      } else if (this.x + m > width) {
-        this.x = width - m;
-        this.vx = -Math.abs(this.vx) * 0.70;
-      }
-      if (this.y > floorY) {
-        this.y = floorY;
-        this.vy = -Math.abs(this.vy) * 0.20;
-      } else if (this.y - m < 0) {
-        this.y = m;
-      }
+      updateMergeAnimation(this, width, height, floorY, m);
       return;
     }
 
     this.age++;
-    this.vy += 0.40;
+    this.vy += 0.40 * this.scale;
     this.vx *= 0.985;
     this.vy *= 0.99;
 
-    if (Math.abs(this.vx) < 0.03) this.vx = 0;
-    if (Math.abs(this.vy) < 0.05) this.vy = 0;
+    if (Math.abs(this.vx) < 0.03 * this.scale) this.vx = 0;
+    if (Math.abs(this.vy) < 0.05 * this.scale) this.vy = 0;
 
     this.x += this.vx;
     this.y += this.vy;
 
-    if (Math.abs(this.vx) > 0.03) {
+    if (Math.abs(this.vx) > 0.03 * this.scale) {
       this.angularVelocity = this.vx / this.radius;
       this.rotation += this.angularVelocity;
     }
@@ -141,22 +84,22 @@ export class Ball {
     // Boundary bounce & containment
     if (this.x - m < 0) {
       this.x = m;
-      const restitution = Math.abs(this.vx) > 1.2 ? 0.88 : 0.40;
+      const restitution = Math.abs(this.vx) > 1.2 * this.scale ? 0.88 : 0.40;
       this.vx = Math.abs(this.vx) * restitution;
-      if (Math.abs(this.vx) < 0.04) this.vx = 0;
+      if (Math.abs(this.vx) < 0.04 * this.scale) this.vx = 0;
     } else if (this.x + m > width) {
       this.x = width - m;
-      const restitution = Math.abs(this.vx) > 1.2 ? 0.88 : 0.40;
+      const restitution = Math.abs(this.vx) > 1.2 * this.scale ? 0.88 : 0.40;
       this.vx = -Math.abs(this.vx) * restitution;
-      if (Math.abs(this.vx) < 0.04) this.vx = 0;
+      if (Math.abs(this.vx) < 0.04 * this.scale) this.vx = 0;
     }
 
     if (this.y > floorY) {
       this.y = floorY;
       this.vy = -Math.abs(this.vy) * 0.15;
       this.vx *= 0.88;
-      if (Math.abs(this.vy) < 0.35) this.vy = 0;
-      if (Math.abs(this.vx) < 0.04) this.vx = 0;
+      if (Math.abs(this.vy) < 0.35 * this.scale) this.vy = 0;
+      if (Math.abs(this.vx) < 0.04 * this.scale) this.vx = 0;
     } else if (this.y - m < 0) {
       this.y = m;
       this.vy = Math.abs(this.vy) * 0.5;
@@ -164,7 +107,7 @@ export class Ball {
   }
 
   draw(ctx) {
-    const sprite = spriteCache.getSprite(this.tierIndex);
+    const sprite = spriteCache.getSprite(this.tierIndex, this.radius);
     if (!sprite) return;
 
     ctx.save();

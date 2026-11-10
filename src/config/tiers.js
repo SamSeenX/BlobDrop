@@ -10,5 +10,6 @@ export const TIERS = [
   { level: 8, name: "512", radius: 83, mass: 100.0, color: "#fb7185", glow: "#e11d48", points: 512 },
   { level: 9, name: "1024", radius: 96, mass: 160.0, color: "#f59e0b", glow: "#d97706", points: 1024 },
   { level: 10, name: "2048", radius: 110, mass: 250.0, color: "#10b981", glow: "#059669", points: 2048 },
-  { level: 11, name: "4096", radius: 124, mass: 380.0, color: "#06b6d4", glow: "#0891b2", points: 4096 }
+  { level: 11, name: "4096", radius: 124, mass: 380.0, color: "#06b6d4", glow: "#0891b2", points: 4096 },
+  { level: 12, name: "8192", radius: 138, mass: 550.0, color: "#d946ef", glow: "#f0abfc", points: 8192 }
 ];

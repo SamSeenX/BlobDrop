@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2026-11-10
+### Added
+- Responsive screen normalization: Standardized 2:3 aspect ratio viewport layout (`layout.js`) scaling blob radii, danger limit, launch speeds, and physics uniformly across all mobile, tablet, and desktop display sizes.
+- Competitive parity across devices: Smaller, shorter, or low-PPI screens now maintain the exact same relative playfield volume and stacking capacity as larger displays.
+- Win 4096 celebration modal & 8192 Dare: Unlocking the 4096 milestone triggers a victory announcement with an interactive dare: *"Are you brave enough to keep going to the next milestone: 8192?"*.
+- Tier 12 ("8192") blob: Added cosmic violet 8192 blob with 138 base radius and 8192 points, allowing players who accept the 4096 dare to keep merging towards the ultimate high score.
+- Full PWA support: Added `public/manifest.webmanifest`, offline-capable Service Worker (`public/sw.js`), and high-resolution glowing vector app icon (`public/icon.svg`).
+- Proactive file splitting: Extracted `ballMerge.js`, `layout.js`, and `modal.css` maintaining all code files strictly under 180 lines.
+
 ## [1.4.3] - 2026-11-10
 ### Added
 - Elastic cannon reload entry animation: Active blob slides smoothly down from above screen boundaries into the cannon shoot position over ~260ms upon firing or starting game.
@@ -46,17 +55,3 @@ All notable changes to this project will be documented in this file.
 - Pre-merge impact wobble phase: 8-frame elastic compression and squish animation before suction fusion.
 - Dual-pass merge detection: pre-solver contact pass and post-relaxation confirmation pass.
 - Contact distance tolerance buffer (+1.8px) preventing floating point solver stalls on settled touching blobs.
-
-## [1.3.1] - 2026-11-10
-### Fixed
-- Corrected top-left status bar `Next:` badge to show the upcoming ball before launch.
-- Removed duplicate queue badge from the canvas muzzle to keep the active ball unobstructed.
-- Replaced multi-bounce trajectory line with a single clean laser ray that smoothly fades off toward the side edge or screen center.
-- Increased side wall bank shot bounce restitution factor to 0.88 for punchier ricochets.
-
-## [1.3.0] - 2026-11-10
-### Added
-- Center-top cannon aiming system replacing top-drop spawner.
-- Multi-bounce laser trajectory guide with wall reflection physics in dedicated `trajectory.js`.
-- Responsive wall ricochet mechanics with tuned restitution (0.75 for fast bank shots).
-- In-flight queue preview displaying the upcoming next ball directly above the cannon muzzle during aim hold.

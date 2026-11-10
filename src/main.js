@@ -9,6 +9,12 @@ import { eventBus } from './core/eventBus.js';
 initErrorBoundary();
 storage.initPersistence();
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
 const canvas = document.getElementById('gameCanvas');
 const wrapper = document.getElementById('canvasWrapper');
 const ctx = canvas.getContext('2d');

@@ -13,13 +13,6 @@
   transition: opacity 0.3s ease;
 }
 
-.overlay-modal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
 .overlay-icon-wrap {
   width: 58px;
   height: 58px;
@@ -33,21 +26,10 @@
   font-size: 1.85rem;
 }
 
-.milestone-badge {
-  background: linear-gradient(135deg, #10b981, #06b6d4);
-}
-
 .overlay-title {
   font-size: 1.85rem;
   font-weight: 900;
   color: var(--accent-amber);
-  margin-bottom: 6px;
-}
-
-.milestone-title {
-  font-size: 1.55rem;
-  font-weight: 900;
-  color: #fbbf24;
   margin-bottom: 6px;
 }
 
@@ -59,32 +41,10 @@
   line-height: 1.4;
 }
 
-.milestone-unlocked-text {
-  font-size: 14px;
-  color: var(--text-main);
-  margin-bottom: 2px;
-}
-
-.milestone-current {
-  color: #34d399;
-  font-size: 1.2rem;
-}
-
-.milestone-next-text {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
-
-.milestone-next {
-  color: #f43f5e;
-  font-weight: 800;
-}
-
 .ad-slot-wrap {
   width: 100%;
-  max-width: 270px;
-  margin: 10px auto 16px;
+  max-width: 300px;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,11 +52,11 @@
 
 .ad-badge {
   font-size: 9px;
-  letter-spacing: 1.2px;
-  color: var(--text-dim);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
   margin-bottom: 4px;
   text-transform: uppercase;
-  font-weight: 700;
 }
 
 .ad-placeholder {
@@ -119,7 +79,7 @@
 
 .action-btn {
   width: 100%;
-  max-width: 230px;
+  max-width: 250px;
   min-height: 48px;
   background: linear-gradient(90deg, #f43f5e, #ec4899, #facc15);
   border: none;
@@ -131,10 +91,6 @@
   cursor: pointer;
   box-shadow: var(--shadow-glow);
   transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.continue-btn {
-  background: linear-gradient(90deg, #10b981, #06b6d4);
 }
 
 .action-btn:hover {
