@@ -3,9 +3,13 @@
 ## In-Scope Features (Current)
 - [x] Vite dev and build workflow.
 - [x] Modular Vanilla JS architecture (< 200 lines per file).
-- [x] Center-top cannon aiming system with multi-bounce trajectory line.
-- [x] Wall bounce ricochet dynamics with energetic restitution.
-- [x] In-flight next-ball queue preview badge during active aim hold.
+- [x] Milestone overlay modals for 1024, 2048, and 4096 with game pause.
+- [x] Standardized ad container slots (300x100) on milestone and game over screens.
+- [x] Progressive sliding spawner phasing out low-tier blobs as higher tiers unlock.
+- [x] Center-top cannon aiming system with fade-off laser trajectory.
+- [x] Wall bounce ricochet dynamics with energetic restitution (0.88).
+- [x] Hardware-accelerated offscreen sprite texture cache for guaranteed 60+ FPS.
+- [x] Inelastic momentum inheritance and relative-mass collision deflection.
 - [x] 12 blob tiers (2 to 4096) with dynamic mass, radii, and color gradients.
 - [x] Dynamic audio synthesizer using Web Audio API.
 - [x] Chain combo score multiplier and high score tracking in `localStorage`.

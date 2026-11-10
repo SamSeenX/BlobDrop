@@ -7,23 +7,34 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 20px;
   text-align: center;
   z-index: 30;
   transition: opacity 0.3s ease;
 }
 
+.overlay-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .overlay-icon-wrap {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 12px;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 10px;
   background: linear-gradient(135deg, #e11d48, #f59e0b);
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-card);
-  font-size: 2rem;
+  font-size: 1.85rem;
+}
+
+.milestone-badge {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
 }
 
 .overlay-title {
@@ -33,12 +44,77 @@
   margin-bottom: 6px;
 }
 
+.milestone-title {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: #fbbf24;
+  margin-bottom: 6px;
+}
+
 .overlay-sub {
   font-size: 13px;
   color: var(--text-dim);
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   max-width: 270px;
   line-height: 1.4;
+}
+
+.milestone-unlocked-text {
+  font-size: 14px;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.milestone-current {
+  color: #34d399;
+  font-size: 1.2rem;
+}
+
+.milestone-next-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.milestone-next {
+  color: #f43f5e;
+  font-weight: 800;
+}
+
+.ad-slot-wrap {
+  width: 100%;
+  max-width: 270px;
+  margin: 10px auto 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ad-badge {
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.ad-placeholder {
+  width: 100%;
+  height: 80px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.ad-text {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 600;
 }
 
 .action-btn {
@@ -51,10 +127,14 @@
   color: #020617;
   font-weight: 900;
   font-size: 1rem;
-  padding: 14px 24px;
+  padding: 12px 24px;
   cursor: pointer;
   box-shadow: var(--shadow-glow);
   transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.continue-btn {
+  background: linear-gradient(90deg, #10b981, #06b6d4);
 }
 
 .action-btn:hover {

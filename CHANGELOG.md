@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-11-10
+### Added
+- Milestone modal overlay for 1024, 2048, and 4096 unlock events displaying current achievement and next target.
+- Game loop pause mechanics: physics and inputs freeze in `PAUSED` state while milestone modal is displayed, with timing accumulator reset upon resume.
+- Standardized ad placeholder slots (300x100) incorporated in both Milestone celebration and Game Over loss overlays.
+- Progressive spawner sliding floor in `spawner.js`: dynamically phases out 2s after 512, 4s after 1024, and 8s after 2048 to prevent endgame board clutter.
+
 ## [1.3.5] - 2026-11-10
 ### Added
 - Inherited merge momentum: Newly created upgraded blobs now carry 82% of combined incoming velocity `((v1 + v2) / 2 * 0.82)` instead of stalling to zero.
