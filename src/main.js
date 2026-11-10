@@ -10,9 +10,20 @@ initErrorBoundary();
 storage.initPersistence();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
+  if (import.meta.env.DEV) {
+    navigator.serviceWorker.getRegistrations().then((regs) => {
+      for (const reg of regs) reg.unregister();
+    });
+    if ('caches' in window) {
+      caches.keys().then((keys) => {
+        for (const k of keys) caches.delete(k);
+      });
+    }
+  } else {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
 }
 
 const canvas = document.getElementById('gameCanvas');

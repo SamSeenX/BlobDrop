@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.3] - 2026-11-10
+### Changed
+- Rebalanced endgame blob progression: Scaled tier radii down across upper tiers (1024: 78px, 2048: 90px, 4096: 102px, 8192: 115px) so two 1024s or 2048s can sit side-by-side on the bottom of the 360px playfield without forcing premature vertical overflow.
+- Development service worker purge: Automatically unregister service workers and purge caches in dev mode (`import.meta.env.DEV`), ensuring instant HMR and fresh asset delivery.
+
 ## [1.5.2] - 2026-11-10
 ### Fixed
 - Top-edge danger threshold alignment: Pinned `.danger-line` to `top: 0` along the container's top rim and eliminated the floating mid-canvas dashed line that appeared below the aiming blob.
