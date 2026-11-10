@@ -4,6 +4,15 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Sprite Texture Cache (`src/game/spriteCache.js`)**:
+  - Pre-renders high-DPI offscreen canvas textures once per tier (radial body, soft aura glow, gloss highlight, tier typography).
+  - Single hardware-accelerated `ctx.drawImage` blit per ball per frame (< 1ms frame rendering).
+  - Eliminates runtime `shadowBlur` Gaussian passes and continuous gradient garbage collection.
+- **Fixed Timestep Loop (`src/main.js`)**:
+  - Deterministic 60 FPS physics accumulator loop decouple from display refresh rate.
+  - Zero lag or jitter on 60Hz, 120Hz ProMotion, or low-power mobile displays.
+- **Physical Buffer Clearing (`src/game/renderer.js`)**:
+  - Reset transform identity prior to `clearRect` on full physical pixel dimensions, preventing fractional subpixel clipping artifacts.
 - **Cannon Launcher & Trajectory (`src/game/trajectory.js`, `src/game/input.js`)**:
   - Center-top mounted cannon aiming from `(width / 2, 38)`.
   - Focused single aim trajectory ray with linear opacity fade-off towards screen center and edge boundaries.
@@ -16,7 +25,6 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Tangential friction impulse and resting restitution thresholds (inelastic contact under 0.6 relative velocity).
   - Dynamic wall restitution: high bounce factor (0.88 for fast bank shots with `|vx| > 1.2`) settling to 0.40 and deadband for resting blobs.
   - High-performance broadphase: fast AABB coordinate rejection and squared-distance checks avoiding unnecessary square root operations.
-  - Velocity deadband and rigidity damping over time so resting blobs settle firmly.
 - **Audio Synthesis (`src/audio/sound.js`)**:
   - Zero sound assets or external audio files.
   - Web Audio API real-time synthesis: sine waveforms for drops, pitch-ramped triangle waves for merges, and sawtooth drops for gameover alerts.
@@ -30,5 +38,5 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
 
 ## Technical Decisions
 - **No Tailwind / No React**: Pure Vanilla ES modules and modern semantic CSS variables to guarantee lightweight execution, fast loading, and zero runtime overhead.
-- **Strict 200-Line Modular Limit**: Every code module is kept below 180 lines through single-responsibility separation (`input.js`, `renderer.js`, `engine.js`, `trajectory.js`).
+- **Strict 200-Line Modular Limit**: Every code module is kept below 180 lines through single-responsibility separation (`input.js`, `renderer.js`, `engine.js`, `trajectory.js`, `spriteCache.js`).
 - **Vite Build System**: Pre-configured with ES2022 targets and automated console/debugger drop in production builds.

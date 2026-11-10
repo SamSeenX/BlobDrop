@@ -27,8 +27,20 @@ eventBus.emit('next:update', {
   nextTier: TIERS[1]
 });
 
-function loop() {
-  engine.update();
+const FIXED_TIMESTEP = 1000 / 60;
+let lastTimestamp = performance.now();
+let accumulator = 0;
+
+function loop(currentTimestamp) {
+  const delta = Math.min(100, currentTimestamp - lastTimestamp);
+  lastTimestamp = currentTimestamp;
+  accumulator += delta;
+
+  while (accumulator >= FIXED_TIMESTEP) {
+    engine.update();
+    accumulator -= FIXED_TIMESTEP;
+  }
+
   engine.render();
   requestAnimationFrame(loop);
 }
