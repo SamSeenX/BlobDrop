@@ -4,6 +4,10 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Progressive Spawner & Milestones (`src/game/spawner.js`, `src/ui/uiManager.js`)**:
+  - Sliding spawn floor: dynamically phases out low-tier blobs (drops 2s after 512, drops 4s after 1024, drops 8s after 2048) to keep endgame boards playable.
+  - Milestone unlock overlays: celebrated pause events for 1024, 2048, and 4096.
+  - Standardized 300x100 ad placeholder container integrated on both milestone and game over overlays.
 - **Physics Engine & Momentum Transfer (`src/game/physics.js`, `src/game/ball.js`)**:
   - Inelastic momentum inheritance: merged blobs inherit `((v1 + v2) / 2 * 0.82)` velocity, carrying active impact without freezing.
   - Relative mass dynamics: inverse-mass displacement partitioning and amplified restitution (0.38) when light blobs impact heavy masses.
@@ -20,8 +24,8 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Tier-based z-index draw sorting: larger background blobs render first, smaller foreground blobs render last to prevent visual obscuration.
   - Single hardware-accelerated `ctx.drawImage` blit per ball per frame (< 1ms frame rendering).
 - **Fixed Timestep Loop (`src/main.js`)**:
-  - Deterministic 60 FPS physics accumulator loop decouple from display refresh rate.
-  - Zero lag or jitter on 60Hz, 120Hz ProMotion, or low-power mobile displays.
+  - Deterministic 60 FPS physics accumulator loop decoupled from display refresh rate.
+  - Timing accumulator cleanly reset upon unpause/resume events.
 - **Cannon Launcher & Trajectory (`src/game/trajectory.js`, `src/game/input.js`)**:
   - Center-top mounted cannon aiming from `(width / 2, 38)`.
   - Focused single aim trajectory ray with linear opacity fade-off towards screen center and edge boundaries.
@@ -30,10 +34,10 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Zero sound assets or external audio files.
   - Web Audio API real-time synthesis: sine waveforms for drops, pitch-ramped triangle waves for merges, and sawtooth drops for gameover alerts.
 - **State & Event Architecture (`src/core/eventBus.js`, `src/core/storage.js`)**:
-  - Decoupled pub/sub event bus coordinating game states (`START`, `PLAYING`, `GAMEOVER`), combo multipliers, and score updates.
+  - Decoupled pub/sub event bus coordinating game states (`START`, `PLAYING`, `PAUSED`, `GAMEOVER`), combo multipliers, and score updates.
   - Safe-wrapped `localStorage` persistence with persistent storage request (`navigator.storage?.persist()`).
 
 ## Technical Decisions
 - **No Tailwind / No React**: Pure Vanilla ES modules and modern semantic CSS variables to guarantee lightweight execution, fast loading, and zero runtime overhead.
-- **Strict 200-Line Modular Limit**: Every code module is kept below 180 lines through single-responsibility separation (`input.js`, `renderer.js`, `engine.js`, `trajectory.js`, `spriteCache.js`).
+- **Strict 200-Line Modular Limit**: Every code module is kept below 180 lines through single-responsibility separation (`input.js`, `renderer.js`, `engine.js`, `trajectory.js`, `spriteCache.js`, `spawner.js`).
 - **Vite Build System**: Pre-configured with ES2022 targets and automated console/debugger drop in production builds.

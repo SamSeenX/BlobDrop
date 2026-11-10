@@ -57,14 +57,45 @@
       <div id="gameOverlay" class="game-overlay">
         <div id="overlayContent">
           <div class="overlay-icon-wrap viral-badge">
-            <span>🫧</span>
+            <span id="overlayEmoji">🫧</span>
           </div>
           <h2 id="overlayTitle" class="display-font overlay-title">BLOBDROP: 4096</h2>
           <p id="overlaySub" class="overlay-sub">
             Drop matching numbers, watch them merge and stack. Don't let blobs reach the top!
           </p>
+          <div id="gameOverAd" class="ad-slot-wrap hidden">
+            <span class="ad-badge">ADVERTISEMENT</span>
+            <div class="ad-placeholder">
+              <span class="ad-text">Ad Slot (300 x 100)</span>
+            </div>
+          </div>
           <button id="actionBtn" class="action-btn">
             PLAY NOW
+          </button>
+        </div>
+      </div>
+
+      <!-- Milestone Modal Overlay -->
+      <div id="milestoneOverlay" class="game-overlay hidden opacity-0 pointer-events-none">
+        <div id="milestoneContent" class="overlay-modal">
+          <div class="overlay-icon-wrap milestone-badge">
+            <span>🎉</span>
+          </div>
+          <h2 class="display-font milestone-title">MILESTONE UNLOCKED!</h2>
+          <p class="milestone-unlocked-text">
+            You just unlocked <strong id="milestoneCurrent" class="milestone-current">1024</strong>
+          </p>
+          <p id="milestoneNextRow" class="milestone-next-text">
+            Next milestone: <span id="milestoneNext" class="milestone-next">2048</span>
+          </p>
+          <div class="ad-slot-wrap">
+            <span class="ad-badge">ADVERTISEMENT</span>
+            <div class="ad-placeholder">
+              <span class="ad-text">Ad Slot (300 x 100)</span>
+            </div>
+          </div>
+          <button id="milestoneContinueBtn" class="action-btn continue-btn">
+            CONTINUE
           </button>
         </div>
       </div>

@@ -27,6 +27,11 @@ eventBus.emit('next:update', {
   nextTier: TIERS[1]
 });
 
+eventBus.on('game:resumed', () => {
+  lastTimestamp = performance.now();
+  accumulator = 0;
+});
+
 const FIXED_TIMESTEP = 1000 / 60;
 let lastTimestamp = performance.now();
 let accumulator = 0;
