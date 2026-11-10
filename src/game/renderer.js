@@ -1,4 +1,5 @@
 import { TIERS } from '../config/tiers.js';
+import { spriteCache } from './spriteCache.js';
 
 export class Renderer {
   constructor(canvas, ctx) {
@@ -7,7 +8,11 @@ export class Renderer {
   }
 
   clear(width, height) {
-    this.ctx.clearRect(0, 0, width, height);
+    // Guaranteed physical buffer wipe
+    this.ctx.save();
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.restore();
 
     // Subtle background grid
     this.ctx.strokeStyle = 'rgba(244, 63, 94, 0.05)';
@@ -46,8 +51,6 @@ export class Renderer {
     this.ctx.strokeStyle = grad;
     this.ctx.lineWidth = 2.5;
     this.ctx.setLineDash([5, 5]);
-    this.ctx.shadowColor = tier.glow;
-    this.ctx.shadowBlur = 8;
 
     this.ctx.beginPath();
     this.ctx.moveTo(trajectory.startX, trajectory.startY);
@@ -59,34 +62,15 @@ export class Renderer {
   drawCannon({ originX, originY, currentTierIndex, isAiming, trajectory }) {
     const tier = TIERS[currentTierIndex];
     if (!tier) return;
-    const currentRadius = tier.radius;
 
     if (isAiming && trajectory) {
       this.drawTrajectory(trajectory, tier);
     }
 
-    // Active ball in cannon muzzle
-    this.ctx.save();
-    this.ctx.shadowColor = tier.glow;
-    this.ctx.shadowBlur = 12;
-    this.ctx.fillStyle = tier.color;
-    this.ctx.beginPath();
-    this.ctx.arc(originX, originY, currentRadius, 0, Math.PI * 2);
-    this.ctx.fill();
-
-    // Specular highlight & label
-    this.ctx.shadowBlur = 0;
-    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-    this.ctx.beginPath();
-    this.ctx.arc(originX - currentRadius * 0.35, originY - currentRadius * 0.35, currentRadius * 0.28, 0, Math.PI * 2);
-    this.ctx.fill();
-
-    this.ctx.fillStyle = '#07090e';
-    this.ctx.font = `900 ${Math.max(11, currentRadius * 0.48)}px Outfit, sans-serif`;
-    this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';
-    this.ctx.fillText(tier.name, originX, originY + 1);
-    this.ctx.restore();
+    const sprite = spriteCache.getSprite(currentTierIndex);
+    if (sprite) {
+      this.ctx.drawImage(sprite.canvas, originX - sprite.offset, originY - sprite.offset);
+    }
   }
 
   render({ width, height, balls, particles, isAiming, originX, originY, currentTierIndex, trajectory, isPlaying }) {

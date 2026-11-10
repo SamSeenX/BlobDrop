@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.3] - 2026-11-10
+### Added
+- Pre-cached offscreen sprite textures in `spriteCache.js` for all 12 tiers, eliminating expensive runtime `shadowBlur` and per-frame `createRadialGradient` allocations.
+- Fixed 60 FPS timestep accumulator loop in `main.js` preventing frame drops and timing jitter across variable refresh rate displays.
+- Full physical backing buffer clear in `renderer.js` to eliminate fractional pixel clipping artifacts on high-DPI Retina screens.
+
 ## [1.3.2] - 2026-11-10
 ### Added
 - Pre-merge impact wobble phase: 8-frame elastic compression and squish animation before suction fusion.
