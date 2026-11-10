@@ -6,12 +6,10 @@ import { audioManager } from '../audio/sound.js';
 const SOLVER_ITERATIONS = 4;
 const RESTITUTION_THRESHOLD = 0.6;
 const FRICTION = 0.22;
+const CONTACT_BUFFER = 1.8;
 
-export function resolveCollisions({ balls, particles, onMerge }) {
-  const newBalls = [];
+function detectMerges(balls) {
   const n = balls.length;
-
-  // 1. Merge detection pass (single check per frame for clarity)
   for (let i = 0; i < n; i++) {
     const b1 = balls[i];
     if (b1.toRemove || b1.isMerging) continue;
@@ -19,19 +17,16 @@ export function resolveCollisions({ balls, particles, onMerge }) {
     for (let j = i + 1; j < n; j++) {
       const b2 = balls[j];
       if (b2.toRemove || b2.isMerging) continue;
+      if (b1.tierIndex !== b2.tierIndex || b1.tierIndex >= TIERS.length - 1) continue;
 
-      if (b1.tierIndex !== b2.tierIndex || b1.tierIndex >= TIERS.length - 1) {
-        continue;
-      }
-
-      const minDist = b1.radius + b2.radius;
+      const contactDist = b1.radius + b2.radius + CONTACT_BUFFER;
       const dx = b2.x - b1.x;
-      if (Math.abs(dx) >= minDist) continue;
+      if (Math.abs(dx) > contactDist) continue;
       const dy = b2.y - b1.y;
-      if (Math.abs(dy) >= minDist) continue;
+      if (Math.abs(dy) > contactDist) continue;
 
       const distSq = dx * dx + dy * dy;
-      if (distSq < minDist * minDist) {
+      if (distSq <= contactDist * contactDist) {
         const targetX = (b1.x + b2.x) / 2;
         const targetY = (b1.y + b2.y) / 2;
         b1.startMerge(targetX, targetY, b1.tierIndex + 1, true);
@@ -40,8 +35,16 @@ export function resolveCollisions({ balls, particles, onMerge }) {
       }
     }
   }
+}
 
-  // 2. Iterative Relaxation Solver for high stability and zero jitter
+export function resolveCollisions({ balls, particles, onMerge }) {
+  const newBalls = [];
+  const n = balls.length;
+
+  // Pass 1: Initial merge detection on incoming contact
+  detectMerges(balls);
+
+  // Pass 2: Iterative Relaxation Solver for rock-solid stability
   for (let iter = 0; iter < SOLVER_ITERATIONS; iter++) {
     for (let i = 0; i < n; i++) {
       const b1 = balls[i];
@@ -58,8 +61,7 @@ export function resolveCollisions({ balls, particles, onMerge }) {
         if (Math.abs(dy) >= minDist) continue;
 
         const distSq = dx * dx + dy * dy;
-        const minDistSq = minDist * minDist;
-        if (distSq >= minDistSq || distSq === 0) continue;
+        if (distSq >= minDist * minDist || distSq === 0) continue;
 
         const dist = Math.sqrt(distSq);
         const overlap = minDist - dist;
@@ -70,7 +72,7 @@ export function resolveCollisions({ balls, particles, onMerge }) {
         const invM1 = b2.mass / totalMass;
         const invM2 = b1.mass / totalMass;
 
-        // Position relaxation (split overlap cleanly)
+        // Position relaxation
         const separationRatio = 0.55;
         b1.x -= nx * overlap * invM1 * separationRatio;
         b1.y -= ny * overlap * invM1 * separationRatio;
@@ -82,7 +84,6 @@ export function resolveCollisions({ balls, particles, onMerge }) {
         const rvy = b2.vy - b1.vy;
         const velAlongNormal = rvx * nx + rvy * ny;
 
-        // Only apply impulse if objects are moving toward each other
         if (velAlongNormal < 0) {
           const restitution = Math.abs(velAlongNormal) > RESTITUTION_THRESHOLD ? 0.2 : 0.0;
           const impulseMag = -(1 + restitution) * velAlongNormal / (1 / b1.mass + 1 / b2.mass);
@@ -107,7 +108,10 @@ export function resolveCollisions({ balls, particles, onMerge }) {
     }
   }
 
-  // 3. Handle completed merge animations
+  // Pass 3: Second confirmation pass for balls pushed into contact by solver
+  detectMerges(balls);
+
+  // Pass 4: Finalize completed merges
   for (let i = 0; i < n; i++) {
     const b = balls[i];
     if (b.isMerging && b.toRemove && b.isMergeLeader) {

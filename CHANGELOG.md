@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2026-11-10
+### Added
+- Pre-merge impact wobble phase: 8-frame elastic compression and squish animation before suction fusion.
+- Dual-pass merge detection: pre-solver contact pass and post-relaxation confirmation pass.
+- Contact distance tolerance buffer (+1.8px) preventing floating point solver stalls on settled touching blobs.
+
 ## [1.3.1] - 2026-11-10
 ### Fixed
 - Corrected top-left status bar `Next:` badge to show the upcoming ball before launch.

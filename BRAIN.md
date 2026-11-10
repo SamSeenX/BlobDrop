@@ -9,12 +9,14 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Focused single aim trajectory ray with linear opacity fade-off towards screen center and edge boundaries.
   - Directional impulse launch with initial velocity (`speed: 14`).
 - **Physics Engine (`src/game/physics.js`, `src/game/ball.js`)**:
+  - Two-stage tactile merge animation: 8-frame elastic collision wobble/compression followed by 10-frame cubic suction into the fusion center.
+  - Dual-pass merge detection: pre-solver sweep catching incoming dynamic contacts, plus post-relaxation confirmation sweep ensuring touching resting blobs never stall.
+  - Generous contact buffer (+1.8px) preventing floating point solver separation from freezing adjacent blobs.
   - Iterative relaxation solver (4 sub-steps) providing rock-solid, jitter-free stacking stability for heavy piles.
   - Tangential friction impulse and resting restitution thresholds (inelastic contact under 0.6 relative velocity).
   - Dynamic wall restitution: high bounce factor (0.88 for fast bank shots with `|vx| > 1.2`) settling to 0.40 and deadband for resting blobs.
   - High-performance broadphase: fast AABB coordinate rejection and squared-distance checks avoiding unnecessary square root operations.
   - Velocity deadband and rigidity damping over time so resting blobs settle firmly.
-  - Ease-in cubic suction merge animation with ~200ms fuse duration, radial `Shockwave`, and spawn squash-and-stretch.
 - **Audio Synthesis (`src/audio/sound.js`)**:
   - Zero sound assets or external audio files.
   - Web Audio API real-time synthesis: sine waveforms for drops, pitch-ramped triangle waves for merges, and sawtooth drops for gameover alerts.
