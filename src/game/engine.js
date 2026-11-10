@@ -7,14 +7,14 @@ import { InputHandler } from './input.js';
 import { calculateTrajectory } from './trajectory.js';
 import { updateParticles } from './particle.js';
 import { getRandomSpawnTier, checkMilestone, checkDangerLimit, launchBallData } from './spawner.js';
+import { applyCanvasResize } from './layout.js';
 
 export class Engine {
   constructor({ canvas, wrapper, renderer }) {
     Object.assign(this, {
       canvas, wrapper, renderer,
-      width: 300, height: 450,
-      originX: 150, originY: 38,
-      aimPos: { x: 150, y: 300 },
+      width: 360, height: 540, scale: 1, dangerY: 75,
+      originX: 180, originY: 38, aimPos: { x: 180, y: 300 },
       balls: [], particles: [], score: 0, gameState: 'START',
       isAiming: false, currentTierIndex: 0, nextTierIndex: 1,
       highestTier: 0, unlockedMilestones: new Set(),
@@ -41,14 +41,7 @@ export class Engine {
   }
 
   resizeCanvas() {
-    if (!this.wrapper) return;
-    this.width = this.wrapper.clientWidth || 300;
-    this.height = this.wrapper.clientHeight || 450;
-    this.originX = this.width / 2;
-    const d = window.devicePixelRatio || 1;
-    this.canvas.width = this.width * d;
-    this.canvas.height = this.height * d;
-    this.renderer.ctx.setTransform(d, 0, 0, d, 0, 0);
+    applyCanvasResize({ wrapper: this.wrapper, canvas: this.canvas, renderer: this.renderer, engine: this });
   }
 
   updateTrajectory() {
@@ -108,7 +101,9 @@ export class Engine {
       this.pause();
       eventBus.emit('milestone:unlocked', {
         currentTier: TIERS[m.currentTierIndex],
-        nextTier: m.nextMilestoneIndex !== null ? TIERS[m.nextMilestoneIndex] : null
+        nextTier: m.nextMilestoneIndex !== null ? TIERS[m.nextMilestoneIndex] : null,
+        isWin4096: m.isWin4096,
+        isGodlike8192: m.isGodlike8192
       });
     }
   }
@@ -118,8 +113,8 @@ export class Engine {
     this.isAiming = false;
     if (!this.trajectory) this.updateTrajectory();
 
-    const { vx, vy } = launchBallData(this.trajectory);
-    this.balls.push(new Ball(this.originX, this.originY, this.currentTierIndex, false, vx, vy));
+    const { vx, vy } = launchBallData(this.trajectory, this.scale);
+    this.balls.push(new Ball(this.originX, this.originY, this.currentTierIndex, false, vx, vy, this.scale));
     audioManager.play('drop');
 
     this.currentTierIndex = this.nextTierIndex;
@@ -158,15 +153,19 @@ export class Engine {
       particles: this.particles,
       width: this.width,
       height: this.height,
+      scale: this.scale,
       onMerge: (tierIdx) => this.handleMerge(tierIdx)
     });
 
-    if (checkDangerLimit(this.balls)) this.triggerGameOver();
+    if (checkDangerLimit(this.balls, this.dangerY, this.scale)) {
+      this.triggerGameOver();
+    }
   }
 
   render() {
     this.renderer.render({
       width: this.width, height: this.height,
+      dangerY: this.dangerY, scale: this.scale,
       balls: this.balls, particles: this.particles,
       isAiming: this.isAiming, originX: this.originX, originY: this.originY,
       currentTierIndex: this.currentTierIndex, trajectory: this.trajectory,

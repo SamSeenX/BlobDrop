@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+
+    <!-- Outer Aura Glow -->
+    <radialGradient id="auraGlow" cx="50%" cy="46%" r="50%">
+      <stop offset="20%" stop-color="#f43f5e" stop-opacity="0.5" />
+      <stop offset="60%" stop-color="#ec4899" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#020617" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Main 3D Jelly Sphere -->
+    <radialGradient id="jellyGrad" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="18%" stop-color="#fda4af" />
+      <stop offset="45%" stop-color="#f43f5e" />
+      <stop offset="85%" stop-color="#be123c" />
+      <stop offset="100%" stop-color="#881337" />
+    </radialGradient>
+
+    <!-- Specular Highlight -->
+    <linearGradient id="specular" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Gold Badge Gradient -->
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <!-- Shadow filter -->
+    <filter id="blobShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#f43f5e" flood-opacity="0.45" />
+    </filter>
+    <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- App Squircle Canvas -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="4" />
+
+  <!-- Outer Neon Aura -->
+  <circle cx="256" cy="235" r="210" fill="url(#auraGlow)" />
+
+  <!-- Ambient Glow Bubbles -->
+  <circle cx="110" cy="130" r="14" fill="#38bdf8" opacity="0.6" />
+  <circle cx="410" cy="150" r="20" fill="#facc15" opacity="0.5" />
+  <circle cx="95" cy="360" r="16" fill="#34d399" opacity="0.5" />
+  <circle cx="420" cy="340" r="12" fill="#c084fc" opacity="0.6" />
+
+  <!-- Main Hero Jelly Blob -->
+  <g filter="url(#blobShadow)">
+    <circle cx="256" cy="235" r="160" fill="url(#jellyGrad)" />
+    <!-- Secondary Bottom Glow -->
+    <ellipse cx="256" cy="370" rx="90" ry="18" fill="#fda4af" opacity="0.35" />
+    <!-- Specular Gloss Highlight -->
+    <ellipse cx="210" cy="165" rx="52" ry="32" transform="rotate(-30 210 165)" fill="url(#specular)" />
+    <circle cx="310" cy="155" r="12" fill="#ffffff" opacity="0.6" />
+  </g>
+
+  <!-- Number "4096" on the Blob -->
+  <text x="256" y="258" font-family="'Outfit', system-ui, -apple-system, sans-serif" font-weight="900" font-size="78" fill="#ffffff" text-anchor="middle" letter-spacing="-2" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.5))">4096</text>
+
+  <!-- Bottom Banner Pill: BLOBDROP -->
+  <g filter="url(#badgeShadow)">
+    <rect x="116" y="408" width="280" height="56" rx="28" fill="#090d16" stroke="rgba(244, 63, 94, 0.6)" stroke-width="3" />
+    <text x="256" y="444" font-family="'Outfit', system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="url(#badgeGrad)" text-anchor="middle" letter-spacing="4">BLOBDROP</text>
+  </g>
+</svg>
