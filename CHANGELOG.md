@@ -1,0 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.0.0] - 2026-11-10
+### Added
+- Modular Vite project setup targeting ES2022 with production minification.
+- Full conversion from monolithic HTML to standard ES6+ modules and semantic Vanilla CSS.
+- Centralized CSS tokens system (`tokens.css`, `base.css`, `header.css`, `status.css`, `canvas.css`, `overlay.css`).
+- Decoupled `EventBus` pub/sub communication and safe persistent storage wrapper (`storage.js`).
+- Web Audio API synthesizer for drop, merge, and game-over sounds.
+- Squishy blob physics engine with collision solver, rigidity scaling, and burst particle effects.
+- Input handler supporting touch and pointer ergonomics (>= 48px targets).
+- Standard project documentation (`BRAIN.md`, `README.md`, `CHANGELOG.md`, `RULES.md`, `SCOPE.md`).
