@@ -1,43 +1,69 @@
+import { TIERS } from '../config/tiers.js';
+
 export function calculateTrajectory({
   originX,
   originY,
   targetX,
   targetY,
   width,
-  height
+  height,
+  scale = 1,
+  tierIndex = 0
 }) {
   let dx = targetX - originX;
   let dy = targetY - originY;
 
-  // Enforce minimum downward angle so ball shoots towards the board
-  if (dy < 12) dy = 12;
+  if (dy < 12 * scale) dy = 12 * scale;
 
   const len = Math.hypot(dx, dy) || 1;
-  const vx = dx / len;
-  const vy = dy / len;
+  const dirX = dx / len;
+  const dirY = dy / len;
 
-  // Fade-off ray length: reaches into the upper-middle of screen (~200px max)
-  const maxDistance = Math.min(210, height * 0.45);
-  let distance = maxDistance;
+  const speed = 14 * scale;
+  let simVx = dirX * speed;
+  let simVy = dirY * speed;
+  let simX = originX;
+  let simY = originY;
 
-  // Stop trajectory line before penetrating wall boundary
-  const edgeMargin = 16;
-  if (vx < -0.001) {
-    const tWall = (edgeMargin - originX) / vx;
-    if (tWall > 0 && tWall < distance) distance = tWall;
-  } else if (vx > 0.001) {
-    const tWall = (width - edgeMargin - originX) / vx;
-    if (tWall > 0 && tWall < distance) distance = tWall;
+  const tier = TIERS[tierIndex] || TIERS[0];
+  const radius = tier.radius * scale;
+  const gravity = 0.40 * scale;
+  const floorY = height - 20 - radius;
+
+  const points = [{ x: simX, y: simY }];
+  const MAX_STEPS = 22;
+
+  for (let i = 0; i < MAX_STEPS; i++) {
+    simVy += gravity;
+    simVx *= 0.985;
+    simVy *= 0.99;
+
+    simX += simVx;
+    simY += simVy;
+
+    if (simX - radius < 0) {
+      simX = radius;
+      simVx = Math.abs(simVx) * 0.88;
+    } else if (simX + radius > width) {
+      simX = width - radius;
+      simVx = -Math.abs(simVx) * 0.88;
+    }
+
+    if (simY >= floorY) {
+      simY = floorY;
+      points.push({ x: simX, y: simY });
+      break;
+    }
+
+    points.push({ x: simX, y: simY });
   }
-
-  const endX = originX + vx * distance;
-  const endY = originY + vy * distance;
 
   return {
     startX: originX,
     startY: originY,
-    endX,
-    endY,
-    launchDir: { x: vx, y: vy }
+    endX: points[points.length - 1].x,
+    endY: points[points.length - 1].y,
+    points,
+    launchDir: { x: dirX, y: dirY }
   };
 }

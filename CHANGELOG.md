@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2026-11-10
+### Added
+- Curved ballistic aim trajectory: `trajectory.js` forward-simulates 22 physical steps integrating gravity (`0.40 * scale`), air drag, and wall ricochet deflections.
+- Multi-segment trajectory rendering: `renderer.js` paints a smooth gravity curve with gradient fade-out and landing dot indicator, eliminating aim discrepancy on angled bank shots.
+
 ## [1.5.0] - 2026-11-10
 ### Added
 - Responsive screen normalization: Standardized 2:3 aspect ratio viewport layout (`layout.js`) scaling blob radii, danger limit, launch speeds, and physics uniformly across all mobile, tablet, and desktop display sizes.

@@ -48,7 +48,8 @@ export class Engine {
     this.trajectory = calculateTrajectory({
       originX: this.originX, originY: this.originY,
       targetX: this.aimPos.x, targetY: this.aimPos.y,
-      width: this.width, height: this.height
+      width: this.width, height: this.height,
+      scale: this.scale, tierIndex: this.currentTierIndex
     });
   }
 
