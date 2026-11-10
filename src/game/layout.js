@@ -27,11 +27,11 @@ export function computeGameLayout(wrapper) {
   wrapper.style.height = `${height}px`;
 
   const scale = width / BASE_WIDTH;
-  const dangerY = Math.round(75 * scale);
+  const dangerY = Math.round(14 * scale);
 
   const dangerEl = document.getElementById('dangerLine');
   if (dangerEl) {
-    dangerEl.style.top = `${dangerY}px`;
+    dangerEl.style.top = '0px';
   }
 
   return {

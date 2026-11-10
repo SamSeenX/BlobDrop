@@ -13,7 +13,7 @@ export class Engine {
   constructor({ canvas, wrapper, renderer }) {
     Object.assign(this, {
       canvas, wrapper, renderer,
-      width: 360, height: 540, scale: 1, dangerY: 75,
+      width: 360, height: 540, scale: 1, dangerY: 14,
       originX: 180, originY: 38, aimPos: { x: 180, y: 300 },
       balls: [], particles: [], score: 0, gameState: 'START',
       isAiming: false, currentTierIndex: 0, nextTierIndex: 1,

@@ -25,13 +25,12 @@
 
 .danger-line {
   position: absolute;
-  top: 75px;
+  top: 0;
   left: 0;
   width: 100%;
-  border-top: 2px dashed rgba(239, 68, 68, 0.85);
+  border-top: 3px dashed rgba(239, 68, 68, 0.85);
   pointer-events: none;
   z-index: 10;
-  transition: top 0.2s ease-out;
 }
 
 #gameCanvas {

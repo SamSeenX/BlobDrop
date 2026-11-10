@@ -6,7 +6,8 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
 ## Core Modules & Design
 - **Responsive Screen Normalization & Fair Viewport (`src/game/layout.js`, `src/styles/canvas.css`)**:
   - Enforced 2:3 aspect ratio containment: Regardless of screen resolution or orientation, `.canvas-wrapper` locks to 2:3 proportions, eliminating unfair vertical stacking advantages on tall or high-PPI screens.
-  - Uniform scale factor (`scale = width / 360`): All blob radii, danger limit (`75 * scale`), launch speed (`14 * scale`), and gravity (`0.40 * scale`) scale uniformly.
+  - Uniform scale factor (`scale = width / 360`): All blob radii, danger limit (`14 * scale`), launch speed (`14 * scale`), and gravity (`0.40 * scale`) scale uniformly.
+  - Danger limit on top rim: Pinned `.danger-line` to `top: 0` along the container ceiling with zero mid-playfield line obstruction.
   - Dynamic ball rescaling: Window resize or orientation change triggers `rescaleBalls()` without glitching or dropping balls out of bounds.
 - **Physics Engine & Edge Containment (`src/game/physics.js`, `src/game/ball.js`, `src/game/ballMerge.js`)**:
   - Full perimeter edge containment: All blobs (moving, resting, or in merge wobble/suction) are strictly contained within `[radius, width - radius]` horizontally and `[radius, height - 20 - radius]` vertically.
