@@ -45,7 +45,6 @@ export class Ball {
     if (this.isMerging) {
       this.mergeFrame++;
       const t = Math.min(1, this.mergeFrame / this.mergeDuration);
-      // Ease-in cubic curve for magnetic suction
       const easeIn = t * t * t;
       this.x = this.startX + (this.targetX - this.startX) * easeIn;
       this.y = this.startY + (this.targetY - this.startY) * easeIn;
@@ -61,41 +60,51 @@ export class Ball {
     }
 
     this.age++;
-    this.vy += 0.42;
-    this.vx *= 0.99;
+    this.vy += 0.40;
+    this.vx *= 0.985;
     this.vy *= 0.99;
+
+    // Velocity deadband to prevent micro-jitter
+    if (Math.abs(this.vx) < 0.03) this.vx = 0;
+    if (Math.abs(this.vy) < 0.05) this.vy = 0;
 
     this.x += this.vx;
     this.y += this.vy;
 
-    this.angularVelocity = this.vx / this.radius;
-    this.rotation += this.angularVelocity;
+    if (Math.abs(this.vx) > 0.03) {
+      this.angularVelocity = this.vx / this.radius;
+      this.rotation += this.angularVelocity;
+    }
 
-    const rigidityFactor = Math.min(1, this.age / 240);
-    this.scaleX += (1 - this.scaleX) * (0.08 + rigidityFactor * 0.15);
-    this.scaleY += (1 - this.scaleY) * (0.08 + rigidityFactor * 0.15);
+    // Rigidity settling: jello -> firm body over 200 frames
+    const rigidityFactor = Math.min(1, this.age / 200);
+    this.scaleX += (1 - this.scaleX) * (0.08 + rigidityFactor * 0.16);
+    this.scaleY += (1 - this.scaleY) * (0.08 + rigidityFactor * 0.16);
 
     if (Math.abs(1 - this.scaleX) < 0.001) this.scaleX = 1;
     if (Math.abs(1 - this.scaleY) < 0.001) this.scaleY = 1;
 
-    // Boundary collisions
+    // Wall collisions
     const m = this.radius;
     if (this.x - m < 0) {
       this.x = m;
-      this.vx *= -0.35;
+      this.vx *= -0.25;
+      if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
     if (this.x + m > width) {
       this.x = width - m;
-      this.vx *= -0.35;
+      this.vx *= -0.25;
+      if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
 
+    // Floor collision
     const floorY = height - 20 - this.radius;
     if (this.y > floorY) {
       this.y = floorY;
-      this.vy *= -0.2;
-      this.vx *= 0.92;
-      if (Math.abs(this.vy) < 0.3) this.vy = 0;
-      if (Math.abs(this.vx) < 0.05) this.vx = 0;
+      this.vy *= -0.15;
+      this.vx *= 0.88;
+      if (Math.abs(this.vy) < 0.35) this.vy = 0;
+      if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
   }
 
