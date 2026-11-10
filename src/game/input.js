@@ -1,43 +1,43 @@
 export class InputHandler {
-  constructor({ canvas, getAimRadius, getWidth, onAim, onDrop }) {
+  constructor({ canvas, onAim, onDrop }) {
     this.canvas = canvas;
-    this.getAimRadius = getAimRadius;
-    this.getWidth = getWidth;
     this.onAim = onAim;
     this.onDrop = onDrop;
     this.isAiming = false;
     this.bind();
   }
 
-  getPointerX(e) {
+  getPointerPos(e) {
     const rect = this.canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    return clientX - rect.left;
-  }
-
-  clampDropX(rawX) {
-    const radius = this.getAimRadius();
-    const width = this.getWidth();
-    return Math.max(radius, Math.min(width - radius, rawX));
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
   }
 
   bind() {
     this.canvas.addEventListener('pointerdown', (e) => {
       this.isAiming = true;
-      const dropX = this.clampDropX(this.getPointerX(e));
-      this.onAim(dropX);
+      const pos = this.getPointerPos(e);
+      this.onAim(pos.x, pos.y);
     });
 
     this.canvas.addEventListener('pointermove', (e) => {
       if (!this.isAiming) return;
-      const dropX = this.clampDropX(this.getPointerX(e));
-      this.onAim(dropX);
+      const pos = this.getPointerPos(e);
+      this.onAim(pos.x, pos.y);
     });
 
-    this.canvas.addEventListener('pointerup', () => {
+    const release = () => {
       if (!this.isAiming) return;
       this.isAiming = false;
       this.onDrop();
-    });
+    };
+
+    this.canvas.addEventListener('pointerup', release);
+    this.canvas.addEventListener('pointercancel', release);
+    window.addEventListener('pointerup', release);
   }
 }

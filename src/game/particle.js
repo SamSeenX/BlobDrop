@@ -57,3 +57,10 @@ export class Shockwave {
     ctx.restore();
   }
 }
+
+export function updateParticles(particles) {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    if (particles[i].alpha <= 0) particles.splice(i, 1);
+  }
+}
