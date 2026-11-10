@@ -17,11 +17,12 @@ export class Ball {
     this.age = 0;
     this.toRemove = false;
 
-    // Merge suction state
+    // Merge state with pre-merge wobble
     this.isMerging = false;
     this.isMergeLeader = false;
     this.mergeFrame = 0;
-    this.mergeDuration = 12;
+    this.wobbleDuration = 8;
+    this.mergeDuration = 18;
     this.startX = x;
     this.startY = y;
     this.targetX = x;
@@ -39,19 +40,33 @@ export class Ball {
     this.targetY = targetY;
     this.nextTier = nextTier;
     this.mergeFrame = 0;
+    this.vx *= 0.2;
+    this.vy *= 0.2;
   }
 
   update(width, height) {
     if (this.isMerging) {
       this.mergeFrame++;
-      const t = Math.min(1, this.mergeFrame / this.mergeDuration);
+
+      // Phase 1: Physical impact wobble and compression
+      if (this.mergeFrame <= this.wobbleDuration) {
+        const progress = this.mergeFrame / this.wobbleDuration;
+        const wobble = Math.sin(progress * Math.PI);
+        this.scaleX = 1 + wobble * 0.24;
+        this.scaleY = 1 - wobble * 0.20;
+        return;
+      }
+
+      // Phase 2: Suction fusion into target center
+      const suctionProgress = (this.mergeFrame - this.wobbleDuration) / (this.mergeDuration - this.wobbleDuration);
+      const t = Math.min(1, suctionProgress);
       const easeIn = t * t * t;
       this.x = this.startX + (this.targetX - this.startX) * easeIn;
       this.y = this.startY + (this.targetY - this.startY) * easeIn;
-      const squish = Math.max(0.2, 1 - easeIn * 0.65);
+      const squish = Math.max(0.18, 1 - easeIn * 0.72);
       this.scaleX = squish;
       this.scaleY = squish;
-      this.alpha = Math.max(0.15, 1 - easeIn * 0.7);
+      this.alpha = Math.max(0.15, 1 - easeIn * 0.8);
 
       if (this.mergeFrame >= this.mergeDuration) {
         this.toRemove = true;
