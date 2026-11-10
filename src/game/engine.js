@@ -18,7 +18,8 @@ export class Engine {
       balls: [], particles: [], score: 0, gameState: 'START',
       isAiming: false, currentTierIndex: 0, nextTierIndex: 1,
       highestTier: 0, unlockedMilestones: new Set(),
-      canDrop: true, comboMultiplier: 1, comboTimer: 0, trajectory: null
+      canDrop: true, comboMultiplier: 1, comboTimer: 0, trajectory: null,
+      spawnProgress: 1
     });
 
     this.input = new InputHandler({
@@ -52,12 +53,9 @@ export class Engine {
 
   updateTrajectory() {
     this.trajectory = calculateTrajectory({
-      originX: this.originX,
-      originY: this.originY,
-      targetX: this.aimPos.x,
-      targetY: this.aimPos.y,
-      width: this.width,
-      height: this.height
+      originX: this.originX, originY: this.originY,
+      targetX: this.aimPos.x, targetY: this.aimPos.y,
+      width: this.width, height: this.height
     });
   }
 
@@ -80,7 +78,7 @@ export class Engine {
       balls: [], particles: [], score: 0, highestTier: 0,
       comboMultiplier: 1, comboTimer: 0,
       currentTierIndex: getRandomSpawnTier(0), nextTierIndex: getRandomSpawnTier(0),
-      gameState: 'PLAYING', trajectory: null, isAiming: false
+      gameState: 'PLAYING', trajectory: null, isAiming: false, spawnProgress: 0.15
     });
     this.unlockedMilestones.clear();
     eventBus.emit('score:update', { score: 0 });
@@ -133,6 +131,7 @@ export class Engine {
 
     this.trajectory = null;
     this.canDrop = false;
+    this.spawnProgress = 0;
     setTimeout(() => { this.canDrop = true; }, 320);
   }
 
@@ -142,6 +141,10 @@ export class Engine {
     if (this.comboTimer > 0 && --this.comboTimer === 0) {
       this.comboMultiplier = 1;
       eventBus.emit('combo:reset');
+    }
+
+    if (this.spawnProgress < 1) {
+      this.spawnProgress = Math.min(1, this.spawnProgress + 0.065);
     }
 
     updateParticles(this.particles);
@@ -163,16 +166,11 @@ export class Engine {
 
   render() {
     this.renderer.render({
-      width: this.width,
-      height: this.height,
-      balls: this.balls,
-      particles: this.particles,
-      isAiming: this.isAiming,
-      originX: this.originX,
-      originY: this.originY,
-      currentTierIndex: this.currentTierIndex,
-      trajectory: this.trajectory,
-      isPlaying: this.gameState === 'PLAYING'
+      width: this.width, height: this.height,
+      balls: this.balls, particles: this.particles,
+      isAiming: this.isAiming, originX: this.originX, originY: this.originY,
+      currentTierIndex: this.currentTierIndex, trajectory: this.trajectory,
+      spawnProgress: this.spawnProgress, isPlaying: this.gameState === 'PLAYING'
     });
   }
 }
