@@ -80,8 +80,10 @@ export class Renderer {
       this.drawCannon({ originX, originY, currentTierIndex, isAiming, trajectory });
     }
 
-    for (let i = 0; i < balls.length; i++) {
-      balls[i].draw(this.ctx);
+    // Render larger balls first so smaller balls always appear in front
+    const sortedBalls = balls.slice().sort((a, b) => b.tierIndex - a.tierIndex);
+    for (let i = 0; i < sortedBalls.length; i++) {
+      sortedBalls[i].draw(this.ctx);
     }
 
     for (let i = 0; i < particles.length; i++) {

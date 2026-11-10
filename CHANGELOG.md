@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2026-11-10
+### Added
+- Tier-based z-index draw sorting in `renderer.js`: larger blobs render first to background, ensuring smaller blobs always appear visible in the foreground upon overlap.
+
 ## [1.3.3] - 2026-11-10
 ### Added
 - Pre-cached offscreen sprite textures in `spriteCache.js` for all 12 tiers, eliminating expensive runtime `shadowBlur` and per-frame `createRadialGradient` allocations.
