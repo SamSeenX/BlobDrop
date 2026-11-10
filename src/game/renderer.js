@@ -32,22 +32,34 @@ export class Renderer {
   }
 
   drawTrajectory(trajectory, tier) {
-    if (!trajectory) return;
+    if (!trajectory || !trajectory.points || trajectory.points.length < 2) return;
+    const { points } = trajectory;
+    const len = points.length;
+    const startPt = points[0], endPt = points[len - 1];
+
     this.ctx.save();
-    const grad = this.ctx.createLinearGradient(
-      trajectory.startX, trajectory.startY,
-      trajectory.endX, trajectory.endY
-    );
-    grad.addColorStop(0, tier.color);
-    grad.addColorStop(0.35, tier.color);
-    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    this.ctx.strokeStyle = grad;
     this.ctx.lineWidth = 2.5;
     this.ctx.setLineDash([5, 5]);
+
+    const grad = this.ctx.createLinearGradient(startPt.x, startPt.y, endPt.x, endPt.y);
+    grad.addColorStop(0, tier.color);
+    grad.addColorStop(0.4, tier.color);
+    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    this.ctx.strokeStyle = grad;
+
     this.ctx.beginPath();
-    this.ctx.moveTo(trajectory.startX, trajectory.startY);
-    this.ctx.lineTo(trajectory.endX, trajectory.endY);
+    this.ctx.moveTo(startPt.x, startPt.y);
+    for (let i = 1; i < len; i++) {
+      this.ctx.lineTo(points[i].x, points[i].y);
+    }
     this.ctx.stroke();
+
+    this.ctx.setLineDash([]);
+    this.ctx.fillStyle = tier.glow;
+    this.ctx.beginPath();
+    this.ctx.arc(endPt.x, endPt.y, 3, 0, Math.PI * 2);
+    this.ctx.fill();
+
     this.ctx.restore();
   }
 

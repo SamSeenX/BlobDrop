@@ -24,8 +24,9 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Offline-first cache service worker for instant launches and offline play.
   - 512x512 glowing vector jelly squircle icon with maskable PWA badge support.
   - Native standalone display mode and theme-color styling.
-- **Cannon Launcher, Reload Animation & Trajectory (`src/game/trajectory.js`, `src/game/renderer.js`, `src/game/input.js`)**:
+- **Cannon Launcher, Ballistic Trajectory & Reload Animation (`src/game/trajectory.js`, `src/game/renderer.js`, `src/game/input.js`)**:
   - Center-top mounted cannon aiming from `(width / 2, 38 * scale)`.
+  - Curved ballistic aim trajectory: 22-step forward simulation in `trajectory.js` integrating exact launch velocity (`14 * scale`), downward gravity (`0.40 * scale`), air drag (`0.985 / 0.99`), and wall bounce ricochets.
   - Elastic cannon reload entry animation: Blob slides smoothly down from off-screen above into shoot position over ~260ms.
   - Exponentially dampened harmonic bounce on arrival at the muzzle.
 - **Sprite Texture Cache & Depth Rendering (`src/game/spriteCache.js`, `src/game/renderer.js`)**:
