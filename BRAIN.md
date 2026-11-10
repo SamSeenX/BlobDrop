@@ -4,8 +4,9 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
-- **Sprite Texture Cache (`src/game/spriteCache.js`)**:
+- **Sprite Texture Cache & Depth Rendering (`src/game/spriteCache.js`, `src/game/renderer.js`)**:
   - Pre-renders high-DPI offscreen canvas textures once per tier (radial body, soft aura glow, gloss highlight, tier typography).
+  - Tier-based z-index draw sorting: larger background blobs render first, smaller foreground blobs render last to prevent visual obscuration.
   - Single hardware-accelerated `ctx.drawImage` blit per ball per frame (< 1ms frame rendering).
   - Eliminates runtime `shadowBlur` Gaussian passes and continuous gradient garbage collection.
 - **Fixed Timestep Loop (`src/main.js`)**:
@@ -25,6 +26,7 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Tangential friction impulse and resting restitution thresholds (inelastic contact under 0.6 relative velocity).
   - Dynamic wall restitution: high bounce factor (0.88 for fast bank shots with `|vx| > 1.2`) settling to 0.40 and deadband for resting blobs.
   - High-performance broadphase: fast AABB coordinate rejection and squared-distance checks avoiding unnecessary square root operations.
+  - Velocity deadband and rigidity damping over time so resting blobs settle firmly.
 - **Audio Synthesis (`src/audio/sound.js`)**:
   - Zero sound assets or external audio files.
   - Web Audio API real-time synthesis: sine waveforms for drops, pitch-ramped triangle waves for merges, and sawtooth drops for gameover alerts.
