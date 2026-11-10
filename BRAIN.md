@@ -22,6 +22,12 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Sliding spawn floor: Dynamically phases out low-tier blobs (drops 2s after 512, drops 4s after 1024, drops 8s after 2048) to keep endgame boards playable.
   - Milestone unlock overlays: Celebrated pause events for 1024, 2048, and 4096.
   - Standardized 300x100 ad placeholder container integrated on both milestone and game over overlays.
+- **Cannon Launcher, Reload Animation & Trajectory (`src/game/trajectory.js`, `src/game/renderer.js`, `src/game/input.js`)**:
+  - Center-top mounted cannon aiming from `(width / 2, 38)`.
+  - Elastic cannon reload entry animation: Blob slides smoothly down from off-screen above into shoot position over ~260ms upon firing or starting game.
+  - Jelly touchdown wobble: Exponentially dampened harmonic bounce on arrival at the muzzle.
+  - Focused single aim trajectory ray with linear opacity fade-off towards screen center and edge boundaries.
+  - Directional impulse launch with initial velocity (`speed: 14`).
 - **Sprite Texture Cache & Depth Rendering (`src/game/spriteCache.js`, `src/game/renderer.js`)**:
   - Pre-renders high-DPI offscreen canvas textures once per tier (radial body, soft aura glow, gloss highlight, tier typography).
   - Tier-based z-index draw sorting: Larger background blobs render first, smaller foreground blobs render last to prevent visual obscuration.
@@ -29,10 +35,6 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
 - **Fixed Timestep Loop (`src/main.js`)**:
   - Deterministic 60 FPS physics accumulator loop decoupled from display refresh rate.
   - Timing accumulator cleanly reset upon unpause/resume events.
-- **Cannon Launcher & Trajectory (`src/game/trajectory.js`, `src/game/input.js`)**:
-  - Center-top mounted cannon aiming from `(width / 2, 38)`.
-  - Focused single aim trajectory ray with linear opacity fade-off towards screen center and edge boundaries.
-  - Directional impulse launch with initial velocity (`speed: 14`).
 - **Audio Synthesis (`src/audio/sound.js`)**:
   - Zero sound assets or external audio files.
   - Web Audio API real-time synthesis: sine waveforms for drops, pitch-ramped triangle waves for merges, and sawtooth drops for gameover alerts.

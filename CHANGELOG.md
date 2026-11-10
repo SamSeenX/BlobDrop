@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.3] - 2026-11-10
+### Added
+- Elastic cannon reload entry animation: Active blob slides smoothly down from above screen boundaries into the cannon shoot position over ~260ms upon firing or starting game.
+- Jelly touchdown wobble: Blob compresses on arrival with an exponential dampening harmonic wobble before firmly settling at the muzzle.
+
 ## [1.4.2] - 2026-11-10
 ### Fixed
 - Perimeter edge containment during merges: Both merging blobs and their moving center of mass are clamped to screen boundaries and floor, completely eliminating side wall and bottom floor penetration during wobble and suction phases.
