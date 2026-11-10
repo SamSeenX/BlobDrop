@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BlobDrop: 4096 - Viral Merge Puzzle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/index.css">
+</head>
+<body>
+
+  <!-- Header / Scoreboard -->
+  <header class="game-header">
+    <div class="title-wrap">
+      <h1 class="display-font viral-badge">BLOBDROP: 4096</h1>
+      <p class="subtitle">Balanced Jelly Physics</p>
+    </div>
+    <div class="scores-wrap">
+      <div class="score-card">
+        <div class="score-label">Score</div>
+        <div id="scoreDisplay" class="score-value">0</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Best</div>
+        <div id="bestDisplay" class="score-value best">0</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Next Element Preview Bar & Combo Counter -->
+  <div class="status-bar">
+    <div class="next-pill">
+      <span class="next-label">Next:</span>
+      <div id="nextPreviewCircle" class="next-circle"></div>
+      <span id="nextPreviewName" class="next-name">2</span>
+    </div>
+
+    <div id="comboBadge" class="combo-badge hidden animate-bounce">
+      🔥 COMBO x2
+    </div>
+
+    <button id="muteBtn" class="icon-btn" aria-label="Toggle Sound">
+      <span id="muteIcon">🔊</span>
+      <span id="muteText">Sound</span>
+    </button>
+  </div>
+
+  <!-- Game Canvas Container -->
+  <main class="game-main">
+    <div id="canvasWrapper" class="canvas-wrapper">
+      <div id="dangerLine" class="danger-line"></div>
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- Game Over / Start Overlay -->
+      <div id="gameOverlay" class="game-overlay">
+        <div id="overlayContent">
+          <div class="overlay-icon-wrap viral-badge">
+            <span>🫧</span>
+          </div>
+          <h2 id="overlayTitle" class="display-font overlay-title">BLOBDROP: 4096</h2>
+          <p id="overlaySub" class="overlay-sub">
+            Drop matching numbers, watch them merge and stack. Don't let blobs reach the top!
+          </p>
+          <button id="actionBtn" class="action-btn">
+            PLAY NOW
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer / Viral Tips -->
+  <footer class="game-footer">
+    <p class="footer-tip">
+      💡 <strong>Pro-Tip:</strong> Heavy blobs crush smaller ones! Chain merges for massive score multipliers.
+    </p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
