@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.2] - 2026-11-10
+### Fixed
+- Top-edge danger threshold alignment: Pinned `.danger-line` to `top: 0` along the container's top rim and eliminated the floating mid-canvas dashed line that appeared below the aiming blob.
+- Overflow detection at top ceiling: Calibrated `dangerY` to the top rim threshold (`14 * scale`) so game over triggers only when stacked blobs genuinely breach the top boundary.
+
 ## [1.5.1] - 2026-11-10
 ### Added
 - Curved ballistic aim trajectory: `trajectory.js` forward-simulates 22 physical steps integrating gravity (`0.40 * scale`), air drag, and wall ricochet deflections.

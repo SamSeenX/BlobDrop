@@ -21,14 +21,6 @@ export class Renderer {
       this.ctx.lineTo(x, height - 20);
     }
     this.ctx.stroke();
-
-    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    this.ctx.setLineDash([4, 6]);
-    this.ctx.beginPath();
-    this.ctx.moveTo(10, dangerY);
-    this.ctx.lineTo(width - 10, dangerY);
-    this.ctx.stroke();
-    this.ctx.setLineDash([]);
   }
 
   drawTrajectory(trajectory, tier) {

@@ -25,7 +25,7 @@ export function checkMilestone(tierIndex, unlockedSet) {
   return { isMilestone: false };
 }
 
-export function checkDangerLimit(balls, dangerY = 75, scale = 1) {
+export function checkDangerLimit(balls, dangerY = 14, scale = 1) {
   const velLimit = 0.6 * scale;
   for (let i = 0; i < balls.length; i++) {
     const b = balls[i];
