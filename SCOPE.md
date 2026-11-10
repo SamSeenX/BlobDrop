@@ -3,6 +3,9 @@
 ## In-Scope Features (Current)
 - [x] Vite dev and build workflow.
 - [x] Modular Vanilla JS architecture (< 200 lines per file).
+- [x] Center-top cannon aiming system with multi-bounce trajectory line.
+- [x] Wall bounce ricochet dynamics with energetic restitution.
+- [x] In-flight next-ball queue preview badge during active aim hold.
 - [x] 12 blob tiers (2 to 4096) with dynamic mass, radii, and color gradients.
 - [x] Dynamic audio synthesizer using Web Audio API.
 - [x] Chain combo score multiplier and high score tracking in `localStorage`.

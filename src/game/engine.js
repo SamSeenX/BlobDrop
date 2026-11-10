@@ -4,6 +4,8 @@ import { resolveCollisions } from './physics.js';
 import { audioManager } from '../audio/sound.js';
 import { eventBus } from '../core/eventBus.js';
 import { InputHandler } from './input.js';
+import { calculateTrajectory } from './trajectory.js';
+import { updateParticles } from './particle.js';
 
 export class Engine {
   constructor({ canvas, wrapper, renderer }) {
@@ -13,45 +15,60 @@ export class Engine {
 
     this.width = 300;
     this.height = 450;
+    this.originX = 150;
+    this.originY = 38;
+    this.aimPos = { x: 150, y: 300 };
     this.balls = [];
     this.particles = [];
     this.score = 0;
     this.gameState = 'START';
-    this.dropX = 150;
     this.isAiming = false;
     this.currentTierIndex = 0;
     this.nextTierIndex = 1;
     this.canDrop = true;
     this.comboMultiplier = 1;
     this.comboTimer = 0;
+    this.trajectory = null;
 
     this.input = new InputHandler({
       canvas: this.canvas,
-      getAimRadius: () => TIERS[this.currentTierIndex].radius,
-      getWidth: () => this.width,
-      onAim: (x) => {
-        if (this.gameState !== 'PLAYING') return;
-        this.isAiming = true;
-        this.dropX = x;
-      },
-      onDrop: () => this.handleDrop()
+      onAim: (x, y) => this.handleAim(x, y),
+      onDrop: () => this.handleLaunch()
     });
 
     this.resizeCanvas();
     window.addEventListener('resize', () => this.resizeCanvas());
   }
 
+  handleAim(x, y) {
+    if (this.gameState !== 'PLAYING') return;
+    this.isAiming = true;
+    this.aimPos = { x, y };
+    this.updateTrajectory();
+  }
+
   resizeCanvas() {
     if (!this.wrapper) return;
     this.width = this.wrapper.clientWidth || 300;
     this.height = this.wrapper.clientHeight || 450;
+    this.originX = this.width / 2;
     const dpr = window.devicePixelRatio || 1;
     this.canvas.width = this.width * dpr;
     this.canvas.height = this.height * dpr;
-    const ctx = this.renderer.ctx;
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    if (this.dropX > this.width) this.dropX = this.width / 2;
+    this.renderer.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  updateTrajectory() {
+    const radius = TIERS[this.currentTierIndex].radius;
+    this.trajectory = calculateTrajectory({
+      originX: this.originX,
+      originY: this.originY,
+      targetX: this.aimPos.x,
+      targetY: this.aimPos.y,
+      radius,
+      width: this.width,
+      height: this.height
+    });
   }
 
   start() {
@@ -63,8 +80,9 @@ export class Engine {
     this.currentTierIndex = Math.floor(Math.random() * 3);
     this.nextTierIndex = Math.floor(Math.random() * 3);
     this.gameState = 'PLAYING';
-
-    eventBus.emit('score:update', { score: this.score });
+    this.trajectory = null;
+    this.isAiming = false;
+    eventBus.emit('score:update', { score: 0 });
     eventBus.emit('next:update', {
       currentTier: TIERS[this.currentTierIndex],
       nextTier: TIERS[this.nextTierIndex]
@@ -82,25 +100,23 @@ export class Engine {
   handleMerge(tierIndex) {
     this.comboTimer = 45;
     this.comboMultiplier = Math.min(8, this.comboMultiplier + 1);
-    const pointsEarned = TIERS[tierIndex].points * this.comboMultiplier;
-    this.score += pointsEarned;
-
+    this.score += TIERS[tierIndex].points * this.comboMultiplier;
     eventBus.emit('score:update', { score: this.score });
     eventBus.emit('combo:update', { multiplier: this.comboMultiplier });
   }
 
-  handleDrop() {
+  handleLaunch() {
     if (this.gameState !== 'PLAYING' || !this.canDrop) {
       this.isAiming = false;
       return;
     }
     this.isAiming = false;
+    if (!this.trajectory) this.updateTrajectory();
 
-    const radius = TIERS[this.currentTierIndex].radius;
-    const clampedX = Math.max(radius, Math.min(this.width - radius, this.dropX));
-    const dropY = Math.max(70 + radius, 40);
-
-    this.balls.push(new Ball(clampedX, dropY, this.currentTierIndex));
+    const speed = 13;
+    const vx = this.trajectory.launchDir.x * speed;
+    const vy = this.trajectory.launchDir.y * speed;
+    this.balls.push(new Ball(this.originX, this.originY, this.currentTierIndex, false, vx, vy));
     audioManager.play('drop');
 
     this.currentTierIndex = this.nextTierIndex;
@@ -110,27 +126,20 @@ export class Engine {
       nextTier: TIERS[this.nextTierIndex]
     });
 
+    this.trajectory = null;
     this.canDrop = false;
-    setTimeout(() => { this.canDrop = true; }, 300);
+    setTimeout(() => { this.canDrop = true; }, 320);
   }
 
   update() {
     if (this.gameState !== 'PLAYING') return;
 
-    if (this.comboTimer > 0) {
-      this.comboTimer--;
-      if (this.comboTimer === 0) {
-        this.comboMultiplier = 1;
-        eventBus.emit('combo:reset');
-      }
+    if (this.comboTimer > 0 && --this.comboTimer === 0) {
+      this.comboMultiplier = 1;
+      eventBus.emit('combo:reset');
     }
 
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      this.particles[i].update();
-      if (this.particles[i].alpha <= 0) {
-        this.particles.splice(i, 1);
-      }
-    }
+    updateParticles(this.particles);
 
     for (let i = 0; i < this.balls.length; i++) {
       this.balls[i].update(this.width, this.height);
@@ -142,10 +151,9 @@ export class Engine {
       onMerge: (tierIdx) => this.handleMerge(tierIdx)
     });
 
-    const dangerLimitY = 12;
     for (let i = 0; i < this.balls.length; i++) {
-      const ball = this.balls[i];
-      if (!ball.isMerging && ball.y - ball.radius <= dangerLimitY && Math.abs(ball.vy) < 0.6) {
+      const b = this.balls[i];
+      if (!b.isMerging && b.age > 45 && b.y - b.radius <= 75 && Math.abs(b.vy) < 0.6) {
         this.triggerGameOver();
         break;
       }
@@ -159,8 +167,11 @@ export class Engine {
       balls: this.balls,
       particles: this.particles,
       isAiming: this.isAiming,
-      dropX: this.dropX,
+      originX: this.originX,
+      originY: this.originY,
       currentTierIndex: this.currentTierIndex,
+      nextTierIndex: this.nextTierIndex,
+      trajectory: this.trajectory,
       isPlaying: this.gameState === 'PLAYING'
     });
   }

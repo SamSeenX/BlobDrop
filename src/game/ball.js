@@ -1,15 +1,15 @@
 import { TIERS } from '../config/tiers.js';
 
 export class Ball {
-  constructor(x, y, tierIndex, isSpawning = false) {
+  constructor(x, y, tierIndex, isSpawning = false, initialVx = 0, initialVy = 0) {
     this.x = x;
     this.y = y;
     this.tierIndex = tierIndex;
     const t = TIERS[tierIndex];
     this.radius = t.radius;
     this.mass = t.mass;
-    this.vx = 0;
-    this.vy = isSpawning ? -1.2 : 0;
+    this.vx = initialVx;
+    this.vy = isSpawning ? -1.2 : initialVy;
     this.scaleX = isSpawning ? 1.4 : 1.15;
     this.scaleY = isSpawning ? 0.65 : 0.85;
     this.rotation = Math.random() * Math.PI * 2;
@@ -88,12 +88,14 @@ export class Ball {
     const m = this.radius;
     if (this.x - m < 0) {
       this.x = m;
-      this.vx *= -0.25;
+      const restitution = Math.abs(this.vx) > 1.5 ? 0.75 : 0.35;
+      this.vx = -this.vx * restitution;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
     if (this.x + m > width) {
       this.x = width - m;
-      this.vx *= -0.25;
+      const restitution = Math.abs(this.vx) > 1.5 ? 0.75 : 0.35;
+      this.vx = -this.vx * restitution;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
 

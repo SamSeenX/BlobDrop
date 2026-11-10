@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-11-10
+### Added
+- Center-top cannon aiming system replacing top-drop spawner.
+- Multi-bounce laser trajectory guide with wall reflection physics in dedicated `trajectory.js`.
+- Responsive wall ricochet mechanics with tuned restitution (0.75 for fast bank shots).
+- In-flight queue preview displaying the upcoming next ball directly above the cannon muzzle during aim hold.
+- Spawn grace period (45 frames) to prevent false game-over triggers during launch exit.
+
 ## [1.2.0] - 2026-11-10
 ### Added
 - Multi-pass (4x) iterative relaxation solver in `physics.js` eliminating pyramid stacking jitter.
