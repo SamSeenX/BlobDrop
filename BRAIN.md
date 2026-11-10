@@ -4,14 +4,11 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
-- **Progressive Spawner & Milestones (`src/game/spawner.js`, `src/ui/uiManager.js`)**:
-  - Sliding spawn floor: dynamically phases out low-tier blobs (drops 2s after 512, drops 4s after 1024, drops 8s after 2048) to keep endgame boards playable.
-  - Milestone unlock overlays: celebrated pause events for 1024, 2048, and 4096.
-  - Standardized 300x100 ad placeholder container integrated on both milestone and game over overlays.
 - **Physics Engine & Momentum Transfer (`src/game/physics.js`, `src/game/ball.js`)**:
-  - Inelastic momentum inheritance: merged blobs inherit `((v1 + v2) / 2 * 0.82)` velocity, carrying active impact without freezing.
+  - Continuous merge trajectory: center of mass and both merging blobs continuously travel with shared momentum `((v1 + v2) / 2 * 0.85)` and gravity throughout wobble and suction phases, completely eliminating mid-air freezing.
+  - Live momentum inheritance: merged blobs spawn directly with active accumulated velocity and wall/floor collision responses.
   - Relative mass dynamics: inverse-mass displacement partitioning and amplified restitution (0.38) when light blobs impact heavy masses.
-  - Two-stage tactile merge animation: 8-frame elastic collision wobble/compression followed by 10-frame cubic suction into the fusion center.
+  - Two-stage tactile merge animation: 8-frame elastic collision wobble/compression followed by 10-frame cubic suction into the moving fusion center.
   - Dual-pass merge detection: pre-solver sweep catching incoming dynamic contacts, plus post-relaxation confirmation sweep ensuring touching resting blobs never stall.
   - Generous contact buffer (+1.8px) preventing floating point solver separation from freezing adjacent blobs.
   - Iterative relaxation solver (4 sub-steps) providing rock-solid, jitter-free stacking stability for heavy piles.
@@ -19,6 +16,10 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Dynamic wall restitution: high bounce factor (0.88 for fast bank shots with `|vx| > 1.2`) settling to 0.40 and deadband for resting blobs.
   - High-performance broadphase: fast AABB coordinate rejection and squared-distance checks avoiding unnecessary square root operations.
   - Velocity deadband and rigidity damping over time so resting blobs settle firmly.
+- **Progressive Spawner & Milestones (`src/game/spawner.js`, `src/ui/uiManager.js`)**:
+  - Sliding spawn floor: dynamically phases out low-tier blobs (drops 2s after 512, drops 4s after 1024, drops 8s after 2048) to keep endgame boards playable.
+  - Milestone unlock overlays: celebrated pause events for 1024, 2048, and 4096.
+  - Standardized 300x100 ad placeholder container integrated on both milestone and game over overlays.
 - **Sprite Texture Cache & Depth Rendering (`src/game/spriteCache.js`, `src/game/renderer.js`)**:
   - Pre-renders high-DPI offscreen canvas textures once per tier (radial body, soft aura glow, gloss highlight, tier typography).
   - Tier-based z-index draw sorting: larger background blobs render first, smaller foreground blobs render last to prevent visual obscuration.
