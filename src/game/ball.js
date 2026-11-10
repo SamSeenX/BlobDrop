@@ -10,7 +10,7 @@ export class Ball {
     this.radius = t.radius;
     this.mass = t.mass;
     this.vx = initialVx;
-    this.vy = isSpawning ? -1.2 : initialVy;
+    this.vy = Math.abs(initialVy) > 0.2 ? initialVy : (isSpawning ? -1.2 : 0);
     this.scaleX = isSpawning ? 1.4 : 1.15;
     this.scaleY = isSpawning ? 0.65 : 0.85;
     this.rotation = 0;
@@ -32,7 +32,7 @@ export class Ball {
     this.alpha = 1;
   }
 
-  startMerge(targetX, targetY, nextTier, isLeader) {
+  startMerge(targetX, targetY, nextTier, isLeader, inheritedVx = 0, inheritedVy = 0) {
     this.isMerging = true;
     this.isMergeLeader = isLeader;
     this.startX = this.x;
@@ -40,6 +40,8 @@ export class Ball {
     this.targetX = targetX;
     this.targetY = targetY;
     this.nextTier = nextTier;
+    this.inheritedVx = inheritedVx;
+    this.inheritedVy = inheritedVy;
     this.mergeFrame = 0;
     this.vx *= 0.2;
     this.vy *= 0.2;

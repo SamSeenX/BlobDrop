@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.5] - 2026-11-10
+### Added
+- Inherited merge momentum: Newly created upgraded blobs now carry 82% of combined incoming velocity `((v1 + v2) / 2 * 0.82)` instead of stalling to zero.
+- Mass-disparity impact restitution: Enhanced deflection coefficient (0.38) when light blobs hit heavy dense masses, making size differences physically tactile.
+
 ## [1.3.4] - 2026-11-10
 ### Added
 - Tier-based z-index draw sorting in `renderer.js`: larger blobs render first to background, ensuring smaller blobs always appear visible in the foreground upon overlap.

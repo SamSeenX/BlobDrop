@@ -29,8 +29,12 @@ function detectMerges(balls) {
       if (distSq <= contactDist * contactDist) {
         const targetX = (b1.x + b2.x) / 2;
         const targetY = (b1.y + b2.y) / 2;
-        b1.startMerge(targetX, targetY, b1.tierIndex + 1, true);
-        b2.startMerge(targetX, targetY, b1.tierIndex + 1, false);
+        // Inelastic momentum inheritance with balanced 0.82 retention
+        const momentumFactor = 0.82;
+        const inheritedVx = ((b1.vx + b2.vx) * 0.5) * momentumFactor;
+        const inheritedVy = ((b1.vy + b2.vy) * 0.5) * momentumFactor;
+        b1.startMerge(targetX, targetY, b1.tierIndex + 1, true, inheritedVx, inheritedVy);
+        b2.startMerge(targetX, targetY, b1.tierIndex + 1, false, 0, 0);
         break;
       }
     }
@@ -85,7 +89,9 @@ export function resolveCollisions({ balls, particles, onMerge }) {
         const velAlongNormal = rvx * nx + rvy * ny;
 
         if (velAlongNormal < 0) {
-          const restitution = Math.abs(velAlongNormal) > RESTITUTION_THRESHOLD ? 0.2 : 0.0;
+          const massDisparity = Math.max(b1.mass, b2.mass) / Math.min(b1.mass, b2.mass);
+          const baseRestitution = massDisparity > 2.5 ? 0.38 : 0.20;
+          const restitution = Math.abs(velAlongNormal) > RESTITUTION_THRESHOLD ? baseRestitution : 0.0;
           const impulseMag = -(1 + restitution) * velAlongNormal / (1 / b1.mass + 1 / b2.mass);
 
           b1.vx -= (impulseMag / b1.mass) * nx;
@@ -111,7 +117,7 @@ export function resolveCollisions({ balls, particles, onMerge }) {
   // Pass 3: Second confirmation pass for balls pushed into contact by solver
   detectMerges(balls);
 
-  // Pass 4: Finalize completed merges
+  // Pass 4: Finalize completed merges with inherited momentum
   for (let i = 0; i < n; i++) {
     const b = balls[i];
     if (b.isMerging && b.toRemove && b.isMergeLeader) {
@@ -125,7 +131,7 @@ export function resolveCollisions({ balls, particles, onMerge }) {
 
       audioManager.play('merge');
       if (onMerge) onMerge(b.tierIndex);
-      newBalls.push(new Ball(b.targetX, b.targetY, nextTier, true));
+      newBalls.push(new Ball(b.targetX, b.targetY, nextTier, true, b.inheritedVx, b.inheritedVy));
     }
   }
 
