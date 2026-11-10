@@ -59,13 +59,11 @@ export class Engine {
   }
 
   updateTrajectory() {
-    const radius = TIERS[this.currentTierIndex].radius;
     this.trajectory = calculateTrajectory({
       originX: this.originX,
       originY: this.originY,
       targetX: this.aimPos.x,
       targetY: this.aimPos.y,
-      radius,
       width: this.width,
       height: this.height
     });
@@ -113,7 +111,7 @@ export class Engine {
     this.isAiming = false;
     if (!this.trajectory) this.updateTrajectory();
 
-    const speed = 13;
+    const speed = 14;
     const vx = this.trajectory.launchDir.x * speed;
     const vy = this.trajectory.launchDir.y * speed;
     this.balls.push(new Ball(this.originX, this.originY, this.currentTierIndex, false, vx, vy));
@@ -129,6 +127,16 @@ export class Engine {
     this.trajectory = null;
     this.canDrop = false;
     setTimeout(() => { this.canDrop = true; }, 320);
+  }
+
+  checkDangerLimit() {
+    for (let i = 0; i < this.balls.length; i++) {
+      const b = this.balls[i];
+      if (!b.isMerging && b.age > 45 && b.y - b.radius <= 75 && Math.abs(b.vy) < 0.6) {
+        this.triggerGameOver();
+        break;
+      }
+    }
   }
 
   update() {
@@ -151,13 +159,7 @@ export class Engine {
       onMerge: (tierIdx) => this.handleMerge(tierIdx)
     });
 
-    for (let i = 0; i < this.balls.length; i++) {
-      const b = this.balls[i];
-      if (!b.isMerging && b.age > 45 && b.y - b.radius <= 75 && Math.abs(b.vy) < 0.6) {
-        this.triggerGameOver();
-        break;
-      }
-    }
+    this.checkDangerLimit();
   }
 
   render() {
@@ -170,7 +172,6 @@ export class Engine {
       originX: this.originX,
       originY: this.originY,
       currentTierIndex: this.currentTierIndex,
-      nextTierIndex: this.nextTierIndex,
       trajectory: this.trajectory,
       isPlaying: this.gameState === 'PLAYING'
     });

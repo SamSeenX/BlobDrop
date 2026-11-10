@@ -88,13 +88,13 @@ export class Ball {
     const m = this.radius;
     if (this.x - m < 0) {
       this.x = m;
-      const restitution = Math.abs(this.vx) > 1.5 ? 0.75 : 0.35;
+      const restitution = Math.abs(this.vx) > 1.2 ? 0.88 : 0.40;
       this.vx = -this.vx * restitution;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
     if (this.x + m > width) {
       this.x = width - m;
-      const restitution = Math.abs(this.vx) > 1.5 ? 0.75 : 0.35;
+      const restitution = Math.abs(this.vx) > 1.2 ? 0.88 : 0.40;
       this.vx = -this.vx * restitution;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
