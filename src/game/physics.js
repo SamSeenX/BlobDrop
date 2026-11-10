@@ -29,12 +29,12 @@ function detectMerges(balls) {
       if (distSq <= contactDist * contactDist) {
         const targetX = (b1.x + b2.x) / 2;
         const targetY = (b1.y + b2.y) / 2;
-        // Inelastic momentum inheritance with balanced 0.82 retention
-        const momentumFactor = 0.82;
-        const inheritedVx = ((b1.vx + b2.vx) * 0.5) * momentumFactor;
-        const inheritedVy = ((b1.vy + b2.vy) * 0.5) * momentumFactor;
-        b1.startMerge(targetX, targetY, b1.tierIndex + 1, true, inheritedVx, inheritedVy);
-        b2.startMerge(targetX, targetY, b1.tierIndex + 1, false, 0, 0);
+        // Inelastic momentum inheritance with balanced 0.85 retention
+        const momentumFactor = 0.85;
+        const sharedVx = ((b1.vx + b2.vx) * 0.5) * momentumFactor;
+        const sharedVy = ((b1.vy + b2.vy) * 0.5) * momentumFactor;
+        b1.startMerge(targetX, targetY, b1.tierIndex + 1, true, sharedVx, sharedVy);
+        b2.startMerge(targetX, targetY, b1.tierIndex + 1, false, sharedVx, sharedVy);
         break;
       }
     }
@@ -131,7 +131,7 @@ export function resolveCollisions({ balls, particles, onMerge }) {
 
       audioManager.play('merge');
       if (onMerge) onMerge(b.tierIndex);
-      newBalls.push(new Ball(b.targetX, b.targetY, nextTier, true, b.inheritedVx, b.inheritedVy));
+      newBalls.push(new Ball(b.targetX, b.targetY, nextTier, true, b.vx, b.vy));
     }
   }
 

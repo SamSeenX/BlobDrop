@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2026-11-10
+### Fixed
+- Continuous merge velocity integration: Center of mass and both merging blobs now continuously travel with shared momentum and gravity during wobble and suction phases, eliminating the mid-air freeze upon collision.
+- Live velocity inheritance: Merged blob spawns directly with active accumulated velocity and boundary collision response.
+
 ## [1.4.0] - 2026-11-10
 ### Added
 - Milestone modal overlay for 1024, 2048, and 4096 unlock events displaying current achievement and next target.
