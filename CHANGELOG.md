@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2026-11-10
+### Fixed
+- Corrected top-left status bar `Next:` badge to show the upcoming ball before launch.
+- Removed duplicate queue badge from the canvas muzzle to keep the active ball unobstructed.
+- Replaced multi-bounce trajectory line with a single clean laser ray that smoothly fades off toward the side edge or screen center.
+- Increased side wall bank shot bounce restitution factor to 0.88 for punchier ricochets.
+
 ## [1.3.0] - 2026-11-10
 ### Added
 - Center-top cannon aiming system replacing top-drop spawner.

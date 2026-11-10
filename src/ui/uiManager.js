@@ -39,13 +39,13 @@ export class UIManager {
       }
     });
 
-    eventBus.on('next:update', ({ currentTier }) => {
-      if (this.nextCircle && currentTier) {
-        this.nextCircle.style.backgroundColor = currentTier.color;
-        this.nextCircle.style.boxShadow = `0 0 10px ${currentTier.glow}`;
+    eventBus.on('next:update', ({ nextTier }) => {
+      if (this.nextCircle && nextTier) {
+        this.nextCircle.style.backgroundColor = nextTier.color;
+        this.nextCircle.style.boxShadow = `0 0 10px ${nextTier.glow}`;
       }
-      if (this.nextName && currentTier) {
-        this.nextName.innerText = currentTier.name;
+      if (this.nextName && nextTier) {
+        this.nextName.innerText = nextTier.name;
       }
     });
 

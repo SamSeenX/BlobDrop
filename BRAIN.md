@@ -6,12 +6,12 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
 ## Core Modules & Design
 - **Cannon Launcher & Trajectory (`src/game/trajectory.js`, `src/game/input.js`)**:
   - Center-top mounted cannon aiming from `(width / 2, 38)`.
-  - Multi-bounce downward raycasting calculating left and right wall collision points and reflection vectors.
-  - Directional impulse launch with initial velocity (`speed: 13`).
+  - Focused single aim trajectory ray with linear opacity fade-off towards screen center and edge boundaries.
+  - Directional impulse launch with initial velocity (`speed: 14`).
 - **Physics Engine (`src/game/physics.js`, `src/game/ball.js`)**:
   - Iterative relaxation solver (4 sub-steps) providing rock-solid, jitter-free stacking stability for heavy piles.
   - Tangential friction impulse and resting restitution thresholds (inelastic contact under 0.6 relative velocity).
-  - Dynamic wall restitution: 0.75 for fast bank shots (`|vx| > 1.5`) dropping to 0.35 and deadband for settled blobs.
+  - Dynamic wall restitution: high bounce factor (0.88 for fast bank shots with `|vx| > 1.2`) settling to 0.40 and deadband for resting blobs.
   - High-performance broadphase: fast AABB coordinate rejection and squared-distance checks avoiding unnecessary square root operations.
   - Velocity deadband and rigidity damping over time so resting blobs settle firmly.
   - Ease-in cubic suction merge animation with ~200ms fuse duration, radial `Shockwave`, and spawn squash-and-stretch.
@@ -22,10 +22,8 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Decoupled pub/sub event bus coordinating game states (`START`, `PLAYING`, `GAMEOVER`), combo multipliers, and score updates.
   - Safe-wrapped `localStorage` persistence with persistent storage request (`navigator.storage?.persist()`).
 - **UI & Presentation (`src/ui/uiManager.js`, `src/game/renderer.js`, `src/styles/`)**:
-  - Design token system (`tokens.css`) specifying colors, safe area insets, and typography.
-  - Trajectory laser rendering with bounce ripple rings and landing reticle.
-  - In-flight queue preview displaying the upcoming ball right above the cannon muzzle during aim hold.
-  - Dedicated sub-styles (`header.css`, `status.css`, `canvas.css`, `overlay.css`, `base.css`).
+  - Top-left status bar `Next:` badge continuously displays the true upcoming ball before launch.
+  - Clean cannon muzzle rendering active ball without obstructing badges.
   - Mobile touch-ergonomic targets (>= 48px).
 
 ## Technical Decisions

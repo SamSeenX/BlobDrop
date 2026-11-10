@@ -3,69 +3,41 @@ export function calculateTrajectory({
   originY,
   targetX,
   targetY,
-  radius,
   width,
-  height,
-  maxBounces = 2
+  height
 }) {
   let dx = targetX - originX;
   let dy = targetY - originY;
 
-  // Enforce minimum downward angle so player cannot shoot backwards/upwards
+  // Enforce minimum downward angle so ball shoots towards the board
   if (dy < 12) dy = 12;
 
   const len = Math.hypot(dx, dy) || 1;
-  let vx = dx / len;
-  let vy = dy / len;
+  const vx = dx / len;
+  const vy = dy / len;
 
-  const points = [{ x: originX, y: originY }];
-  let currentX = originX;
-  let currentY = originY;
+  // Fade-off ray length: reaches into the upper-middle of screen (~200px max)
+  const maxDistance = Math.min(210, height * 0.45);
+  let distance = maxDistance;
 
-  const leftWall = radius;
-  const rightWall = width - radius;
-  const floorY = height - 20 - radius;
-
-  for (let b = 0; b <= maxBounces; b++) {
-    let tWall = Infinity;
-    let willHitWall = false;
-
-    if (vx < -0.001) {
-      tWall = (leftWall - currentX) / vx;
-      willHitWall = true;
-    } else if (vx > 0.001) {
-      tWall = (rightWall - currentX) / vx;
-      willHitWall = true;
-    }
-
-    const tFloor = vy > 0.001 ? (floorY - currentY) / vy : Infinity;
-
-    if (tFloor <= tWall) {
-      const endX = Math.max(leftWall, Math.min(rightWall, currentX + vx * tFloor));
-      points.push({ x: endX, y: floorY });
-      break;
-    }
-
-    if (willHitWall && tWall < Infinity) {
-      const hitX = vx < 0 ? leftWall : rightWall;
-      const hitY = currentY + vy * tWall;
-
-      if (hitY >= floorY) {
-        points.push({ x: hitX, y: floorY });
-        break;
-      }
-
-      points.push({ x: hitX, y: hitY });
-      currentX = hitX;
-      currentY = hitY;
-      vx = -vx;
-    } else {
-      break;
-    }
+  // Stop trajectory line before penetrating wall boundary
+  const edgeMargin = 16;
+  if (vx < -0.001) {
+    const tWall = (edgeMargin - originX) / vx;
+    if (tWall > 0 && tWall < distance) distance = tWall;
+  } else if (vx > 0.001) {
+    const tWall = (width - edgeMargin - originX) / vx;
+    if (tWall > 0 && tWall < distance) distance = tWall;
   }
 
+  const endX = originX + vx * distance;
+  const endY = originY + vy * distance;
+
   return {
-    points,
-    launchDir: { x: dx / len, y: dy / len }
+    startX: originX,
+    startY: originY,
+    endX,
+    endY,
+    launchDir: { x: vx, y: vy }
   };
 }
