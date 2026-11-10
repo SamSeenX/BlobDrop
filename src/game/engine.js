@@ -153,6 +153,8 @@ export class Engine {
     this.balls = resolveCollisions({
       balls: this.balls,
       particles: this.particles,
+      width: this.width,
+      height: this.height,
       onMerge: (tierIdx) => this.handleMerge(tierIdx)
     });
 

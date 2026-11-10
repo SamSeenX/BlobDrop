@@ -21,6 +21,7 @@ export class Ball {
     // Merge state with continuous momentum transfer
     this.isMerging = false;
     this.isMergeLeader = false;
+    this.mergePartner = null;
     this.mergeFrame = 0;
     this.wobbleDuration = 8;
     this.mergeDuration = 18;
@@ -32,9 +33,10 @@ export class Ball {
     this.alpha = 1;
   }
 
-  startMerge(targetX, targetY, nextTier, isLeader, sharedVx = 0, sharedVy = 0) {
+  startMerge(targetX, targetY, nextTier, isLeader, sharedVx = 0, sharedVy = 0, partner = null) {
     this.isMerging = true;
     this.isMergeLeader = isLeader;
+    this.mergePartner = partner;
     this.offsetX = this.x - targetX;
     this.offsetY = this.y - targetY;
     this.targetX = targetX;
@@ -46,34 +48,36 @@ export class Ball {
   }
 
   update(width, height) {
+    const m = this.radius;
+    const floorY = height - 20 - m;
+
     if (this.isMerging) {
       this.mergeFrame++;
-
-      // Center of mass continuously moves with shared momentum and gravity
       this.vy += 0.35;
       this.vx *= 0.985;
       this.vy *= 0.99;
       this.targetX += this.vx;
       this.targetY += this.vy;
 
-      // Bound center of mass to play area
-      const m = this.radius;
+      // Bound target center of mass to playfield
       if (this.targetX - m < 0) {
         this.targetX = m;
-        this.vx *= -0.7;
+        this.vx = Math.abs(this.vx) * 0.70;
       } else if (this.targetX + m > width) {
         this.targetX = width - m;
-        this.vx *= -0.7;
+        this.vx = -Math.abs(this.vx) * 0.70;
       }
 
-      const floorY = height - 20 - this.radius;
       if (this.targetY > floorY) {
         this.targetY = floorY;
-        this.vy *= -0.15;
+        this.vy = -Math.abs(this.vy) * 0.20;
         this.vx *= 0.88;
+      } else if (this.targetY - m < 0) {
+        this.targetY = m;
+        this.vy = Math.abs(this.vy) * 0.5;
       }
 
-      // Phase 1: Physical impact wobble while traveling
+      // Wobble & suction animation
       if (this.mergeFrame <= this.wobbleDuration) {
         const progress = this.mergeFrame / this.wobbleDuration;
         const wobble = Math.sin(progress * Math.PI);
@@ -81,22 +85,32 @@ export class Ball {
         this.scaleY = 1 - wobble * 0.20;
         this.x = this.targetX + this.offsetX;
         this.y = this.targetY + this.offsetY;
-        return;
+      } else {
+        const suction = (this.mergeFrame - this.wobbleDuration) / (this.mergeDuration - this.wobbleDuration);
+        const easeIn = Math.min(1, suction) ** 3;
+        this.x = this.targetX + this.offsetX * (1 - easeIn);
+        this.y = this.targetY + this.offsetY * (1 - easeIn);
+        const squish = Math.max(0.18, 1 - easeIn * 0.72);
+        this.scaleX = squish;
+        this.scaleY = squish;
+        this.alpha = Math.max(0.15, 1 - easeIn * 0.8);
+
+        if (this.mergeFrame >= this.mergeDuration) this.toRemove = true;
       }
 
-      // Phase 2: Suction fusion into the moving center of mass
-      const suctionProgress = (this.mergeFrame - this.wobbleDuration) / (this.mergeDuration - this.wobbleDuration);
-      const t = Math.min(1, suctionProgress);
-      const easeIn = t * t * t;
-      this.x = this.targetX + this.offsetX * (1 - easeIn);
-      this.y = this.targetY + this.offsetY * (1 - easeIn);
-      const squish = Math.max(0.18, 1 - easeIn * 0.72);
-      this.scaleX = squish;
-      this.scaleY = squish;
-      this.alpha = Math.max(0.15, 1 - easeIn * 0.8);
-
-      if (this.mergeFrame >= this.mergeDuration) {
-        this.toRemove = true;
+      // Guarded edge clamp during merge animation
+      if (this.x - m < 0) {
+        this.x = m;
+        this.vx = Math.abs(this.vx) * 0.70;
+      } else if (this.x + m > width) {
+        this.x = width - m;
+        this.vx = -Math.abs(this.vx) * 0.70;
+      }
+      if (this.y > floorY) {
+        this.y = floorY;
+        this.vy = -Math.abs(this.vy) * 0.20;
+      } else if (this.y - m < 0) {
+        this.y = m;
       }
       return;
     }
@@ -106,7 +120,6 @@ export class Ball {
     this.vx *= 0.985;
     this.vy *= 0.99;
 
-    // Velocity deadband to prevent micro-jitter
     if (Math.abs(this.vx) < 0.03) this.vx = 0;
     if (Math.abs(this.vy) < 0.05) this.vy = 0;
 
@@ -118,37 +131,35 @@ export class Ball {
       this.rotation += this.angularVelocity;
     }
 
-    // Rigidity settling: jello -> firm body over 200 frames
-    const rigidityFactor = Math.min(1, this.age / 200);
-    this.scaleX += (1 - this.scaleX) * (0.08 + rigidityFactor * 0.16);
-    this.scaleY += (1 - this.scaleY) * (0.08 + rigidityFactor * 0.16);
+    const rigidity = Math.min(1, this.age / 200);
+    this.scaleX += (1 - this.scaleX) * (0.08 + rigidity * 0.16);
+    this.scaleY += (1 - this.scaleY) * (0.08 + rigidity * 0.16);
 
     if (Math.abs(1 - this.scaleX) < 0.001) this.scaleX = 1;
     if (Math.abs(1 - this.scaleY) < 0.001) this.scaleY = 1;
 
-    // Wall collisions
-    const m = this.radius;
+    // Boundary bounce & containment
     if (this.x - m < 0) {
       this.x = m;
       const restitution = Math.abs(this.vx) > 1.2 ? 0.88 : 0.40;
-      this.vx = -this.vx * restitution;
+      this.vx = Math.abs(this.vx) * restitution;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
-    }
-    if (this.x + m > width) {
+    } else if (this.x + m > width) {
       this.x = width - m;
       const restitution = Math.abs(this.vx) > 1.2 ? 0.88 : 0.40;
-      this.vx = -this.vx * restitution;
+      this.vx = -Math.abs(this.vx) * restitution;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
     }
 
-    // Floor collision
-    const floorY = height - 20 - this.radius;
     if (this.y > floorY) {
       this.y = floorY;
-      this.vy *= -0.15;
+      this.vy = -Math.abs(this.vy) * 0.15;
       this.vx *= 0.88;
       if (Math.abs(this.vy) < 0.35) this.vy = 0;
       if (Math.abs(this.vx) < 0.04) this.vx = 0;
+    } else if (this.y - m < 0) {
+      this.y = m;
+      this.vy = Math.abs(this.vy) * 0.5;
     }
   }
 
@@ -157,14 +168,10 @@ export class Ball {
     if (!sprite) return;
 
     ctx.save();
-    if (this.alpha < 1) {
-      ctx.globalAlpha = this.alpha;
-    }
+    if (this.alpha < 1) ctx.globalAlpha = this.alpha;
     ctx.translate(this.x, this.y);
     ctx.scale(this.scaleX, this.scaleY);
-
     ctx.drawImage(sprite.canvas, -sprite.offset, -sprite.offset);
-
     ctx.restore();
   }
 }
