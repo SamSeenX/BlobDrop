@@ -28,3 +28,32 @@ export class Particle {
     ctx.restore();
   }
 }
+
+export class Shockwave {
+  constructor(x, y, color, maxRadius = 35) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.radius = 4;
+    this.maxRadius = maxRadius;
+    this.alpha = 0.85;
+    this.growth = (maxRadius - 4) / 14;
+  }
+
+  update() {
+    this.radius += this.growth;
+    this.alpha -= 0.06;
+  }
+
+  draw(ctx) {
+    if (this.alpha <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
