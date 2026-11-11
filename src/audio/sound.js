@@ -8,10 +8,8 @@ class AudioManager {
 
   initAudio() {
     if (!this.audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) {
-        this.audioCtx = new AudioContextClass();
-      }
+      const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtxClass) this.audioCtx = new AudioCtxClass();
     }
     if (this.audioCtx && this.audioCtx.state === 'suspended') {
       this.audioCtx.resume();
@@ -29,11 +27,32 @@ class AudioManager {
     this.initAudio();
     if (!this.audioCtx) return;
 
+    const now = this.audioCtx.currentTime;
+
+    if (type === 'milestone') {
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, idx) => {
+        const o = this.audioCtx.createOscillator();
+        const g = this.audioCtx.createGain();
+        o.type = 'triangle';
+        o.connect(g);
+        g.connect(this.audioCtx.destination);
+
+        const start = now + idx * 0.09;
+        const dur = idx === notes.length - 1 ? 0.65 : 0.25;
+        o.frequency.setValueAtTime(freq, start);
+        g.gain.setValueAtTime(0.22, start);
+        g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+        o.start(start);
+        o.stop(start + dur);
+      });
+      return;
+    }
+
     const osc = this.audioCtx.createOscillator();
     const gain = this.audioCtx.createGain();
     osc.connect(gain);
     gain.connect(this.audioCtx.destination);
-    const now = this.audioCtx.currentTime;
 
     if (type === 'drop') {
       osc.type = 'sine';

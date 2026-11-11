@@ -8,18 +8,16 @@ import { calculateTrajectory } from './trajectory.js';
 import { updateParticles } from './particle.js';
 import { getRandomSpawnTier, checkMilestone, checkDangerLimit, launchBallData } from './spawner.js';
 import { applyCanvasResize } from './layout.js';
+import { saveGameState, restoreGameState, clearSavedGameState } from './stateStorage.js';
 
 export class Engine {
   constructor({ canvas, wrapper, renderer }) {
     Object.assign(this, {
-      canvas, wrapper, renderer,
-      width: 360, height: 540, scale: 1, dangerY: 45,
-      originX: 180, originY: 38, aimPos: { x: 180, y: 300 },
-      balls: [], particles: [], score: 0, gameState: 'START',
-      isAiming: false, currentTierIndex: 0, nextTierIndex: 1,
-      highestTier: 0, unlockedMilestones: new Set(),
-      canDrop: true, comboMultiplier: 1, comboTimer: 0, trajectory: null,
-      spawnProgress: 1, dangerTimer: 0, isMuzzleBlocked: false
+      canvas, wrapper, renderer, width: 360, height: 540, scale: 1, dangerY: 45,
+      originX: 180, originY: 38, aimPos: { x: 180, y: 300 }, balls: [], particles: [],
+      score: 0, gameState: 'START', isAiming: false, currentTierIndex: 0, nextTierIndex: 1,
+      highestTier: 0, unlockedMilestones: new Set(), canDrop: true, comboMultiplier: 1,
+      comboTimer: 0, trajectory: null, spawnProgress: 1, dangerTimer: 0, isMuzzleBlocked: false
     });
 
     this.dangerEl = document.getElementById('dangerLine');
@@ -30,8 +28,13 @@ export class Engine {
     });
 
     eventBus.on('game:resume', () => this.resume());
+    eventBus.on('game:pause:toggle', () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()));
+    window.addEventListener('beforeunload', () => saveGameState(this));
+    document.addEventListener('visibilitychange', () => { if (document.hidden) saveGameState(this); });
+
     this.resizeCanvas();
     window.addEventListener('resize', () => this.resizeCanvas());
+    restoreGameState(this);
   }
 
   handleAim(x, y) {
@@ -49,8 +52,7 @@ export class Engine {
     this.trajectory = calculateTrajectory({
       originX: this.originX, originY: this.originY,
       targetX: this.aimPos.x, targetY: this.aimPos.y,
-      width: this.width, height: this.height,
-      scale: this.scale, tierIndex: this.currentTierIndex
+      width: this.width, height: this.height, scale: this.scale, tierIndex: this.currentTierIndex
     });
   }
 
@@ -59,6 +61,7 @@ export class Engine {
     this.gameState = 'PAUSED';
     this.isAiming = false;
     this.trajectory = null;
+    saveGameState(this);
     eventBus.emit('game:paused');
   }
 
@@ -69,11 +72,12 @@ export class Engine {
   }
 
   start() {
+    clearSavedGameState();
     Object.assign(this, {
-      balls: [], particles: [], score: 0, highestTier: 0,
-      comboMultiplier: 1, comboTimer: 0, dangerTimer: 0, isMuzzleBlocked: false,
+      balls: [], particles: [], score: 0, highestTier: 0, comboMultiplier: 1,
+      comboTimer: 0, dangerTimer: 0, isMuzzleBlocked: false, gameState: 'PLAYING',
       currentTierIndex: getRandomSpawnTier(0), nextTierIndex: getRandomSpawnTier(0),
-      gameState: 'PLAYING', trajectory: null, isAiming: false, spawnProgress: 0.15
+      trajectory: null, isAiming: false, spawnProgress: 0.15
     });
     this.unlockedMilestones.clear();
     this.dangerEl?.classList.remove('danger-active');
@@ -86,6 +90,7 @@ export class Engine {
     if (this.gameState === 'GAMEOVER') return;
     this.gameState = 'GAMEOVER';
     this.dangerEl?.classList.remove('danger-active');
+    clearSavedGameState();
     audioManager.play('gameover');
     eventBus.emit('game:over', { score: this.score });
   }
@@ -99,6 +104,7 @@ export class Engine {
 
     const newTier = tierIndex + 1;
     if (newTier > this.highestTier) this.highestTier = newTier;
+    saveGameState(this);
 
     const m = checkMilestone(newTier, this.unlockedMilestones);
     if (m.isMilestone) {
@@ -127,6 +133,7 @@ export class Engine {
     this.trajectory = null;
     this.canDrop = false;
     this.spawnProgress = 0;
+    saveGameState(this);
     setTimeout(() => { this.canDrop = true; }, 320);
   }
 
