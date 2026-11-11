@@ -28,9 +28,21 @@
   top: 0;
   left: 0;
   width: 100%;
-  border-top: 3px dashed rgba(239, 68, 68, 0.85);
+  border-top: 3px dashed rgba(239, 68, 68, 0.5);
   pointer-events: none;
   z-index: 10;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.danger-line.danger-active {
+  border-top: 3px dashed rgba(239, 68, 68, 1);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.85);
+  animation: danger-pulse 0.4s infinite alternate;
+}
+
+@keyframes danger-pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
 }
 
 #gameCanvas {

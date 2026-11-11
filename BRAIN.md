@@ -6,7 +6,8 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
 ## Core Modules & Design
 - **Responsive Screen Normalization & Fair Viewport (`src/game/layout.js`, `src/styles/canvas.css`)**:
   - Enforced 2:3 aspect ratio containment: Regardless of screen resolution or orientation, `.canvas-wrapper` locks to 2:3 proportions, eliminating unfair vertical stacking advantages on tall or high-PPI screens.
-  - Rebalanced tier curve: Tier radii gracefully taper from 14px (tier 0) up to 102px (4096) and 115px (8192), ensuring two large blobs can sit side-by-side (2x 1024 = 312px <= 360px) without instant overflow.
+  - Rebalanced tier curve: Tier radii gracefully taper from 13px (tier 0) up to 98px (4096) and 110px (8192), ensuring large blobs can fit comfortably on the floor (2x 1024 = 304px <= 360px).
+  - Sustained overflow timer & muzzle obstruction check: Fixed late-game failure where vibrating crowded stacks bypassed game over. If stacked balls reach `dangerY = 45 * scale` for > 55 frames or bury the cannon for > 25 frames, Game Over triggers reliably with `.danger-active` pulsing along the top rim.
   - Uniform scale factor (`scale = width / 360`): All blob radii, danger limit (`14 * scale`), launch speed (`14 * scale`), and gravity (`0.40 * scale`) scale uniformly.
   - Danger limit on top rim: Pinned `.danger-line` to `top: 0` along the container ceiling with zero mid-playfield line obstruction.
   - Dynamic ball rescaling: Window resize or orientation change triggers `rescaleBalls()` without glitching or dropping balls out of bounds.
