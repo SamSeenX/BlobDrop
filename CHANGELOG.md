@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2026-11-11
+### Added
+- Browser state persistence: Serializes live board blobs, score, combos, and upcoming tiers to `localStorage` across drops, merges, and tab switches, seamlessly restoring games on page refresh.
+- Top-bar Pause/Resume toggle button: Added interactive `#pauseBtn` in `.status-actions` right next to the Sound button, freezing the game loop and physics cleanly.
+- Celebratory milestone fanfare: Synthesized a bright 4-note ascending Web Audio fanfare (C5-E5-G5-C6 harmonic chime with sparkle shimmer) triggered when milestone and win modals open.
+- Dedicated `stateStorage.js` submodule to handle state serialization while keeping `engine.js` under 180 lines.
+
 ## [1.5.5] - 2026-11-11
 ### Added
 - Standard PWA raster PNG icons: Generated 192x192 and 512x512 maskable PNG icons along with 180x180 `apple-touch-icon.png` from `icon.svg` to satisfy Chromium mobile installability criteria.
@@ -23,9 +30,3 @@ All notable changes to this project will be documented in this file.
 ## [1.5.2] - 2026-11-10
 ### Fixed
 - Top-edge danger threshold alignment: Pinned `.danger-line` to `top: 0` along the container's top rim and eliminated the floating mid-canvas dashed line that appeared below the aiming blob.
-- Overflow detection at top ceiling: Calibrated `dangerY` to the top rim threshold (`14 * scale`) so game over triggers only when stacked blobs genuinely breach the top boundary.
-
-## [1.5.1] - 2026-11-10
-### Added
-- Curved ballistic aim trajectory: `trajectory.js` forward-simulates 22 physical steps integrating gravity (`0.40 * scale`), air drag, and wall ricochet deflections.
-- Multi-segment trajectory rendering: `renderer.js` paints a smooth gravity curve with gradient fade-out and landing dot indicator, eliminating aim discrepancy on angled bank shots.

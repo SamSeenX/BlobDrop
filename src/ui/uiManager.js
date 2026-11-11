@@ -18,6 +18,9 @@ export class UIManager {
     this.muteBtn = document.getElementById('muteBtn');
     this.muteIcon = document.getElementById('muteIcon');
     this.muteText = document.getElementById('muteText');
+    this.pauseBtn = document.getElementById('pauseBtn');
+    this.pauseIcon = document.getElementById('pauseIcon');
+    this.pauseText = document.getElementById('pauseText');
 
     this.milestoneOverlay = document.getElementById('milestoneOverlay');
     this.milestoneEmoji = document.getElementById('milestoneEmoji');
@@ -38,6 +41,10 @@ export class UIManager {
 
     this.muteBtn?.addEventListener('click', () => {
       this.updateMuteUI(audioManager.toggleSound());
+    });
+
+    this.pauseBtn?.addEventListener('click', () => {
+      eventBus.emit('game:pause:toggle');
     });
 
     this.milestoneContinueBtn?.addEventListener('click', () => {
@@ -62,9 +69,7 @@ export class UIManager {
         this.nextCircle.style.backgroundColor = nextTier.color;
         this.nextCircle.style.boxShadow = `0 0 10px ${nextTier.glow}`;
       }
-      if (this.nextName && nextTier) {
-        this.nextName.innerText = nextTier.name;
-      }
+      if (this.nextName && nextTier) this.nextName.innerText = nextTier.name;
     });
 
     eventBus.on('combo:update', ({ multiplier }) => {
@@ -74,13 +79,19 @@ export class UIManager {
       }
     });
 
-    eventBus.on('combo:reset', () => {
-      this.comboBadge?.classList.add('hidden');
+    eventBus.on('combo:reset', () => this.comboBadge?.classList.add('hidden'));
+
+    eventBus.on('game:paused', () => {
+      if (this.pauseIcon) this.pauseIcon.innerText = '▶️';
+      if (this.pauseText) this.pauseText.innerText = 'Resume';
     });
 
-    eventBus.on('milestone:unlocked', ({ currentTier, nextTier, isWin4096, isGodlike8192 }) => {
-      this.handleMilestoneUI({ currentTier, nextTier, isWin4096, isGodlike8192 });
+    eventBus.on('game:resumed', () => {
+      if (this.pauseIcon) this.pauseIcon.innerText = '⏸️';
+      if (this.pauseText) this.pauseText.innerText = 'Pause';
     });
+
+    eventBus.on('milestone:unlocked', (data) => this.handleMilestoneUI(data));
 
     eventBus.on('game:started', () => {
       this.gameOverlay?.classList.add('opacity-0', 'pointer-events-none');
@@ -90,9 +101,7 @@ export class UIManager {
     eventBus.on('game:over', ({ score }) => {
       if (this.overlayEmoji) this.overlayEmoji.innerText = '💀';
       if (this.overlayTitle) this.overlayTitle.innerText = 'BLOBS OVERFLOWED!';
-      if (this.overlaySub) {
-        this.overlaySub.innerText = `Final Score: ${score} (Best: ${this.highScore})`;
-      }
+      if (this.overlaySub) this.overlaySub.innerText = `Final Score: ${score} (Best: ${this.highScore})`;
       this.gameOverAd?.classList.remove('hidden');
       if (this.actionBtn) this.actionBtn.innerText = 'TRY AGAIN';
       this.gameOverlay?.classList.remove('opacity-0', 'pointer-events-none');
@@ -100,12 +109,12 @@ export class UIManager {
   }
 
   handleMilestoneUI({ currentTier, nextTier, isWin4096, isGodlike8192 }) {
+    audioManager.play('milestone');
+
     if (isWin4096) {
       if (this.milestoneEmoji) this.milestoneEmoji.innerText = '🏆';
       if (this.milestoneTitle) this.milestoneTitle.innerText = 'YOU WON 4096!';
-      if (this.milestoneDesc) {
-        this.milestoneDesc.innerHTML = 'Sensational victory! You crafted the legendary <strong>4096</strong> blob!';
-      }
+      if (this.milestoneDesc) this.milestoneDesc.innerHTML = 'Sensational victory! You crafted the legendary <strong>4096</strong> blob!';
       this.milestoneDareBox?.classList.remove('hidden');
       this.milestoneNextRow?.classList.add('hidden');
       if (this.milestoneContinueBtn) {
@@ -115,9 +124,7 @@ export class UIManager {
     } else if (isGodlike8192) {
       if (this.milestoneEmoji) this.milestoneEmoji.innerText = '👑';
       if (this.milestoneTitle) this.milestoneTitle.innerText = 'GODLIKE: 8192 UNLOCKED!';
-      if (this.milestoneDesc) {
-        this.milestoneDesc.innerHTML = 'UNBELIEVABLE! You conquered the ultimate <strong>8192</strong> blob!';
-      }
+      if (this.milestoneDesc) this.milestoneDesc.innerHTML = 'UNBELIEVABLE! You conquered the ultimate <strong>8192</strong> blob!';
       this.milestoneDareBox?.classList.add('hidden');
       this.milestoneNextRow?.classList.add('hidden');
       if (this.milestoneContinueBtn) {
@@ -127,12 +134,10 @@ export class UIManager {
     } else {
       if (this.milestoneEmoji) this.milestoneEmoji.innerText = '🎉';
       if (this.milestoneTitle) this.milestoneTitle.innerText = 'MILESTONE UNLOCKED!';
-      if (this.milestoneDesc) {
-        this.milestoneDesc.innerHTML = `You just unlocked <strong class="milestone-current">${currentTier.name}</strong>`;
-      }
+      if (this.milestoneDesc) this.milestoneDesc.innerHTML = `You just unlocked <strong class="milestone-current">${currentTier.name}</strong>`;
       this.milestoneDareBox?.classList.add('hidden');
-      if (nextTier) {
-        if (this.milestoneNext) this.milestoneNext.innerText = nextTier.name;
+      if (nextTier && this.milestoneNext) {
+        this.milestoneNext.innerText = nextTier.name;
         this.milestoneNextRow?.classList.remove('hidden');
       } else {
         this.milestoneNextRow?.classList.add('hidden');
