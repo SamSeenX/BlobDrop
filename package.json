@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@rollup/rollup-linux-arm64-gnu": "^4.68.2"
   }
 }

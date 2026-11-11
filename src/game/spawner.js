@@ -1,9 +1,9 @@
 export function getMinSpawnTier(highestTier) {
-  if (highestTier >= 11) return 4; // 4096 unlocked -> min spawn is 32
-  if (highestTier >= 10) return 3; // 2048 unlocked -> min spawn is 16
-  if (highestTier >= 9) return 2;  // 1024 unlocked -> min spawn is 8
-  if (highestTier >= 8) return 1;  // 512 unlocked -> min spawn is 4
-  return 0;                        // base game -> min spawn is 2
+  if (highestTier >= 11) return 4;
+  if (highestTier >= 10) return 3;
+  if (highestTier >= 9) return 2;
+  if (highestTier >= 8) return 1;
+  return 0;
 }
 
 export function getRandomSpawnTier(highestTier) {
@@ -25,15 +25,27 @@ export function checkMilestone(tierIndex, unlockedSet) {
   return { isMilestone: false };
 }
 
-export function checkDangerLimit(balls, dangerY = 14, scale = 1) {
-  const velLimit = 0.6 * scale;
+export function checkDangerLimit(balls, originX, originY, dangerY = 45, spawnRadius = 20) {
+  let hasOverflow = false;
+  let isMuzzleBlocked = false;
+
   for (let i = 0; i < balls.length; i++) {
     const b = balls[i];
-    if (!b.isMerging && b.age > 45 && b.y - b.radius <= dangerY && Math.abs(b.vy) < velLimit) {
-      return true;
+    if (b.toRemove || b.isMerging) continue;
+
+    const distToCannon = Math.hypot(b.x - originX, b.y - originY);
+    if (b.age > 25 && distToCannon < b.radius + spawnRadius * 0.75) {
+      isMuzzleBlocked = true;
+      hasOverflow = true;
+      break;
+    }
+
+    if (b.age > 40 && b.y - b.radius <= dangerY) {
+      hasOverflow = true;
     }
   }
-  return false;
+
+  return { hasOverflow, isMuzzleBlocked };
 }
 
 export function launchBallData(trajectory, scale = 1, baseSpeed = 14) {
