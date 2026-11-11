@@ -3,6 +3,7 @@ import { storage } from './core/storage.js';
 import { Renderer } from './game/renderer.js';
 import { Engine } from './game/engine.js';
 import { UIManager } from './ui/uiManager.js';
+import { initPwaPrompt } from './ui/pwaPrompt.js';
 import { TIERS } from './config/tiers.js';
 import { eventBus } from './core/eventBus.js';
 
@@ -33,6 +34,7 @@ const ctx = canvas.getContext('2d');
 const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
 const uiManager = new UIManager();
+initPwaPrompt();
 
 uiManager.bindStartAction(() => {
   engine.start();

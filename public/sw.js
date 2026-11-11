@@ -1,9 +1,12 @@
-const CACHE_NAME = 'blobdrop-v1.5.3';
+const CACHE_NAME = 'blobdrop-v1.5.4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
-  '/icon.svg'
+  '/icon.svg',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (e) => {
