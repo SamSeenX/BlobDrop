@@ -4,6 +4,15 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Single-Source Unified Multi-Platform Architecture (`capacitor.config.json`, `android/`)**:
+  - Unified codebase for Web and Android: Capacitor wraps the web build (`dist/`) directly inside the local `android/` directory without splitting or duplicating repositories.
+  - Single build command: Web deploys to Cloudflare Pages via Vite, while `npx cap sync android` synchronizes the exact same tested web assets into Android Studio / Gradle.
+  - Target SDK 36 and Android 14+ compliance with memory-capped Gradle daemon (`2048m`) ensuring fast, freeze-free local builds.
+  - Both debug APK (`app-debug.apk`) and release App Bundle (`app-release.aab`) compile cleanly in under 4 minutes using local Android SDK.
+- **Smart Dual-Mode Ad Monetization (`src/ui/adManager.js`, `src/ui/houseAds.js`, `src/ui/admobService.js`)**:
+  - Native Android (Google AdMob): Uses `@capacitor-community/admob` to show adaptive bottom banners and preloaded interstitial ads upon Milestones and Game Over events.
+  - Web & PWA (House Ads): Uses `src/ui/houseAds.js` with auto-rotating cards promoting SamSeen's *EloRun* on the Google Play Store with direct click-throughs, overcoming AdSense approval hurdles on web.
+  - Dynamic platform switching via `Capacitor.isNativePlatform()` with zero runtime crashes on unsupported environments.
 - **Responsive Screen Normalization & Fair Viewport (`src/game/layout.js`, `src/styles/canvas.css`)**:
   - Enforced 2:3 aspect ratio containment: Regardless of screen resolution or orientation, `.canvas-wrapper` locks to 2:3 proportions, eliminating unfair vertical stacking advantages on tall or high-PPI screens.
   - Rebalanced tier curve: Tier radii gracefully taper from 13px (tier 0) up to 98px (4096) and 110px (8192), ensuring large blobs can fit comfortably on the floor (2x 1024 = 304px <= 360px).
@@ -25,25 +34,24 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Standardized 300x100 ad placeholder container integrated on both milestone and game over overlays.
 - **Progressive Web App (PWA) Support (`public/manifest.webmanifest`, `public/sw.js`, `public/icon.svg`)**:
   - Offline-first cache service worker for instant launches and offline play.
-  - 512x512 glowing vector jelly squircle icon with maskable PWA badge support.
-  - Native standalone display mode and theme-color styling.
+  - 192x192 and 512x512 maskable PNG icons along with 180x180 `apple-touch-icon.png` meeting Chromium and Safari installability heuristics.
+  - Interactive install prompt handler (`src/ui/pwaPrompt.js`).
 - **Cannon Launcher, Ballistic Trajectory & Reload Animation (`src/game/trajectory.js`, `src/game/renderer.js`, `src/game/input.js`)**:
   - Center-top mounted cannon aiming from `(width / 2, 38 * scale)`.
   - Curved ballistic aim trajectory: 22-step forward simulation in `trajectory.js` integrating exact launch velocity (`14 * scale`), downward gravity (`0.40 * scale`), air drag (`0.985 / 0.99`), and wall bounce ricochets.
   - Elastic cannon reload entry animation: Blob slides smoothly down from off-screen above into shoot position over ~260ms.
   - Exponentially dampened harmonic bounce on arrival at the muzzle.
 - **Sprite Texture Cache & Depth Rendering (`src/game/spriteCache.js`, `src/game/renderer.js`)**:
-  - Pre-renders high-DPI offscreen canvas textures dynamically cached per tier and scaled radius.
+  - Pre-renders high-DPI offscreen canvas textures once per tier.
   - Tier-based z-index draw sorting: Larger background blobs render first, smaller foreground blobs render last.
-- **Fixed Timestep Loop (`src/main.js`)**:
+  - Single hardware-accelerated `ctx.drawImage` blit per ball per frame (< 1ms frame rendering).
+- **Fixed Timestep Loop & State Persistence (`src/main.js`, `src/core/storage.js`, `src/game/stateStorage.js`)**:
   - Deterministic 60 FPS physics accumulator loop decoupled from display refresh rate.
-  - Timing accumulator cleanly reset upon unpause/resume events.
+  - Session state persistence in `localStorage`: active balls, positions, score, combos, and upcoming tiers survive browser reloads.
 - **Audio Synthesis (`src/audio/sound.js`)**:
-  - Zero sound assets or external audio files. Web Audio API real-time synthesis.
-- **State & Event Architecture (`src/core/eventBus.js`, `src/core/storage.js`)**:
-  - Decoupled pub/sub event bus coordinating game states (`START`, `PLAYING`, `PAUSED`, `GAMEOVER`).
+  - Real-time Web Audio API synthesis: sine drops, triangle merges, sawtooth gameover, and ascending 4-note celebratory fanfare for milestones.
 
 ## Technical Decisions
 - **No Tailwind / No React**: Pure Vanilla ES modules and modern semantic CSS variables to guarantee lightweight execution, fast loading, and zero runtime overhead.
-- **Strict 200-Line Modular Limit**: Every code module is kept strictly below 180 lines through single-responsibility separation (`layout.js`, `ballMerge.js`, `modal.css`, `spriteCache.js`, etc.).
+- **Strict 200-Line Modular Limit**: Every code module is kept below 180 lines through single-responsibility separation.
 - **Vite Build System**: Pre-configured with ES2022 targets and automated console/debugger drop in production builds.
