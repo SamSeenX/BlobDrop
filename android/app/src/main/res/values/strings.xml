@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BlobDrop</string>
+    <string name="title_activity_main">BlobDrop</string>
+    <string name="package_name">com.samseen.blobdrop</string>
+    <string name="custom_url_scheme">com.samseen.blobdrop</string>
+</resources>

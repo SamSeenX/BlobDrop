@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-11-12
+### Added
+- Unified Capacitor Android project: Integrated `@capacitor/core`, `@capacitor/android`, and `@capacitor-community/admob` into the root repository, allowing single-command synchronization from web build into native Android.
+- Smart dual-mode ad system: On native Android, AdMob initializes with banner and interstitial ads on milestones/game over; on Web/PWA, an automated House Ad Rotator promotes SamSeen's EloRun game with direct Play Store click-throughs.
+- Local Android build pipeline: Configured Gradle with memory caps and SDK 36 compliance, compiling both debug APK (`app-debug.apk`, 8.8MB) and release App Bundle (`app-release.aab`, 6.8MB) locally.
+- Modular ad architecture: Split into `houseAds.js`, `admobService.js`, and `adManager.js` with all source files strictly under 180 lines.
+
 ## [1.6.1] - 2026-11-11
 ### Fixed
 - Cloudflare Pages EBADPLATFORM build error: Removed accidental top-level `@rollup/rollup-linux-arm64-gnu` dependency from `package.json` and regenerated clean cross-platform `package-lock.json`, restoring compatibility with Cloudflare's Linux x64 CI/CD environment.

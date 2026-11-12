@@ -4,6 +4,7 @@ import { Renderer } from './game/renderer.js';
 import { Engine } from './game/engine.js';
 import { UIManager } from './ui/uiManager.js';
 import { initPwaPrompt } from './ui/pwaPrompt.js';
+import { initAdSystem } from './ui/adManager.js';
 import { TIERS } from './config/tiers.js';
 import { eventBus } from './core/eventBus.js';
 
@@ -35,6 +36,7 @@ const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
 const uiManager = new UIManager();
 initPwaPrompt();
+initAdSystem();
 
 uiManager.bindStartAction(() => {
   engine.start();

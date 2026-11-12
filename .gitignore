@@ -2,3 +2,14 @@ node_modules/
 dist/
 .DS_Store
 *.local
+
+# Android build outputs and caches
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.apk
+*.aab
+*.jks
+*.keystore
