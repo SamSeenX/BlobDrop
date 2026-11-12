@@ -91,6 +91,10 @@
   cursor: pointer;
   box-shadow: var(--shadow-glow);
   transition: transform 0.15s ease, filter 0.15s ease;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .action-btn:hover {

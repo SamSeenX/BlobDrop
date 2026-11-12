@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - 2026-11-12
+### Fixed
+- Android Play Now touch responsiveness: Bound dual `pointerup`, `touchend`, and `click` listeners with debouncing on the primary action button to eliminate synthetic click drops and touch latency on Android WebViews.
+- Canvas touch obstruction: Applied `display: none` (`.hidden`) to `#gameOverlay` on game start so invisible overlay elements with backdrop-filter no longer trap touch events intended for the game canvas.
+- Modular milestone architecture: Extracted milestone modal logic into `src/ui/milestoneModal.js` to keep `uiManager.js` under 150 lines in accordance with the 180-line target.
+- Initialization sequence: Initialized `uiManager` before `engine` so game state restoration events are immediately captured by UI listeners.
+
 ## [1.8.0] - 2026-11-12
 ### Added
 - Native Android launcher adaptive icons: Exported pixel-perfect launcher PNGs across all density buckets (mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi) from the 512x512 master icon with a custom `#020617` background color and 72% safe-zone foreground padding matching system adaptive squircle and circle shapes.

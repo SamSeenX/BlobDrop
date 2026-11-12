@@ -1,6 +1,7 @@
 import { eventBus } from '../core/eventBus.js';
 import { storage } from '../core/storage.js';
 import { audioManager } from '../audio/sound.js';
+import { renderMilestoneModal } from './milestoneModal.js';
 
 export class UIManager {
   constructor() {
@@ -94,7 +95,10 @@ export class UIManager {
     eventBus.on('milestone:unlocked', (data) => this.handleMilestoneUI(data));
 
     eventBus.on('game:started', () => {
-      this.gameOverlay?.classList.add('opacity-0', 'pointer-events-none');
+      if (this.gameOverlay) {
+        this.gameOverlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => this.gameOverlay?.classList.add('hidden'), 220);
+      }
       this.gameOverAd?.classList.add('hidden');
     });
 
@@ -104,53 +108,17 @@ export class UIManager {
       if (this.overlaySub) this.overlaySub.innerText = `Final Score: ${score} (Best: ${this.highScore})`;
       this.gameOverAd?.classList.remove('hidden');
       if (this.actionBtn) this.actionBtn.innerText = 'TRY AGAIN';
-      this.gameOverlay?.classList.remove('opacity-0', 'pointer-events-none');
+      if (this.gameOverlay) {
+        this.gameOverlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          this.gameOverlay?.classList.remove('opacity-0', 'pointer-events-none');
+        });
+      }
     });
   }
 
-  handleMilestoneUI({ currentTier, nextTier, isWin4096, isGodlike8192 }) {
-    audioManager.play('milestone');
-
-    if (isWin4096) {
-      if (this.milestoneEmoji) this.milestoneEmoji.innerText = '🏆';
-      if (this.milestoneTitle) this.milestoneTitle.innerText = 'YOU WON 4096!';
-      if (this.milestoneDesc) this.milestoneDesc.innerHTML = 'Sensational victory! You crafted the legendary <strong>4096</strong> blob!';
-      this.milestoneDareBox?.classList.remove('hidden');
-      this.milestoneNextRow?.classList.add('hidden');
-      if (this.milestoneContinueBtn) {
-        this.milestoneContinueBtn.innerText = 'DARE ACCEPTED: GO FOR 8192!';
-        this.milestoneContinueBtn.classList.add('dare-btn-pulse');
-      }
-    } else if (isGodlike8192) {
-      if (this.milestoneEmoji) this.milestoneEmoji.innerText = '👑';
-      if (this.milestoneTitle) this.milestoneTitle.innerText = 'GODLIKE: 8192 UNLOCKED!';
-      if (this.milestoneDesc) this.milestoneDesc.innerHTML = 'UNBELIEVABLE! You conquered the ultimate <strong>8192</strong> blob!';
-      this.milestoneDareBox?.classList.add('hidden');
-      this.milestoneNextRow?.classList.add('hidden');
-      if (this.milestoneContinueBtn) {
-        this.milestoneContinueBtn.innerText = 'KEEP PLAYING';
-        this.milestoneContinueBtn.classList.remove('dare-btn-pulse');
-      }
-    } else {
-      if (this.milestoneEmoji) this.milestoneEmoji.innerText = '🎉';
-      if (this.milestoneTitle) this.milestoneTitle.innerText = 'MILESTONE UNLOCKED!';
-      if (this.milestoneDesc) this.milestoneDesc.innerHTML = `You just unlocked <strong class="milestone-current">${currentTier.name}</strong>`;
-      this.milestoneDareBox?.classList.add('hidden');
-      if (nextTier && this.milestoneNext) {
-        this.milestoneNext.innerText = nextTier.name;
-        this.milestoneNextRow?.classList.remove('hidden');
-      } else {
-        this.milestoneNextRow?.classList.add('hidden');
-      }
-      if (this.milestoneContinueBtn) {
-        this.milestoneContinueBtn.innerText = 'CONTINUE';
-        this.milestoneContinueBtn.classList.remove('dare-btn-pulse');
-      }
-    }
-
-    if (this.milestoneOverlay) {
-      this.milestoneOverlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-    }
+  handleMilestoneUI(data) {
+    renderMilestoneModal(this, data);
   }
 
   updateBestDisplay(score) {
@@ -163,6 +131,19 @@ export class UIManager {
   }
 
   bindStartAction(callback) {
-    this.actionBtn?.addEventListener('click', callback);
+    if (!this.actionBtn) return;
+    let handled = false;
+    const trigger = (e) => {
+      e?.preventDefault?.();
+      e?.stopPropagation?.();
+      if (handled) return;
+      handled = true;
+      setTimeout(() => { handled = false; }, 300);
+      callback();
+    };
+
+    this.actionBtn.addEventListener('click', trigger);
+    this.actionBtn.addEventListener('pointerup', trigger);
+    this.actionBtn.addEventListener('touchend', trigger);
   }
 }
