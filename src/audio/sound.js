@@ -1,4 +1,5 @@
 import { storage } from '../core/storage.js';
+import { hapticManager } from './haptics.js';
 
 class AudioManager {
   constructor() {
@@ -23,6 +24,7 @@ class AudioManager {
   }
 
   play(type) {
+    hapticManager.trigger(type);
     if (!this.soundEnabled) return;
     this.initAudio();
     if (!this.audioCtx) return;
