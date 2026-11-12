@@ -4,6 +4,13 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Tactile Haptic Feedback & Audio Sync (`src/audio/haptics.js`, `src/audio/sound.js`)**:
+  - Dual-platform tactile response: Native `@capacitor/haptics` impacts and notifications on mobile, coupled with standard `navigator.vibrate` pulse patterns on browsers.
+  - Distinct event vibrations: Light impact on blob launch and drop, medium impact on blob merges, fanfare vibration sequence on milestone unlocks, and dual pulse on game over.
+  - Non-blocking execution: Haptic triggers fire asynchronously without impacting the 60 FPS deterministic physics accumulator loop.
+- **Native Android Adaptive Launcher Assets (`android/app/src/main/res/`)**:
+  - Full density raster coverage: Pixel-perfect launcher icons for mdpi (48px), hdpi (72px), xhdpi (96px), xxhdpi (144px), and xxxhdpi (192px).
+  - Modern adaptive icon support: Adaptive foreground assets with 72% safe-zone margin on a `#020617` background color, supporting dynamic Android 14+ launcher shapes (circles, squircles, pebbles).
 - **Single-Source Unified Multi-Platform Architecture (`capacitor.config.json`, `android/`)**:
   - Unified codebase for Web and Android: Capacitor wraps the web build (`dist/`) directly inside the local `android/` directory without splitting or duplicating repositories.
   - Single build command: Web deploys to Cloudflare Pages via Vite, while `npx cap sync android` synchronizes the exact same tested web assets into Android Studio / Gradle.

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2026-11-12
+### Added
+- Native Android launcher adaptive icons: Exported pixel-perfect launcher PNGs across all density buckets (mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi) from the 512x512 master icon with a custom `#020617` background color and 72% safe-zone foreground padding matching system adaptive squircle and circle shapes.
+- Dual-tier haptic feedback system: Created `src/audio/haptics.js` using `@capacitor/haptics` on Android with automatic fallback to web `navigator.vibrate`, bringing crisp physical vibrations to blob drops, merges, milestone celebrations, and game over sequences.
+- Android vibration permissions: Added `android.permission.VIBRATE` to `AndroidManifest.xml` and synced `@capacitor/haptics` plugin into native Gradle workspace.
+
 ## [1.7.0] - 2026-11-12
 ### Added
 - Unified Capacitor Android project: Integrated `@capacitor/core`, `@capacitor/android`, and `@capacitor-community/admob` into the root repository, allowing single-command synchronization from web build into native Android.
