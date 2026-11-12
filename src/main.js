@@ -32,9 +32,9 @@ const canvas = document.getElementById('gameCanvas');
 const wrapper = document.getElementById('canvasWrapper');
 const ctx = canvas.getContext('2d');
 
+const uiManager = new UIManager();
 const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
-const uiManager = new UIManager();
 initPwaPrompt();
 initAdSystem();
 

@@ -77,7 +77,7 @@ export class Engine {
       balls: [], particles: [], score: 0, highestTier: 0, comboMultiplier: 1,
       comboTimer: 0, dangerTimer: 0, isMuzzleBlocked: false, gameState: 'PLAYING',
       currentTierIndex: getRandomSpawnTier(0), nextTierIndex: getRandomSpawnTier(0),
-      trajectory: null, isAiming: false, spawnProgress: 0.15
+      trajectory: null, isAiming: false, spawnProgress: 0.15, canDrop: true
     });
     this.unlockedMilestones.clear();
     this.dangerEl?.classList.remove('danger-active');
