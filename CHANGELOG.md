@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - 2026-11-13
+### Fixed
+- Play Store House Ad metadata & authentic branding: Fetched official Google Play Store metadata and high-resolution icons for EloRun ("EloRun: Master Chess Puzzles", tactical chess puzzle engine with 112K+ puzzles) and FinTrack ("ZenCash | Master your Money", minimalist financial intelligence and wealth tracker). Bundled offline-cached WebP icons in `public/assets/ads/` and updated `src/ui/houseAds.js`.
+
 ## [1.10.0] - 2026-11-13
 ### Added
 - Custom in-game confirmation modal: Built `#confirmResetOverlay` and decoupled `src/ui/confirmModal.js` to replace ugly system-level `window.confirm` dialogs with theme-matched frosted glass styling, smooth animations, and Cancel/Restart buttons with native haptic feedback.

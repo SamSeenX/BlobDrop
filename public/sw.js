@@ -1,4 +1,4 @@
-const CACHE_NAME = 'blobdrop-v1.9.0';
+const CACHE_NAME = 'blobdrop-v1.10.1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -6,7 +6,9 @@ const STATIC_ASSETS = [
   '/icon.svg',
   '/icon-192.png',
   '/icon-512.png',
-  '/apple-touch-icon.png'
+  '/apple-touch-icon.png',
+  '/assets/ads/elorun-icon.webp',
+  '/assets/ads/zencash-icon.webp'
 ];
 
 self.addEventListener('install', (e) => {
