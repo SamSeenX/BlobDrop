@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.1] - 2026-11-13
+### Fixed
+- Web Service Worker Network-First HTML delivery: Upgraded `public/sw.js` cache name to `blobdrop-v1.9.0` and converted navigation and HTML fetch requests to network-first with offline cache fallback, ensuring web users receive live HTML and UI updates immediately upon deployment rather than serving stale cache-first HTML.
+
 ## [1.9.0] - 2026-11-13
 ### Added
 - New Game and Restart button: Added a circular reset button (`🔄`) to the top action bar with state check confirmation (`window.confirm`) to restart boards cleanly without forcing artificial game over states.

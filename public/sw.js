@@ -1,4 +1,4 @@
-const CACHE_NAME = 'blobdrop-v1.5.4';
+const CACHE_NAME = 'blobdrop-v1.9.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -19,31 +19,43 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(
-        keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null))
-      )
-    )
+      Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)))
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // Serve static assets with cache-first, fall back to network
-  if (url.origin === self.location.origin) {
+  // Network-first for navigation/HTML so updates are seen immediately
+  if (e.request.mode === 'navigate' || url.pathname === '/' || url.pathname.endsWith('.html')) {
     e.respondWith(
-      caches.match(e.request).then((cached) => {
-        if (cached) return cached;
-        return fetch(e.request).then((res) => {
+      fetch(e.request)
+        .then((res) => {
           if (res.status === 200) {
             const clone = res.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
           }
           return res;
-        }).catch(() => caches.match('/index.html'));
-      })
+        })
+        .catch(() => caches.match(e.request).then((cached) => cached || caches.match('/index.html')))
     );
+    return;
   }
+
+  // Cache-first for hashed static assets
+  e.respondWith(
+    caches.match(e.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(e.request).then((res) => {
+        if (res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+        }
+        return res;
+      });
+    })
+  );
 });
