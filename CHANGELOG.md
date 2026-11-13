@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.0] - 2026-11-13
+### Added
+- Custom in-game confirmation modal: Built `#confirmResetOverlay` and decoupled `src/ui/confirmModal.js` to replace ugly system-level `window.confirm` dialogs with theme-matched frosted glass styling, smooth animations, and Cancel/Restart buttons with native haptic feedback.
+- Universal house ad rotator for EloRun and FinTrack: Updated `src/ui/houseAds.js` with rotating promotional banners for EloRun and FinTrack, enabled across both web and native Android platforms via `src/ui/adManager.js` until AdMob is deployed.
+
 ## [1.9.1] - 2026-11-13
 ### Fixed
 - Web Service Worker Network-First HTML delivery: Upgraded `public/sw.js` cache name to `blobdrop-v1.9.0` and converted navigation and HTML fetch requests to network-first with offline cache fallback, ensuring web users receive live HTML and UI updates immediately upon deployment rather than serving stale cache-first HTML.

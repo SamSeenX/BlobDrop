@@ -3,6 +3,7 @@ import { storage } from './core/storage.js';
 import { Renderer } from './game/renderer.js';
 import { Engine } from './game/engine.js';
 import { UIManager } from './ui/uiManager.js';
+import { ConfirmModal } from './ui/confirmModal.js';
 import { initPwaPrompt } from './ui/pwaPrompt.js';
 import { initAdSystem } from './ui/adManager.js';
 import { TIERS } from './config/tiers.js';
@@ -35,6 +36,7 @@ const wrapper = document.getElementById('canvasWrapper');
 const ctx = canvas.getContext('2d');
 
 const uiManager = new UIManager();
+const confirmModal = new ConfirmModal();
 const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
 initPwaPrompt();
