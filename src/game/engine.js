@@ -27,11 +27,11 @@ export class Engine {
     eventBus.on('game:resume', () => this.resume());
     eventBus.on('game:pause:toggle', () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()));
     eventBus.on('game:reset', () => this.handleReset());
+    eventBus.on('game:reset:confirmed', () => this.start());
     window.addEventListener('beforeunload', () => saveGameState(this));
     document.addEventListener('visibilitychange', () => { if (document.hidden) saveGameState(this); });
-
-    this.resizeCanvas();
     window.addEventListener('resize', () => this.resizeCanvas());
+    this.resizeCanvas();
     restoreGameState(this);
   }
 
@@ -55,9 +55,7 @@ export class Engine {
 
   pause() {
     if (this.gameState !== 'PLAYING') return;
-    this.gameState = 'PAUSED';
-    this.isAiming = false;
-    this.trajectory = null;
+    Object.assign(this, { gameState: 'PAUSED', isAiming: false, trajectory: null });
     saveGameState(this);
     eventBus.emit('game:paused');
   }
@@ -69,7 +67,12 @@ export class Engine {
   }
 
   handleReset() {
-    if ((this.balls.length > 0 || this.score > 0) && !window.confirm('Start a new game? Current board will be reset.')) return;
+    if (this.balls.length > 0 || this.score > 0) {
+      const wasPlaying = this.gameState === 'PLAYING';
+      if (wasPlaying) this.pause();
+      eventBus.emit('confirm:reset:open', { wasPlaying });
+      return;
+    }
     this.start();
   }
 
@@ -108,14 +111,13 @@ export class Engine {
     saveGameState(this);
 
     const m = checkMilestone(newTier, this.unlockedMilestones);
-    if (m.isMilestone) {
-      this.pause();
-      eventBus.emit('milestone:unlocked', {
-        currentTier: TIERS[m.currentTierIndex],
-        nextTier: m.nextMilestoneIndex !== null ? TIERS[m.nextMilestoneIndex] : null,
-        isWin4096: m.isWin4096, isGodlike8192: m.isGodlike8192
-      });
-    }
+    if (!m.isMilestone) return;
+    this.pause();
+    eventBus.emit('milestone:unlocked', {
+      currentTier: TIERS[m.currentTierIndex],
+      nextTier: m.nextMilestoneIndex !== null ? TIERS[m.nextMilestoneIndex] : null,
+      isWin4096: m.isWin4096, isGodlike8192: m.isGodlike8192
+    });
   }
 
   handleLaunch() {
@@ -130,9 +132,7 @@ export class Engine {
     this.currentTierIndex = this.nextTierIndex;
     this.nextTierIndex = getRandomSpawnTier(this.highestTier);
     eventBus.emit('next:update', { currentTier: TIERS[this.currentTierIndex], nextTier: TIERS[this.nextTierIndex] });
-    this.trajectory = null;
-    this.canDrop = false;
-    this.spawnProgress = 0;
+    Object.assign(this, { trajectory: null, canDrop: false, spawnProgress: 0 });
     saveGameState(this);
     setTimeout(() => { this.canDrop = true; }, 320);
   }

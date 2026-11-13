@@ -136,6 +136,27 @@
           </button>
         </div>
       </div>
+
+      <!-- Confirm Reset Modal Overlay -->
+      <div id="confirmResetOverlay" class="game-overlay hidden opacity-0 pointer-events-none">
+        <div class="overlay-modal confirm-modal">
+          <div class="overlay-icon-wrap confirm-badge">
+            <span>🔄</span>
+          </div>
+          <h2 class="display-font confirm-title">RESTART GAME?</h2>
+          <p class="confirm-desc">
+            Your current score and board progress will be reset.
+          </p>
+          <div class="confirm-actions">
+            <button id="cancelResetBtn" class="action-btn cancel-btn">
+              CANCEL
+            </button>
+            <button id="confirmResetBtn" class="action-btn confirm-btn">
+              RESTART
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
