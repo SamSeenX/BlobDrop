@@ -13,22 +13,20 @@ import { saveGameState, restoreGameState, clearSavedGameState } from './stateSto
 export class Engine {
   constructor({ canvas, wrapper, renderer }) {
     Object.assign(this, {
-      canvas, wrapper, renderer, width: 360, height: 540, scale: 1, dangerY: 45,
-      originX: 180, originY: 38, aimPos: { x: 180, y: 300 }, balls: [], particles: [],
-      score: 0, gameState: 'START', isAiming: false, currentTierIndex: 0, nextTierIndex: 1,
-      highestTier: 0, unlockedMilestones: new Set(), canDrop: true, comboMultiplier: 1,
-      comboTimer: 0, trajectory: null, spawnProgress: 1, dangerTimer: 0, isMuzzleBlocked: false
+      canvas, wrapper, renderer, width: 360, height: 540, scale: 1, dangerY: 45, originX: 180, originY: 38,
+      aimPos: { x: 180, y: 300 }, balls: [], particles: [], score: 0, gameState: 'START', isAiming: false,
+      currentTierIndex: 0, nextTierIndex: 1, highestTier: 0, unlockedMilestones: new Set(), canDrop: true,
+      comboMultiplier: 1, comboTimer: 0, trajectory: null, spawnProgress: 1, dangerTimer: 0, isMuzzleBlocked: false
     });
 
     this.dangerEl = document.getElementById('dangerLine');
     this.input = new InputHandler({
-      canvas: this.canvas,
-      onAim: (x, y) => this.handleAim(x, y),
-      onDrop: () => this.handleLaunch()
+      canvas: this.canvas, onAim: (x, y) => this.handleAim(x, y), onDrop: () => this.handleLaunch()
     });
 
     eventBus.on('game:resume', () => this.resume());
     eventBus.on('game:pause:toggle', () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()));
+    eventBus.on('game:reset', () => this.handleReset());
     window.addEventListener('beforeunload', () => saveGameState(this));
     document.addEventListener('visibilitychange', () => { if (document.hidden) saveGameState(this); });
 
@@ -50,8 +48,7 @@ export class Engine {
 
   updateTrajectory() {
     this.trajectory = calculateTrajectory({
-      originX: this.originX, originY: this.originY,
-      targetX: this.aimPos.x, targetY: this.aimPos.y,
+      originX: this.originX, originY: this.originY, targetX: this.aimPos.x, targetY: this.aimPos.y,
       width: this.width, height: this.height, scale: this.scale, tierIndex: this.currentTierIndex
     });
   }
@@ -71,13 +68,18 @@ export class Engine {
     eventBus.emit('game:resumed');
   }
 
+  handleReset() {
+    if ((this.balls.length > 0 || this.score > 0) && !window.confirm('Start a new game? Current board will be reset.')) return;
+    this.start();
+  }
+
   start() {
     clearSavedGameState();
     Object.assign(this, {
-      balls: [], particles: [], score: 0, highestTier: 0, comboMultiplier: 1,
-      comboTimer: 0, dangerTimer: 0, isMuzzleBlocked: false, gameState: 'PLAYING',
+      balls: [], particles: [], score: 0, highestTier: 0, comboMultiplier: 1, comboTimer: 0,
+      dangerTimer: 0, isMuzzleBlocked: false, gameState: 'PLAYING', canDrop: true,
       currentTierIndex: getRandomSpawnTier(0), nextTierIndex: getRandomSpawnTier(0),
-      trajectory: null, isAiming: false, spawnProgress: 0.15, canDrop: true
+      trajectory: null, isAiming: false, spawnProgress: 0.15
     });
     this.unlockedMilestones.clear();
     this.dangerEl?.classList.remove('danger-active');
@@ -101,7 +103,6 @@ export class Engine {
     this.score += TIERS[tierIndex].points * this.comboMultiplier;
     eventBus.emit('score:update', { score: this.score });
     eventBus.emit('combo:update', { multiplier: this.comboMultiplier });
-
     const newTier = tierIndex + 1;
     if (newTier > this.highestTier) this.highestTier = newTier;
     saveGameState(this);
@@ -129,7 +130,6 @@ export class Engine {
     this.currentTierIndex = this.nextTierIndex;
     this.nextTierIndex = getRandomSpawnTier(this.highestTier);
     eventBus.emit('next:update', { currentTier: TIERS[this.currentTierIndex], nextTier: TIERS[this.nextTierIndex] });
-
     this.trajectory = null;
     this.canDrop = false;
     this.spawnProgress = 0;
@@ -171,9 +171,9 @@ export class Engine {
   render() {
     this.renderer.render({
       width: this.width, height: this.height, dangerY: this.dangerY, scale: this.scale,
-      balls: this.balls, particles: this.particles, isAiming: this.isAiming,
-      originX: this.originX, originY: this.originY, currentTierIndex: this.currentTierIndex,
-      trajectory: this.trajectory, spawnProgress: this.spawnProgress, isPlaying: this.gameState === 'PLAYING'
+      balls: this.balls, particles: this.particles, isAiming: this.isAiming, originX: this.originX,
+      originY: this.originY, currentTierIndex: this.currentTierIndex, trajectory: this.trajectory,
+      spawnProgress: this.spawnProgress, isPlaying: this.gameState === 'PLAYING'
     });
   }
 }

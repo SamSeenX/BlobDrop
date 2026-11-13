@@ -18,10 +18,9 @@ export class UIManager {
     this.gameOverAd = document.getElementById('gameOverAd');
     this.muteBtn = document.getElementById('muteBtn');
     this.muteIcon = document.getElementById('muteIcon');
-    this.muteText = document.getElementById('muteText');
     this.pauseBtn = document.getElementById('pauseBtn');
     this.pauseIcon = document.getElementById('pauseIcon');
-    this.pauseText = document.getElementById('pauseText');
+    this.resetBtn = document.getElementById('resetBtn');
 
     this.milestoneOverlay = document.getElementById('milestoneOverlay');
     this.milestoneEmoji = document.getElementById('milestoneEmoji');
@@ -46,6 +45,10 @@ export class UIManager {
 
     this.pauseBtn?.addEventListener('click', () => {
       eventBus.emit('game:pause:toggle');
+    });
+
+    this.resetBtn?.addEventListener('click', () => {
+      eventBus.emit('game:reset');
     });
 
     this.milestoneContinueBtn?.addEventListener('click', () => {
@@ -84,12 +87,10 @@ export class UIManager {
 
     eventBus.on('game:paused', () => {
       if (this.pauseIcon) this.pauseIcon.innerText = '▶️';
-      if (this.pauseText) this.pauseText.innerText = 'Resume';
     });
 
     eventBus.on('game:resumed', () => {
       if (this.pauseIcon) this.pauseIcon.innerText = '⏸️';
-      if (this.pauseText) this.pauseText.innerText = 'Pause';
     });
 
     eventBus.on('milestone:unlocked', (data) => this.handleMilestoneUI(data));
@@ -127,7 +128,6 @@ export class UIManager {
 
   updateMuteUI(isEnabled) {
     if (this.muteIcon) this.muteIcon.innerText = isEnabled ? '🔊' : '🔇';
-    if (this.muteText) this.muteText.innerText = isEnabled ? 'Sound' : 'Muted';
   }
 
   bindStartAction(callback) {

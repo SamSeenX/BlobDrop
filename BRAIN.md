@@ -4,7 +4,9 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
-- **Touch Ergonomics & Overlay Tree Management (`src/ui/uiManager.js`, `src/ui/milestoneModal.js`)**:
+- **Touch Ergonomics & Header Actions (`src/ui/uiManager.js`, `src/ui/milestoneModal.js`, `src/styles/status.css`)**:
+  - Icon-only header action buttons: Circular 44px touch targets with no text labels prevent viewport overflow on narrow mobile screens and present clean iconography (`📲`, `🔄`, `⏸️`/`▶️`, `🔊`/`🔇`).
+  - Active session reset protocol: The restart button (`🔄`) clears in-memory balls and saved state via `handleReset()`, featuring confirmation protection against accidental board losses during live games.
   - Tri-event input binding: Primary interactive buttons bind `pointerup`, `touchend`, and `click` with execution debouncing to eliminate 300ms mobile touch delays and avoid dropped taps on Android WebViews.
   - Complete layout tree detachment: Overlays apply `display: none` (`.hidden`) after transition animations rather than relying solely on `pointer-events: none`, preventing backdrop-filter compositing layers from capturing canvas gestures.
 - **Tactile Haptic Feedback & Audio Sync (`src/audio/haptics.js`, `src/audio/sound.js`)**:
