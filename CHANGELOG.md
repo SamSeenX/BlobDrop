@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - 2026-11-13
+### Added
+- New Game and Restart button: Added a circular reset button (`🔄`) to the top action bar with state check confirmation (`window.confirm`) to restart boards cleanly without forcing artificial game over states.
+- Sleek icon-only action group: Removed text labels ("Install", "Pause", "Sound") from header action buttons, transitioning to modern 44px circular pills with centered iconography and full mobile touch targets.
+
 ## [1.8.2] - 2026-11-13
 ### Fixed
 - Native Android Service Worker caching conflict: Guarded Service Worker registration strictly to non-native web browsers and unregister any stale service workers or caches on Capacitor Android builds, preventing stale index.html files from referencing deleted JavaScript bundle hashes.
