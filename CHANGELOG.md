@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.2] - 2026-11-13
+### Fixed
+- Native Android Service Worker caching conflict: Guarded Service Worker registration strictly to non-native web browsers and unregister any stale service workers or caches on Capacitor Android builds, preventing stale index.html files from referencing deleted JavaScript bundle hashes.
+
 ## [1.8.1] - 2026-11-12
 ### Fixed
 - Android Play Now touch responsiveness: Bound dual `pointerup`, `touchend`, and `click` listeners with debouncing on the primary action button to eliminate synthetic click drops and touch latency on Android WebViews.

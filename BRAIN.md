@@ -16,6 +16,7 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Modern adaptive icon support: Adaptive foreground assets with 72% safe-zone margin on a `#020617` background color, supporting dynamic Android 14+ launcher shapes (circles, squircles, pebbles).
 - **Single-Source Unified Multi-Platform Architecture (`capacitor.config.json`, `android/`)**:
   - Unified codebase for Web and Android: Capacitor wraps the web build (`dist/`) directly inside the local `android/` directory without splitting or duplicating repositories.
+  - Native cache isolation: Service Worker (`/sw.js`) registration is restricted exclusively to standard web environments, actively unregistering legacy workers and purging caches in native Capacitor builds to eliminate 404 stale asset hashes across APK updates.
   - Single build command: Web deploys to Cloudflare Pages via Vite, while `npx cap sync android` synchronizes the exact same tested web assets into Android Studio / Gradle.
   - Target SDK 36 and Android 14+ compliance with memory-capped Gradle daemon (`2048m`) ensuring fast, freeze-free local builds.
   - Both debug APK (`app-debug.apk`) and release App Bundle (`app-release.aab`) compile cleanly in under 4 minutes using local Android SDK.

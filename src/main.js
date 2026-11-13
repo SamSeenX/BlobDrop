@@ -7,12 +7,14 @@ import { initPwaPrompt } from './ui/pwaPrompt.js';
 import { initAdSystem } from './ui/adManager.js';
 import { TIERS } from './config/tiers.js';
 import { eventBus } from './core/eventBus.js';
+import { Capacitor } from '@capacitor/core';
 
 initErrorBoundary();
 storage.initPersistence();
 
 if ('serviceWorker' in navigator) {
-  if (import.meta.env.DEV) {
+  const isNative = Capacitor.isNativePlatform();
+  if (isNative || import.meta.env.DEV) {
     navigator.serviceWorker.getRegistrations().then((regs) => {
       for (const reg of regs) reg.unregister();
     });
