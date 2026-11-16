@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.1] - 2026-11-16
+### Fixed
+- Confetti & Fireworks Viewport Detection: Fixed zero-dimension calculation in `src/ui/confetti.js` by unhiding modal overlay before sizing canvas and adding robust dimension fallbacks with `getBoundingClientRect()`.
+- Elevated Particle Layer & Multi-Emitter Celebration: Elevated confetti canvas to `z-index: 10` with click-through pointer events, added dual-cannon fluttering ribbons with 35 radiating center firework sparks, and applied a gleaming golden card border with radial aura in `src/styles/modal.css`.
+
 ## [1.11.0] - 2026-11-16
 ### Added
 - 4096 & 8192 Victory Confetti Engine: Built zero-dependency `src/ui/confetti.js` with hardware-accelerated 2D canvas particle physics running at 60 FPS without memory leaks or main thread lag.

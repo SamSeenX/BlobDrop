@@ -8,14 +8,6 @@ export function renderMilestoneModal(ui, { currentTier, nextTier, isWin4096, isG
   const confettiCanvas = document.getElementById('confettiCanvas');
   const modalContent = ui.milestoneContent || document.getElementById('milestoneContent');
 
-  if (isVictory) {
-    modalContent?.classList.add('milestone-win-flare');
-    fireVictoryConfetti(confettiCanvas);
-  } else {
-    modalContent?.classList.remove('milestone-win-flare');
-    stopVictoryConfetti(confettiCanvas);
-  }
-
   if (isWin4096) {
     if (ui.milestoneEmoji) ui.milestoneEmoji.innerText = '🏆';
     if (ui.milestoneTitle) ui.milestoneTitle.innerText = 'YOU WON 4096!';
@@ -55,6 +47,14 @@ export function renderMilestoneModal(ui, { currentTier, nextTier, isWin4096, isG
 
   if (ui.milestoneOverlay) {
     ui.milestoneOverlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+  }
+
+  if (isVictory) {
+    modalContent?.classList.add('milestone-win-flare');
+    requestAnimationFrame(() => fireVictoryConfetti(confettiCanvas));
+  } else {
+    modalContent?.classList.remove('milestone-win-flare');
+    stopVictoryConfetti(confettiCanvas);
   }
 }
 
