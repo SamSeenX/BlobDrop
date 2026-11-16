@@ -1,7 +1,20 @@
 import { audioManager } from '../audio/sound.js';
+import { fireVictoryConfetti, stopVictoryConfetti } from './confetti.js';
 
 export function renderMilestoneModal(ui, { currentTier, nextTier, isWin4096, isGodlike8192 }) {
-  audioManager.play('milestone');
+  const isVictory = isWin4096 || isGodlike8192;
+  audioManager.play(isVictory ? 'victory' : 'milestone');
+
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  const modalContent = ui.milestoneContent || document.getElementById('milestoneContent');
+
+  if (isVictory) {
+    modalContent?.classList.add('milestone-win-flare');
+    fireVictoryConfetti(confettiCanvas);
+  } else {
+    modalContent?.classList.remove('milestone-win-flare');
+    stopVictoryConfetti(confettiCanvas);
+  }
 
   if (isWin4096) {
     if (ui.milestoneEmoji) ui.milestoneEmoji.innerText = '🏆';
@@ -43,4 +56,11 @@ export function renderMilestoneModal(ui, { currentTier, nextTier, isWin4096, isG
   if (ui.milestoneOverlay) {
     ui.milestoneOverlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
   }
+}
+
+export function cleanupMilestoneModal(ui) {
+  const confettiCanvas = document.getElementById('confettiCanvas');
+  const modalContent = ui?.milestoneContent || document.getElementById('milestoneContent');
+  modalContent?.classList.remove('milestone-win-flare');
+  stopVictoryConfetti(confettiCanvas);
 }
