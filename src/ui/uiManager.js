@@ -1,7 +1,7 @@
 import { eventBus } from '../core/eventBus.js';
 import { storage } from '../core/storage.js';
 import { audioManager } from '../audio/sound.js';
-import { renderMilestoneModal } from './milestoneModal.js';
+import { renderMilestoneModal, cleanupMilestoneModal } from './milestoneModal.js';
 
 export class UIManager {
   constructor() {
@@ -52,6 +52,7 @@ export class UIManager {
     });
 
     this.milestoneContinueBtn?.addEventListener('click', () => {
+      cleanupMilestoneModal(this);
       if (this.milestoneOverlay) {
         this.milestoneOverlay.classList.add('opacity-0', 'pointer-events-none');
         setTimeout(() => this.milestoneOverlay?.classList.add('hidden'), 200);

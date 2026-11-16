@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0] - 2026-11-16
+### Added
+- 4096 & 8192 Victory Confetti Engine: Built zero-dependency `src/ui/confetti.js` with hardware-accelerated 2D canvas particle physics running at 60 FPS without memory leaks or main thread lag.
+- Celebratory Golden Card Flare & Typography: Enhanced `src/styles/modal.css` with shimmering gradient victory text, bouncing trophy badge, and glowing radial halo for 4096 and 8192 milestones.
+- Triumphant Victory Fanfare: Added 6-note sine victory fanfare in `src/audio/sound.js` to distinguish climactic milestone unlocks from ordinary progress popups.
+
 ## [1.10.1] - 2026-11-13
 ### Fixed
 - Play Store House Ad metadata & authentic branding: Fetched official Google Play Store metadata and high-resolution icons for EloRun ("EloRun: Master Chess Puzzles", tactical chess puzzle engine with 112K+ puzzles) and FinTrack ("ZenCash | Master your Money", minimalist financial intelligence and wealth tracker). Bundled offline-cached WebP icons in `public/assets/ads/` and updated `src/ui/houseAds.js`.

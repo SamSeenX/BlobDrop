@@ -31,19 +31,21 @@ class AudioManager {
 
     const now = this.audioCtx.currentTime;
 
-    if (type === 'milestone') {
-      const notes = [523.25, 659.25, 783.99, 1046.50];
+    if (type === 'milestone' || type === 'victory') {
+      const notes = type === 'victory'
+        ? [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98]
+        : [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         const o = this.audioCtx.createOscillator();
         const g = this.audioCtx.createGain();
-        o.type = 'triangle';
+        o.type = type === 'victory' ? 'sine' : 'triangle';
         o.connect(g);
         g.connect(this.audioCtx.destination);
 
-        const start = now + idx * 0.09;
-        const dur = idx === notes.length - 1 ? 0.65 : 0.25;
+        const start = now + idx * 0.085;
+        const dur = idx === notes.length - 1 ? 0.95 : 0.22;
         o.frequency.setValueAtTime(freq, start);
-        g.gain.setValueAtTime(0.22, start);
+        g.gain.setValueAtTime(0.24, start);
         g.gain.exponentialRampToValueAtTime(0.001, start + dur);
         o.start(start);
         o.stop(start + dur);
