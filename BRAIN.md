@@ -4,7 +4,9 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
-- **Theme Manager & Cozy Pastel Anime Theme (`src/core/themeManager.js`, `src/config/tierThemes.js`, `src/ui/themeToggle.js`, `src/styles/themes.css`)**:
+- **Theme Manager & Cozy Pastel Anime Theme (`src/core/themeManager.js`, `src/config/tierThemes.js`, `src/ui/themeToggle.js`, `src/styles/themes.css`, `src/game/animeSprite.js`)**:
+  - Anime cel-shaded chibi sprite renderer: `src/game/animeSprite.js` generates authentic anime balls featuring two-tone cel shading, dark plum cel-ink outlines, soft chibi blush marks, angled bubble gleams, and white-stroked Fredoka sticker typography, completely replacing realistic 3D glossy spheres in the pastel theme.
+  - Theme-aware sprite caching: `spriteCache.getSprite()` dynamically selects between `anime` and `gloss` pipelines based on `data-theme="pastel"`, keeping 60 FPS performance without canvas lag.
   - In-place palette transformation: Mutates existing `TIERS` array references in place using `applyThemeToTiers()`, switching between default neon and cozy pastel palettes (Sakura Pink, Peach Custard, Butter Mochi, Matcha Milk, Boba Sky, Lavender Cloud, Taro Dream) with zero reload and zero physics interruption.
   - Zero-FOUC theme persistence: Stores active theme in `storage.getTheme()` (`blobdrop_theme`) and applies `data-theme="pastel"` to the document root before canvas initialization.
   - High-performance cache clearing: Calls `spriteCache.clear()` on theme switch so all procedural ball textures dynamically regenerate on next frame with matching glow and pastel shades.
