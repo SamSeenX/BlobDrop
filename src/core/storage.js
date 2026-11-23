@@ -78,7 +78,7 @@ export const storage = {
   getTheme() {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.THEME);
-      if (saved === 'dark' || saved === 'default') return 'dark';
+      if (saved === 'dark') return 'dark';
       return 'pastel';
     } catch {
       return 'pastel';

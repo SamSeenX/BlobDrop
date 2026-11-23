@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.18.1] - 2026-11-23
+### Changed
+- Service Worker Cache Version Bump: Bumped `CACHE_NAME` in `public/sw.js` to `blobdrop-v1.18.0` to trigger immediate background cache invalidation and prefetch the new pastel anime PWA icons and web manifest across all user devices.
+- Returning Player Theme Migration: Streamlined `storage.getTheme()` so legacy `'default'` sessions automatically upgrade to the new cozy pastel anime theme, preserving `'dark'` strictly for players who deliberately selected it.
+
 ## [1.18.0] - 2026-11-23
 ### Changed
 - Cozy Pastel Anime App Icons: Redesigned `public/icon.svg`, `public/icon-512.png`, `public/icon-192.png`, and `public/apple-touch-icon.png` to feature a strawberry cream squircle, cute pastel ambient sparkles, a hero anime chibi 4096 blob with cel shadows and blush cheeks, and a white card bottom pill.
