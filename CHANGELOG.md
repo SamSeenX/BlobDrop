@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.18.2] - 2026-11-23
+### Fixed
+- Realistic Shiny Gloss Balls in Dark Theme: Restored the clean, smooth 3D spherical gradient with soft specular gloss and clean dark typography in `src/game/spriteCache.js` for the dark theme, removing the harsh black outer rim and stroke.
+- Preserved Anime Cel-Shading for Pastel Theme: Maintained authentic chibi anime cel-shaded balls, blush marks, and sticker outlines strictly in the cozy pastel anime theme.
+
 ## [1.18.1] - 2026-11-23
 ### Changed
 - Service Worker Cache Version Bump: Bumped `CACHE_NAME` in `public/sw.js` to `blobdrop-v1.18.0` to trigger immediate background cache invalidation and prefetch the new pastel anime PWA icons and web manifest across all user devices.
