@@ -5,7 +5,7 @@ import { audioManager } from '../audio/sound.js';
 import { eventBus } from '../core/eventBus.js';
 import { InputHandler } from './input.js';
 import { calculateTrajectory } from './trajectory.js';
-import { updateParticles } from './particle.js';
+import { updateParticles, FloatingScore } from './particle.js';
 import { getRandomSpawnTier, checkMilestone, checkDangerLimit, launchBallData } from './spawner.js';
 import { applyCanvasResize } from './layout.js';
 import { saveGameState, restoreGameState, clearSavedGameState } from './stateStorage.js';
@@ -20,17 +20,14 @@ export class Engine {
     });
 
     this.dangerEl = document.getElementById('dangerLine');
-    this.input = new InputHandler({
-      canvas: this.canvas, onAim: (x, y) => this.handleAim(x, y), onDrop: () => this.handleLaunch()
-    });
-
+    this.input = new InputHandler({ canvas: this.canvas, onAim: (x, y) => this.handleAim(x, y), onDrop: () => this.handleLaunch() });
     eventBus.on('game:resume', () => this.resume());
     eventBus.on('game:pause:toggle', () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()));
     eventBus.on('game:reset', () => this.handleReset());
     eventBus.on('game:reset:confirmed', () => this.start());
     window.addEventListener('beforeunload', () => saveGameState(this));
-    document.addEventListener('visibilitychange', () => { if (document.hidden) saveGameState(this); });
     window.addEventListener('resize', () => this.resizeCanvas());
+    document.addEventListener('visibilitychange', () => { if (document.hidden) saveGameState(this); });
     this.resizeCanvas();
     restoreGameState(this);
   }
@@ -100,10 +97,13 @@ export class Engine {
     eventBus.emit('game:over', { score: this.score });
   }
 
-  handleMerge(tierIndex) {
+  handleMerge(tierIndex, spawnX, spawnY) {
     this.comboTimer = 45;
     this.comboMultiplier = Math.min(8, this.comboMultiplier + 1);
-    this.score += TIERS[tierIndex].points * this.comboMultiplier;
+    const pts = TIERS[tierIndex].points * this.comboMultiplier;
+    this.score += pts;
+    const nextColor = TIERS[tierIndex + 1]?.color || '#fde047';
+    this.particles.push(new FloatingScore(spawnX, spawnY - 10 * this.scale, `+${pts}`, nextColor, this.scale));
     eventBus.emit('score:update', { score: this.score });
     eventBus.emit('combo:update', { multiplier: this.comboMultiplier });
     const newTier = tierIndex + 1;
@@ -152,7 +152,7 @@ export class Engine {
 
     this.balls = resolveCollisions({
       balls: this.balls, particles: this.particles, width: this.width, height: this.height,
-      scale: this.scale, onMerge: (tierIdx) => this.handleMerge(tierIdx)
+      scale: this.scale, onMerge: (tierIdx, x, y) => this.handleMerge(tierIdx, x, y)
     });
 
     const spawnR = (TIERS[this.currentTierIndex]?.radius || 15) * this.scale;

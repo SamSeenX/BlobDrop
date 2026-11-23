@@ -2,6 +2,7 @@ import { eventBus } from '../core/eventBus.js';
 import { storage } from '../core/storage.js';
 import { audioManager } from '../audio/sound.js';
 import { renderMilestoneModal, cleanupMilestoneModal } from './milestoneModal.js';
+import { renderHighScoreModal, cleanupHighScoreModal } from './highScoreModal.js';
 
 export class UIManager {
   constructor() {
@@ -30,8 +31,13 @@ export class UIManager {
     this.milestoneNext = document.getElementById('milestoneNext');
     this.milestoneNextRow = document.getElementById('milestoneNextRow');
     this.milestoneContinueBtn = document.getElementById('milestoneContinueBtn');
+    this.highScoreOverlay = document.getElementById('highScoreOverlay');
+    this.highScoreModalValue = document.getElementById('highScoreModalValue');
+    this.highScoreContinueBtn = document.getElementById('highScoreContinueBtn');
 
     this.highScore = storage.getHighScore();
+    this.sessionRecord = this.highScore;
+    this.hasCelebratedRecord = false;
     this.init();
   }
 
@@ -60,8 +66,18 @@ export class UIManager {
       eventBus.emit('game:resume');
     });
 
+    this.highScoreContinueBtn?.addEventListener('click', () => {
+      cleanupHighScoreModal(this);
+      eventBus.emit('game:resume');
+    });
+
     eventBus.on('score:update', ({ score }) => {
       if (this.scoreDisplay) this.scoreDisplay.innerText = score;
+      if (this.sessionRecord > 0 && !this.hasCelebratedRecord && score > this.sessionRecord) {
+        this.hasCelebratedRecord = true;
+        eventBus.emit('game:pause:toggle');
+        renderHighScoreModal(this, score);
+      }
       if (score > this.highScore) {
         this.highScore = score;
         storage.setHighScore(score);
@@ -80,11 +96,18 @@ export class UIManager {
     eventBus.on('combo:update', ({ multiplier }) => {
       if (this.comboBadge && multiplier > 1) {
         this.comboBadge.innerText = `🔥 COMBO x${multiplier}`;
-        this.comboBadge.classList.remove('hidden');
+        this.comboBadge.classList.remove('hidden', 'combo-pop');
+        void this.comboBadge.offsetWidth;
+        this.comboBadge.classList.add('combo-pop');
       }
     });
 
-    eventBus.on('combo:reset', () => this.comboBadge?.classList.add('hidden'));
+    eventBus.on('combo:reset', () => {
+      if (this.comboBadge) {
+        this.comboBadge.classList.remove('combo-pop');
+        this.comboBadge.classList.add('hidden');
+      }
+    });
 
     eventBus.on('game:paused', () => {
       if (this.pauseIcon) this.pauseIcon.innerText = '▶️';
@@ -97,6 +120,8 @@ export class UIManager {
     eventBus.on('milestone:unlocked', (data) => this.handleMilestoneUI(data));
 
     eventBus.on('game:started', () => {
+      this.sessionRecord = storage.getHighScore();
+      this.hasCelebratedRecord = false;
       if (this.gameOverlay) {
         this.gameOverlay.classList.add('opacity-0', 'pointer-events-none');
         setTimeout(() => this.gameOverlay?.classList.add('hidden'), 220);

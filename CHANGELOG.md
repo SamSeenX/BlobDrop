@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0] - 2026-11-23
+### Added
+- New High Score Celebration Screen: Created `#highScoreOverlay`, `src/ui/highScoreModal.js`, and `src/styles/highscore.css` to celebrate the instant a player shatters their previous record during an active run.
+- Single-Trigger Record Detection: Evaluates in `src/ui/uiManager.js` against the session start record (`sessionRecord > 0`), firing celebratory fireworks, confetti bursts, golden crown animations, and victory fanfare exactly once per run.
+- Seamless Resume Protocol: Pauses game physics cleanly and provides a prominent "KEEP GOING 🚀" button that dismisses the celebration and resumes gameplay without disrupting board state.
+
+## [1.13.0] - 2026-11-23
+### Added
+- Retro Nintendo Floating Score Popups: Built `FloatingScore` particle class in `src/game/particle.js` that emits bold arcade "+N" point values right from the merge epicenter with dark outlines, decelerating upward float, and gentle fade-out.
+- Centered In-Playfield Combo Banner: Relocated `#comboBadge` from top status header into `#canvasWrapper` with `pointer-events: none` and dynamic `combo-pop` keyframe animations, giving high-visibility multiplier feedback (`🔥 COMBO x2`, `x3`) right in the active playfield.
+
 ## [1.12.2] - 2026-11-23
 ### Added
 - Organic Multi-Drop Demonstration & Adaptive Aim Solver: Upgraded `src/game/tutorial.js` and extracted `src/game/tutorialActions.js` to shoot an organic sequence of 6 to 10 blobs using whatever blobs the game engine naturally provides.

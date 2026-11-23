@@ -4,6 +4,12 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **New High Score Celebration Screen (`src/ui/highScoreModal.js`, `src/styles/highscore.css`, `src/ui/uiManager.js`)**:
+  - Immediate record recognition: Detects the first merge that shatters the session starting record (`sessionRecord > 0`), pausing game physics and triggering a celebratory victory screen with confetti and fanfare.
+  - Dedicated golden crown styling: Features `#highScoreOverlay` with radiant gold borders, bouncing crown badge, clean score readout, and a prominent "KEEP GOING 🚀" resume button.
+- **Retro Floating Scores & In-Playfield Combo Popups (`src/game/particle.js`, `src/styles/canvas.css`, `src/ui/uiManager.js`)**:
+  - Epicenter point popups: `FloatingScore` draws retro arcade-styled `+N` point text with heavy outlines and decelerating upward float at the exact `(spawnX, spawnY)` merge coordinates.
+  - Centered playfield combo banner: Relocated `#comboBadge` into `#canvasWrapper` floating at `18%` height with `pointer-events: none` and `combo-pop` bounce animations, ensuring high visibility without obscuring touches or balls.
 - **Interactive Phantom Hand Onboarding & Head Start (`src/game/tutorial.js`, `src/game/tutorialActions.js`, `src/styles/tutorial.css`)**:
   - Minimalist SVG pointer indicator: Clean, glassmorphic pointing hand with cyan vector styling and expanding contact ripple that demonstrates game mechanics on new game starts.
   - Multi-trajectory mechanical demonstration: Dynamically shoots 6 to 10 natural blobs using whatever tiers the engine naturally produces. Showcases quick tap drops, tap-and-hold drag aiming with visible trajectory sweeps, wall ricochets off both left and right walls, and adaptive matching shots targeting identical resting blobs for live merges.

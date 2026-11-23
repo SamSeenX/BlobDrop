@@ -140,7 +140,7 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
       for (let p = 0; p < 14; p++) particles.push(new Particle(spawnX, spawnY, color, ballScale));
 
       audioManager.play('merge');
-      if (onMerge) onMerge(b.tierIndex);
+      if (onMerge) onMerge(b.tierIndex, spawnX, spawnY);
       newBalls.push(new Ball(spawnX, spawnY, nextTier, true, b.vx, b.vy, ballScale));
     }
   }
