@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.2] - 2026-11-23
+### Added
+- Organic Multi-Drop Demonstration & Adaptive Aim Solver: Upgraded `src/game/tutorial.js` and extracted `src/game/tutorialActions.js` to shoot an organic sequence of 6 to 10 blobs using whatever blobs the game engine naturally provides.
+- Distinct Tap vs Drag Demonstrations: Visually differentiates instantaneous single-tap drops from controlled tap-and-hold drag aiming where the phantom hand and trajectory line visibly sweep across angles before release.
+- Dynamic Merge Detection: Intelligently detects matching tiers present on the board and prioritizes aimed merge shots, while alternating wall ricochets and lane balances when waiting for matches.
+
 ## [1.12.1] - 2026-11-23
 ### Fixed
 - Client-Side AdBlocker Startup Crash: Replaced static promotional imports in `src/main.js` with an asynchronous dynamic loader wrapped in error handling, preventing browser adblocker extensions from halting game engine initialization with `ERR_BLOCKED_BY_CLIENT`.
