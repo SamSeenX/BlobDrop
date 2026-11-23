@@ -30,8 +30,8 @@ export const PASTEL_PALETTE = [
   { color: '#f0abfc', glow: '#e879f9' }  // 8192: Cosmic Magic Plum
 ];
 
-export function applyThemeToTiers(tiers, theme = 'default') {
-  const palette = theme === 'pastel' ? PASTEL_PALETTE : DEFAULT_PALETTE;
+export function applyThemeToTiers(tiers, theme = 'pastel') {
+  const palette = theme === 'dark' || theme === 'default' ? DEFAULT_PALETTE : PASTEL_PALETTE;
   tiers.forEach((tier, i) => {
     if (palette[i]) {
       tier.color = palette[i].color;

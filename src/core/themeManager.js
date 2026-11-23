@@ -18,11 +18,11 @@ class ThemeManager {
   }
 
   getThemeIcon() {
-    return this.currentTheme === 'pastel' ? '⚡' : '🌸';
+    return this.currentTheme === 'dark' ? '🌸' : '🌙';
   }
 
   toggleTheme() {
-    const nextTheme = this.currentTheme === 'pastel' ? 'default' : 'pastel';
+    const nextTheme = this.currentTheme === 'dark' ? 'pastel' : 'dark';
     this.applyTheme(nextTheme, true);
     return nextTheme;
   }
