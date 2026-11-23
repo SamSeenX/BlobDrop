@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.1] - 2026-11-23
+### Fixed
+- Client-Side AdBlocker Startup Crash: Replaced static promotional imports in `src/main.js` with an asynchronous dynamic loader wrapped in error handling, preventing browser adblocker extensions from halting game engine initialization with `ERR_BLOCKED_BY_CLIENT`.
+- Renamed Ad-Related Modules & Selectors: Renamed `adManager.js` to `promoManager.js`, `houseAds.js` to `crossPromo.js`, `admobService.js` to `monetizationService.js`, and `src/styles/ad.css` to `src/styles/promo.css`. Neutralized DOM classes and IDs to `.promo-*` to prevent cosmetic adblock filtering.
+
 ## [1.12.0] - 2026-11-23
 ### Added
 - Interactive Phantom Hand Demonstration: Created `src/game/tutorial.js` and `src/styles/tutorial.css` delivering a sleek, minimalist SVG pointer hand that executes an interactive 5-drop demonstration upon fresh starts.

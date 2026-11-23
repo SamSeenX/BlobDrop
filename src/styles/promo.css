@@ -1,4 +1,4 @@
-.house-ad-card {
+.cross-promo-card {
   width: 100%;
   height: 100%;
   display: flex;
@@ -15,13 +15,13 @@
   cursor: pointer;
 }
 
-.house-ad-card:hover {
+.cross-promo-card:hover {
   transform: translateY(-2px);
   border-color: rgba(244, 63, 94, 0.8);
   box-shadow: 0 6px 18px rgba(244, 63, 94, 0.25);
 }
 
-.house-ad-icon {
+.cross-promo-icon {
   width: 44px;
   height: 44px;
   border-radius: 10px;
@@ -34,7 +34,7 @@
   box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
 }
 
-.house-ad-icon-img {
+.cross-promo-icon-img {
   width: 44px;
   height: 44px;
   border-radius: 10px;
@@ -43,7 +43,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-.house-ad-info {
+.cross-promo-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,7 +53,7 @@
   min-width: 0;
 }
 
-.house-ad-title {
+.cross-promo-title {
   font-family: 'Outfit', sans-serif;
   font-size: 13px;
   font-weight: 800;
@@ -64,7 +64,7 @@
   text-overflow: ellipsis;
 }
 
-.house-ad-tagline {
+.cross-promo-tagline {
   font-size: 10px;
   color: #cbd5e1;
   font-weight: 500;
@@ -73,13 +73,13 @@
   text-overflow: ellipsis;
 }
 
-.house-ad-rating {
+.cross-promo-rating {
   font-size: 9px;
   color: #fbbf24;
   font-weight: 700;
 }
 
-.house-ad-cta {
+.cross-promo-cta {
   padding: 6px 12px;
   background: linear-gradient(135deg, #f43f5e, #e11d48);
   border-radius: var(--radius-full);

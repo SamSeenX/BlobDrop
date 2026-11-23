@@ -6,7 +6,6 @@ import { UIManager } from './ui/uiManager.js';
 import { ConfirmModal } from './ui/confirmModal.js';
 import { TutorialController } from './game/tutorial.js';
 import { initPwaPrompt } from './ui/pwaPrompt.js';
-import { initAdSystem } from './ui/adManager.js';
 import { TIERS } from './config/tiers.js';
 import { eventBus } from './core/eventBus.js';
 import { Capacitor } from '@capacitor/core';
@@ -42,7 +41,10 @@ const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
 const tutorialController = new TutorialController(engine);
 initPwaPrompt();
-initAdSystem();
+
+import('./ui/promoManager.js')
+  .then((m) => m.initPromoSystem?.())
+  .catch(() => {});
 
 eventBus.on('game:started', () => {
   tutorialController.startDemo();
