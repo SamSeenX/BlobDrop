@@ -70,8 +70,8 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Tier 12 ("8192") blob: Added cosmic violet 8192 tier with mass 550 and 8192 points.
   - Standardized 300x100 ad placeholder container integrated on both milestone and game over overlays.
 - **Progressive Web App (PWA) Support (`public/manifest.webmanifest`, `public/sw.js`, `public/icon.svg`)**:
-  - Offline-first cache service worker for instant launches and offline play.
-  - 192x192 and 512x512 maskable PNG icons along with 180x180 `apple-touch-icon.png` meeting Chromium and Safari installability heuristics.
+  - Offline-first cache service worker (`blobdrop-v1.18.0`) with network-first navigation ensuring instant theme/icon updates upon reload and offline play.
+  - 192x192 and 512x512 maskable PNG icons along with 180x180 `apple-touch-icon.png` meeting Chromium and Safari installability heuristics in the cozy pastel anime aesthetic.
   - Interactive install prompt handler (`src/ui/pwaPrompt.js`).
 - **Cannon Launcher, Ballistic Trajectory & Reload Animation (`src/game/trajectory.js`, `src/game/renderer.js`, `src/game/input.js`)**:
   - Center-top mounted cannon aiming from `(width / 2, 38 * scale)`.

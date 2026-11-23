@@ -1,4 +1,4 @@
-const CACHE_NAME = 'blobdrop-v1.12.1';
+const CACHE_NAME = 'blobdrop-v1.18.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
