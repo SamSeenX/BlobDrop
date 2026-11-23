@@ -4,6 +4,11 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Interactive Phantom Hand Onboarding & Head Start (`src/game/tutorial.js`, `src/styles/tutorial.css`)**:
+  - Minimalist SVG pointer indicator: Clean, glassmorphic pointing hand with cyan vector styling and expanding contact ripple that demonstrates game mechanics on new game starts.
+  - Multi-trajectory mechanical demonstration: Showcases direct downward shots, wall bounce bank shots off left and right walls, and precision matching drops triggering a live 2+2=4 merge with visual particles and audio feedback.
+  - Pre-seeded starter basin: Seeds 5 initial low-tier blobs across the floor to eliminate the empty board feeling while maintaining balanced stack safety.
+  - Instant zero-latency player takeover: Any pointerdown or touch event anywhere on the canvas wrapper immediately cancels active timeouts and hands complete control to the player with zero lag.
 - **Touch Ergonomics & Header Actions (`src/ui/uiManager.js`, `src/ui/milestoneModal.js`, `src/styles/status.css`)**:
   - Icon-only header action buttons: Circular 44px touch targets with no text labels prevent viewport overflow on narrow mobile screens and present clean iconography (`📲`, `🔄`, `⏸️`/`▶️`, `🔊`/`🔇`).
   - Active session reset protocol: The restart button (`🔄`) clears in-memory balls and saved state via `handleReset()`, featuring confirmation protection against accidental board losses during live games.
