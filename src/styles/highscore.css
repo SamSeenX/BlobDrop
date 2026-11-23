@@ -1,13 +1,16 @@
 /* New High Score Celebration Screen */
 .highscore-modal {
+  padding: 28px 18px 24px;
+  border-radius: var(--radius-xl);
   border: 2px solid rgba(251, 191, 36, 0.85);
   box-shadow: 0 0 35px rgba(251, 191, 36, 0.35), 0 10px 40px rgba(0, 0, 0, 0.7);
-  background: radial-gradient(circle at 50% 20%, rgba(30, 27, 75, 0.95), rgba(15, 23, 42, 0.98));
+  background: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.22), rgba(15, 23, 42, 0.96) 75%);
 }
 
 .highscore-badge {
   background: linear-gradient(135deg, #f59e0b, #fbbf24);
   box-shadow: 0 0 24px rgba(251, 191, 36, 0.6);
+  margin-bottom: 14px;
   animation: highscore-crown-pulse 1.8s infinite ease-in-out;
 }
 
@@ -29,15 +32,15 @@
 .highscore-sub {
   font-size: 13px;
   color: #cbd5e1;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .highscore-score-box {
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(251, 191, 36, 0.4);
   border-radius: var(--radius-lg);
-  padding: 10px 20px;
-  margin-bottom: 18px;
+  padding: 12px 28px;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,7 +57,7 @@
 
 .highscore-score-val {
   font-family: var(--font-display, inherit);
-  font-size: 1.8rem;
+  font-size: 1.85rem;
   font-weight: 900;
   color: #ffffff;
 }

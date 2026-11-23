@@ -36,8 +36,6 @@ export class UIManager {
     this.highScoreContinueBtn = document.getElementById('highScoreContinueBtn');
 
     this.highScore = storage.getHighScore();
-    this.sessionRecord = this.highScore;
-    this.hasCelebratedRecord = false;
     this.init();
   }
 
@@ -66,18 +64,22 @@ export class UIManager {
       eventBus.emit('game:resume');
     });
 
-    this.highScoreContinueBtn?.addEventListener('click', () => {
+    const closeHighScore = (e) => {
+      e?.preventDefault?.();
+      e?.stopPropagation?.();
       cleanupHighScoreModal(this);
       eventBus.emit('game:resume');
+    };
+    this.highScoreContinueBtn?.addEventListener('click', closeHighScore);
+    this.highScoreContinueBtn?.addEventListener('pointerup', closeHighScore);
+    this.highScoreContinueBtn?.addEventListener('touchend', closeHighScore);
+
+    eventBus.on('highscore:unlocked', ({ score }) => {
+      renderHighScoreModal(this, score);
     });
 
     eventBus.on('score:update', ({ score }) => {
       if (this.scoreDisplay) this.scoreDisplay.innerText = score;
-      if (this.sessionRecord > 0 && !this.hasCelebratedRecord && score > this.sessionRecord) {
-        this.hasCelebratedRecord = true;
-        eventBus.emit('game:pause:toggle');
-        renderHighScoreModal(this, score);
-      }
       if (score > this.highScore) {
         this.highScore = score;
         storage.setHighScore(score);
@@ -120,8 +122,6 @@ export class UIManager {
     eventBus.on('milestone:unlocked', (data) => this.handleMilestoneUI(data));
 
     eventBus.on('game:started', () => {
-      this.sessionRecord = storage.getHighScore();
-      this.hasCelebratedRecord = false;
       if (this.gameOverlay) {
         this.gameOverlay.classList.add('opacity-0', 'pointer-events-none');
         setTimeout(() => this.gameOverlay?.classList.add('hidden'), 220);

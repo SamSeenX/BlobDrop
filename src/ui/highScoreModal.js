@@ -1,5 +1,6 @@
 import { audioManager } from '../audio/sound.js';
 import { fireVictoryConfetti, stopVictoryConfetti } from './confetti.js';
+import { renderCrossPromo } from './crossPromo.js';
 
 export function renderHighScoreModal(ui, score) {
   audioManager.play('victory');
@@ -7,6 +8,9 @@ export function renderHighScoreModal(ui, score) {
   if (ui.highScoreModalValue) {
     ui.highScoreModalValue.innerText = score;
   }
+
+  const promoSlot = document.getElementById('highScorePromoPlaceholder');
+  if (promoSlot) renderCrossPromo(promoSlot);
 
   const confettiCanvas = document.getElementById('highScoreConfettiCanvas');
   if (ui.highScoreOverlay) {
