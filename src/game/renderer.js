@@ -13,7 +13,8 @@ export class Renderer {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
 
-    this.ctx.strokeStyle = 'rgba(244, 63, 94, 0.05)';
+    const isPastel = document.documentElement.getAttribute('data-theme') === 'pastel';
+    this.ctx.strokeStyle = isPastel ? 'rgba(244, 114, 182, 0.14)' : 'rgba(244, 63, 94, 0.05)';
     this.ctx.lineWidth = 1;
     this.ctx.beginPath();
     for (let x = 30; x < width; x += 40) {

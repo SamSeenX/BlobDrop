@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.1] - 2026-11-23
+### Changed
+- Streamlined Game Header: Removed redundant "Balanced Jelly Physics" subtitle text from `index.html` and stylesheets, letting the main title breathe and cleanly aligning with scoreboard cards.
+- High-Contrast Score Readability: Replaced washed-out yellow score text with vivid high-contrast tones (deep crimson rose for Score, royal violet for Best) backed by crisp text-shadows and subtle drop shadows across both pastel and dark themes.
+- Pastel Anime Onboarding Elements: Restyled `#phantomBadge` toast and `#phantomHand` SVG to render as a white anime chibi hand with soft pink outlines, glowing pink contact ripple, and white-card toast pill with dark plum text.
+- Theme-Adaptive Floating Scores & Grid: In-game `+N` floaters and canvas grid lines dynamically adapt between dark plum outlines on sakura pink in pastel mode and dark slate outlines on golden amber in default mode.
+
 ## [1.16.0] - 2026-11-23
 ### Added
 - Anime Cel-Shaded Chibi Ball Rendering: Built `src/game/animeSprite.js` replacing 3D glossy gradients with authentic anime cel-shading when the pastel anime theme is active.
