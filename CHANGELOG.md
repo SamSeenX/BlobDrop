@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.0] - 2026-11-23
+### Added
+- Interactive Phantom Hand Demonstration: Created `src/game/tutorial.js` and `src/styles/tutorial.css` delivering a sleek, minimalist SVG pointer hand that executes an interactive 5-drop demonstration upon fresh starts.
+- Multiple Trajectory & Mechanic Showcase: Demonstrates direct downward shots, high-angle wall ricochets off both left and right walls, and an intentional same-tier collision illustrating the core 2+2=4 blob merge with particle sparkles and combo chime.
+- Instant Zero-Latency Touch Takeover: Wrapped user input listeners (`pointerdown`, `touchstart`) to immediately abort the demonstration sequence, dismiss the phantom hand, and grant players 100% responsive control without any delay or frozen state.
+
 ## [1.11.1] - 2026-11-16
 ### Fixed
 - Confetti & Fireworks Viewport Detection: Fixed zero-dimension calculation in `src/ui/confetti.js` by unhiding modal overlay before sizing canvas and adding robust dimension fallbacks with `getBoundingClientRect()`.

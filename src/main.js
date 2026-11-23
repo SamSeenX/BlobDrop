@@ -4,6 +4,7 @@ import { Renderer } from './game/renderer.js';
 import { Engine } from './game/engine.js';
 import { UIManager } from './ui/uiManager.js';
 import { ConfirmModal } from './ui/confirmModal.js';
+import { TutorialController } from './game/tutorial.js';
 import { initPwaPrompt } from './ui/pwaPrompt.js';
 import { initAdSystem } from './ui/adManager.js';
 import { TIERS } from './config/tiers.js';
@@ -39,8 +40,13 @@ const uiManager = new UIManager();
 const confirmModal = new ConfirmModal();
 const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
+const tutorialController = new TutorialController(engine);
 initPwaPrompt();
 initAdSystem();
+
+eventBus.on('game:started', () => {
+  tutorialController.startDemo();
+});
 
 uiManager.bindStartAction(() => {
   engine.start();
