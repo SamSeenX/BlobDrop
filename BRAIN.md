@@ -35,9 +35,10 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Dual-platform tactile response: Native `@capacitor/haptics` impacts and notifications on mobile, coupled with standard `navigator.vibrate` pulse patterns on browsers.
   - Distinct event vibrations: Light impact on blob launch and drop, medium impact on blob merges, fanfare vibration sequence on milestone unlocks, and dual pulse on game over.
   - Non-blocking execution: Haptic triggers fire asynchronously without impacting the 60 FPS deterministic physics accumulator loop.
-- **Native Android Adaptive Launcher Assets (`android/app/src/main/res/`)**:
-  - Full density raster coverage: Pixel-perfect launcher icons for mdpi (48px), hdpi (72px), xhdpi (96px), xxhdpi (144px), and xxxhdpi (192px).
-  - Modern adaptive icon support: Adaptive foreground assets with 72% safe-zone margin on a `#020617` background color, supporting dynamic Android 14+ launcher shapes (circles, squircles, pebbles).
+- **Native Android Adaptive Launcher Assets (`android/app/src/main/res/`, `public/`)**:
+  - Full density raster coverage: Pixel-perfect launcher icons for mdpi (48px/108px), hdpi (72px/162px), xhdpi (96px/216px), xxhdpi (144px/324px), and xxxhdpi (192px/432px).
+  - Modern adaptive icon support: Adaptive foreground assets with 72% safe-zone margin on a `#fff0f3` background color, matching the default cozy pastel anime theme across dynamic Android 14+ launcher shapes (circles, squircles, pebbles).
+  - PWA icon suite: High-resolution raster icons (512x512, 192x192, 180x180) and scalable SVG rendered with anime cel-shaded aesthetics.
 - **Single-Source Unified Multi-Platform Architecture (`capacitor.config.json`, `android/`)**:
   - Unified codebase for Web and Android: Capacitor wraps the web build (`dist/`) directly inside the local `android/` directory without splitting or duplicating repositories.
   - Native cache isolation: Service Worker (`/sw.js`) registration is restricted exclusively to standard web environments, actively unregistering legacy workers and purging caches in native Capacitor builds to eliminate 404 stale asset hashes across APK updates.

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.18.0] - 2026-11-23
+### Changed
+- Cozy Pastel Anime App Icons: Redesigned `public/icon.svg`, `public/icon-512.png`, `public/icon-192.png`, and `public/apple-touch-icon.png` to feature a strawberry cream squircle, cute pastel ambient sparkles, a hero anime chibi 4096 blob with cel shadows and blush cheeks, and a white card bottom pill.
+- Native Android Adaptive Launcher Suite: Re-rendered all Android launcher density assets (mdpi through xxxhdpi) including `ic_launcher.png`, `ic_launcher_round.png`, and safe-zone centered `ic_launcher_foreground.png` with `@color/ic_launcher_background` updated to `#fff0f3`.
+- Web App Manifest Sync: Updated `background_color` and `theme_color` in `public/manifest.webmanifest` to `#fff0f3` for seamless PWA loading.
+
 ## [1.17.0] - 2026-11-23
 ### Changed
 - Cozy Pastel Anime as Primary Default Theme: Configured `storage.getTheme()` and `index.html` to load the cozy pastel anime theme by default on startup, with the header toggle icon displaying `🌙` to easily switch to midnight dark.
