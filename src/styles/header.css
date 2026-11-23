@@ -19,14 +19,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-.subtitle {
-  font-size: 11px;
-  color: rgba(253, 164, 175, 0.85);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
 .scores-wrap {
   display: flex;
   gap: 10px;
@@ -55,6 +47,7 @@
   font-size: 1rem;
   font-weight: 900;
   color: var(--accent-amber);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 .score-value.best {

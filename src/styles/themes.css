@@ -20,6 +20,12 @@
 
   --shadow-glow: 0 0 25px rgba(244, 114, 182, 0.35);
   --shadow-card: 0 4px 16px rgba(244, 114, 182, 0.15);
+
+  --phantom-body: #ffffff;
+  --phantom-stroke: #f472b6;
+  --phantom-touch: rgba(244, 114, 182, 0.45);
+  --phantom-core: #fb7185;
+  --phantom-inner: #f472b6;
 }
 
 [data-theme="pastel"] body {
@@ -71,10 +77,6 @@
   border-top-color: rgba(251, 113, 133, 0.6);
 }
 
-[data-theme="pastel"] .subtitle {
-  color: var(--text-muted);
-}
-
 [data-theme="pastel"] .viral-badge {
   background: linear-gradient(135deg, #f472b6, #a855f7);
   -webkit-background-clip: text;
@@ -113,4 +115,59 @@
   border: 2px solid #f472b6;
   color: #db2777;
   box-shadow: 0 4px 15px rgba(244, 114, 182, 0.35);
+}
+
+[data-theme="pastel"] .phantom-badge {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1.5px solid rgba(244, 114, 182, 0.65);
+  color: #3b1d38;
+  box-shadow: 0 4px 16px rgba(244, 114, 182, 0.28), 0 0 10px rgba(244, 114, 182, 0.18);
+}
+
+[data-theme="pastel"] .phantom-svg {
+  filter: drop-shadow(0 4px 10px rgba(244, 114, 182, 0.35));
+}
+
+[data-theme="pastel"] .phantom-ripple {
+  border-color: rgba(244, 114, 182, 0.85);
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.4) 0%, transparent 70%);
+}
+
+[data-theme="pastel"] .score-value {
+  color: #e11d48;
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(225, 29, 72, 0.25);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+}
+
+[data-theme="pastel"] .score-value.best {
+  color: #7c3aed;
+  font-weight: 900;
+  text-shadow: 0 1px 2px rgba(124, 58, 237, 0.25);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+}
+
+[data-theme="pastel"] .score-label {
+  color: #be185d;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+[data-theme="pastel"] .cross-promo-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid rgba(244, 114, 182, 0.5);
+  box-shadow: 0 4px 14px rgba(244, 114, 182, 0.15);
+}
+
+[data-theme="pastel"] .cross-promo-title {
+  color: var(--text-main);
+}
+
+[data-theme="pastel"] .cross-promo-desc {
+  color: var(--text-muted);
+}
+
+[data-theme="pastel"] .promo-placeholder {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px dashed rgba(244, 114, 182, 0.45);
 }
