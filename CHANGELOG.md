@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.0] - 2026-11-23
+### Added
+- Anime Cel-Shaded Chibi Ball Rendering: Built `src/game/animeSprite.js` replacing 3D glossy gradients with authentic anime cel-shading when the pastel anime theme is active.
+- Two-Tone Cel Shadows & Ink Outlines: Features crisp clipped crescent shadow bands, dark plum cel strokes, soft pink chibi blush marks, and dual anime eye/bubble gleam speculars.
+- Fredoka Sticker Typography: Numbers render in soft rounded Fredoka with crisp white sticker borders and dark plum text.
+- Theme-Aware Sprite Caching: `spriteCache.js` keys sprites by theme (`anime` vs `gloss`), preserving the glossy neon look in default mode and instant anime rendering in pastel mode.
+
 ## [1.15.0] - 2026-11-23
 ### Added
 - Cozy Pastel Anime Theme: Created `src/config/tierThemes.js`, `src/core/themeManager.js`, `src/ui/themeToggle.js`, and `src/styles/themes.css` introducing a soft, aesthetic pastel color scheme inspired by cozy anime visuals.
