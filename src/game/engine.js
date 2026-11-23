@@ -3,6 +3,7 @@ import { Ball } from './ball.js';
 import { resolveCollisions } from './physics.js';
 import { audioManager } from '../audio/sound.js';
 import { eventBus } from '../core/eventBus.js';
+import { storage } from '../core/storage.js';
 import { InputHandler } from './input.js';
 import { calculateTrajectory } from './trajectory.js';
 import { updateParticles, FloatingScore } from './particle.js';
@@ -16,7 +17,8 @@ export class Engine {
       canvas, wrapper, renderer, width: 360, height: 540, scale: 1, dangerY: 45, originX: 180, originY: 38,
       aimPos: { x: 180, y: 300 }, balls: [], particles: [], score: 0, gameState: 'START', isAiming: false,
       currentTierIndex: 0, nextTierIndex: 1, highestTier: 0, unlockedMilestones: new Set(), canDrop: true,
-      comboMultiplier: 1, comboTimer: 0, trajectory: null, spawnProgress: 1, dangerTimer: 0, isMuzzleBlocked: false
+      comboMultiplier: 1, comboTimer: 0, trajectory: null, spawnProgress: 1, dangerTimer: 0, isMuzzleBlocked: false,
+      sessionStartBest: storage.getHighScore(), hasCelebratedBest: false
     });
 
     this.dangerEl = document.getElementById('dangerLine');
@@ -25,17 +27,15 @@ export class Engine {
     eventBus.on('game:pause:toggle', () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()));
     eventBus.on('game:reset', () => this.handleReset());
     eventBus.on('game:reset:confirmed', () => this.start());
-    window.addEventListener('beforeunload', () => saveGameState(this));
+    ['beforeunload', 'visibilitychange'].forEach(ev => window.addEventListener(ev, () => { if (!document.hidden && ev === 'visibilitychange') return; saveGameState(this); }));
     window.addEventListener('resize', () => this.resizeCanvas());
-    document.addEventListener('visibilitychange', () => { if (document.hidden) saveGameState(this); });
     this.resizeCanvas();
     restoreGameState(this);
   }
 
   handleAim(x, y) {
     if (this.gameState !== 'PLAYING') return;
-    this.isAiming = true;
-    this.aimPos = { x, y };
+    Object.assign(this, { isAiming: true, aimPos: { x, y } });
     this.updateTrajectory();
   }
 
@@ -64,13 +64,10 @@ export class Engine {
   }
 
   handleReset() {
-    if (this.balls.length > 0 || this.score > 0) {
-      const wasPlaying = this.gameState === 'PLAYING';
-      if (wasPlaying) this.pause();
-      eventBus.emit('confirm:reset:open', { wasPlaying });
-      return;
-    }
-    this.start();
+    if (this.balls.length === 0 && this.score === 0) return this.start();
+    const wasPlaying = this.gameState === 'PLAYING';
+    if (wasPlaying) this.pause();
+    eventBus.emit('confirm:reset:open', { wasPlaying });
   }
 
   start() {
@@ -79,7 +76,8 @@ export class Engine {
       balls: [], particles: [], score: 0, highestTier: 0, comboMultiplier: 1, comboTimer: 0,
       dangerTimer: 0, isMuzzleBlocked: false, gameState: 'PLAYING', canDrop: true,
       currentTierIndex: getRandomSpawnTier(0), nextTierIndex: getRandomSpawnTier(0),
-      trajectory: null, isAiming: false, spawnProgress: 0.15
+      trajectory: null, isAiming: false, spawnProgress: 0.15,
+      sessionStartBest: storage.getHighScore(), hasCelebratedBest: false
     });
     this.unlockedMilestones.clear();
     this.dangerEl?.classList.remove('danger-active');
@@ -109,6 +107,13 @@ export class Engine {
     const newTier = tierIndex + 1;
     if (newTier > this.highestTier) this.highestTier = newTier;
     saveGameState(this);
+
+    if (this.sessionStartBest > 0 && !this.hasCelebratedBest && this.score > this.sessionStartBest) {
+      this.hasCelebratedBest = true;
+      this.pause();
+      eventBus.emit('highscore:unlocked', { score: this.score });
+      return;
+    }
 
     const m = checkMilestone(newTier, this.unlockedMilestones);
     if (!m.isMilestone) return;
@@ -158,14 +163,9 @@ export class Engine {
     const spawnR = (TIERS[this.currentTierIndex]?.radius || 15) * this.scale;
     const danger = checkDangerLimit(this.balls, this.originX, this.originY, this.dangerY, spawnR);
     this.isMuzzleBlocked = danger.isMuzzleBlocked;
-
-    if (danger.hasOverflow) {
-      this.dangerEl?.classList.add('danger-active');
-      if (++this.dangerTimer >= (danger.isMuzzleBlocked ? 25 : 55)) this.triggerGameOver();
-    } else {
-      this.dangerTimer = 0;
-      this.dangerEl?.classList.remove('danger-active');
-    }
+    this.dangerEl?.classList.toggle('danger-active', danger.hasOverflow);
+    this.dangerTimer = danger.hasOverflow ? this.dangerTimer + 1 : 0;
+    if (this.dangerTimer >= (danger.isMuzzleBlocked ? 25 : 55)) this.triggerGameOver();
   }
 
   render() {

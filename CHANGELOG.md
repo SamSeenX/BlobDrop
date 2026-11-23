@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.1] - 2026-11-23
+### Fixed
+- High Score Modal Duplicate Triggering: Relocated record-break evaluation into `Engine.handleMerge()`, tracking `sessionStartBest` and strictly latching `hasCelebratedBest = true` on the engine state so the celebration fires exactly once per round.
+- Enhanced High Score Modal Padding & Breathing Room: Upgraded `.highscore-modal` padding in `src/styles/highscore.css` to `28px 18px 24px` with expanded vertical spacing around the crown icon and record box.
+- Featured Promo Slot in High Score Modal: Integrated `.promo-slot-wrap` and populated rotating cross-promo cards (EloRun & ZenCash) between the high score display and the "KEEP GOING 🚀" button with multi-touch event bindings.
+
 ## [1.14.0] - 2026-11-23
 ### Added
 - New High Score Celebration Screen: Created `#highScoreOverlay`, `src/ui/highScoreModal.js`, and `src/styles/highscore.css` to celebrate the instant a player shatters their previous record during an active run.

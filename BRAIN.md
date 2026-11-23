@@ -5,8 +5,8 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
 
 ## Core Modules & Design
 - **New High Score Celebration Screen (`src/ui/highScoreModal.js`, `src/styles/highscore.css`, `src/ui/uiManager.js`)**:
-  - Immediate record recognition: Detects the first merge that shatters the session starting record (`sessionRecord > 0`), pausing game physics and triggering a celebratory victory screen with confetti and fanfare.
-  - Dedicated golden crown styling: Features `#highScoreOverlay` with radiant gold borders, bouncing crown badge, clean score readout, and a prominent "KEEP GOING 🚀" resume button.
+  - Deterministic single-trigger record recognition: Evaluated in `Engine.handleMerge()` against `sessionStartBest`, strictly latching `hasCelebratedBest = true` so the celebration fires exactly once per round.
+  - Spaced golden crown modal with cross-promos: Features `#highScoreOverlay` with generous `28px 18px 24px` padding, radiant gold borders, bouncing crown badge, clean score readout, an integrated `.promo-slot-wrap` banner, and a prominent "KEEP GOING 🚀" multi-touch resume button.
 - **Retro Floating Scores & In-Playfield Combo Popups (`src/game/particle.js`, `src/styles/canvas.css`, `src/ui/uiManager.js`)**:
   - Epicenter point popups: `FloatingScore` draws retro arcade-styled `+N` point text with heavy outlines and decelerating upward float at the exact `(spawnX, spawnY)` merge coordinates.
   - Centered playfield combo banner: Relocated `#comboBadge` into `#canvasWrapper` floating at `18%` height with `pointer-events: none` and `combo-pop` bounce animations, ensuring high visibility without obscuring touches or balls.
