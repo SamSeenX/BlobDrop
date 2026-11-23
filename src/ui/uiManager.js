@@ -15,7 +15,7 @@ export class UIManager {
     this.overlayTitle = document.getElementById('overlayTitle');
     this.overlaySub = document.getElementById('overlaySub');
     this.actionBtn = document.getElementById('actionBtn');
-    this.gameOverAd = document.getElementById('gameOverAd');
+    this.gameOverPromo = document.getElementById('gameOverPromo');
     this.muteBtn = document.getElementById('muteBtn');
     this.muteIcon = document.getElementById('muteIcon');
     this.pauseBtn = document.getElementById('pauseBtn');
@@ -101,14 +101,14 @@ export class UIManager {
         this.gameOverlay.classList.add('opacity-0', 'pointer-events-none');
         setTimeout(() => this.gameOverlay?.classList.add('hidden'), 220);
       }
-      this.gameOverAd?.classList.add('hidden');
+      this.gameOverPromo?.classList.add('hidden');
     });
 
     eventBus.on('game:over', ({ score }) => {
       if (this.overlayEmoji) this.overlayEmoji.innerText = '💀';
       if (this.overlayTitle) this.overlayTitle.innerText = 'BLOBS OVERFLOWED!';
       if (this.overlaySub) this.overlaySub.innerText = `Final Score: ${score} (Best: ${this.highScore})`;
-      this.gameOverAd?.classList.remove('hidden');
+      this.gameOverPromo?.classList.remove('hidden');
       if (this.actionBtn) this.actionBtn.innerText = 'TRY AGAIN';
       if (this.gameOverlay) {
         this.gameOverlay.classList.remove('hidden');

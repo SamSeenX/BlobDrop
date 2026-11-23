@@ -27,10 +27,11 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Single build command: Web deploys to Cloudflare Pages via Vite, while `npx cap sync android` synchronizes the exact same tested web assets into Android Studio / Gradle.
   - Target SDK 36 and Android 14+ compliance with memory-capped Gradle daemon (`2048m`) ensuring fast, freeze-free local builds.
   - Both debug APK (`app-debug.apk`) and release App Bundle (`app-release.aab`) compile cleanly in under 4 minutes using local Android SDK.
-- **Smart Dual-Mode Ad Monetization (`src/ui/adManager.js`, `src/ui/houseAds.js`, `src/ui/admobService.js`)**:
-  - Native Android (Google AdMob): Uses `@capacitor-community/admob` to show adaptive bottom banners and preloaded interstitial ads upon Milestones and Game Over events.
-  - Web & PWA (House Ads): Uses `src/ui/houseAds.js` with auto-rotating cards promoting SamSeen's *EloRun* on the Google Play Store with direct click-throughs, overcoming AdSense approval hurdles on web.
-  - Dynamic platform switching via `Capacitor.isNativePlatform()` with zero runtime crashes on unsupported environments.
+- **AdBlock-Resilient Dual-Mode Monetization (`src/ui/promoManager.js`, `src/ui/crossPromo.js`, `src/ui/monetizationService.js`)**:
+  - Non-blocking dynamic loader: Promotional modules are loaded asynchronously via dynamic `import()` in `main.js` with error isolation, guaranteeing that client-side adblock extensions (uBlock, AdGuard, Brave Shields) never halt game startup with `ERR_BLOCKED_BY_CLIENT`.
+  - Neutralized asset naming: Files and DOM classes avoid adblock regex triggers by using `promo-` prefixes rather than `ad-` or `houseAds`.
+  - Native Android (Google AdMob): Uses `@capacitor-community/admob` via `monetizationService.js` to display bottom banners and preloaded interstitial ads upon Milestones and Game Over.
+  - Web & PWA (Cross-Promo): Uses `src/ui/crossPromo.js` with auto-rotating cards promoting EloRun and ZenCash on the Google Play Store with direct click-throughs.
 - **Responsive Screen Normalization & Fair Viewport (`src/game/layout.js`, `src/styles/canvas.css`)**:
   - Enforced 2:3 aspect ratio containment: Regardless of screen resolution or orientation, `.canvas-wrapper` locks to 2:3 proportions, eliminating unfair vertical stacking advantages on tall or high-PPI screens.
   - Rebalanced tier curve: Tier radii gracefully taper from 13px (tier 0) up to 98px (4096) and 110px (8192), ensuring large blobs can fit comfortably on the floor (2x 1024 = 304px <= 360px).
