@@ -77,9 +77,11 @@ export const storage = {
 
   getTheme() {
     try {
-      return localStorage.getItem(STORAGE_KEYS.THEME) || 'default';
+      const saved = localStorage.getItem(STORAGE_KEYS.THEME);
+      if (saved === 'dark' || saved === 'default') return 'dark';
+      return 'pastel';
     } catch {
-      return 'default';
+      return 'pastel';
     }
   },
 

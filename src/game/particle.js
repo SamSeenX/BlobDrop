@@ -84,7 +84,7 @@ export class FloatingScore {
     ctx.font = `900 ${this.fontSize}px Outfit, Fredoka, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const isPastel = document.documentElement.getAttribute('data-theme') === 'pastel';
+    const isPastel = document.documentElement.getAttribute('data-theme') !== 'dark';
     ctx.strokeStyle = isPastel ? '#3b1d38' : '#020617';
     ctx.lineWidth = 3.5 * this.scale;
     ctx.lineJoin = 'round';

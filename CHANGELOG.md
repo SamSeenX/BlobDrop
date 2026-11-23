@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.17.0] - 2026-11-23
+### Changed
+- Cozy Pastel Anime as Primary Default Theme: Configured `storage.getTheme()` and `index.html` to load the cozy pastel anime theme by default on startup, with the header toggle icon displaying `🌙` to easily switch to midnight dark.
+- High-Flair Cyberpunk Neon Dark Theme: Rebuilt the dark mode in `src/styles/themeDark.css` featuring deep space dual-vignette backgrounds, luminous cyan playfield border glows with inner crimson warmth, frosted cyber glass scoreboards with neon drop shadows, and electric laser danger lines.
+- Enhanced Cyber Neon Ball Sprites: Upgraded `src/game/spriteCache.js` for dark theme to render 3D spherical neon orbs with laser rim rings, intense outer aura halos, dual specular gleams, and white numbers framed by deep dark contour strokes.
+- Modular Theme Stylesheet Split: Proactively partitioned theme styles into `src/styles/themePastel.css` and `src/styles/themeDark.css` united under `src/styles/themes.css` to respect the 180-line modular rule.
+
 ## [1.16.1] - 2026-11-23
 ### Changed
 - Streamlined Game Header: Removed redundant "Balanced Jelly Physics" subtitle text from `index.html` and stylesheets, letting the main title breathe and cleanly aligning with scoreboard cards.
