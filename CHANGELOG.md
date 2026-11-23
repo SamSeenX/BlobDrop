@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.0] - 2026-11-23
+### Added
+- Cozy Pastel Anime Theme: Created `src/config/tierThemes.js`, `src/core/themeManager.js`, `src/ui/themeToggle.js`, and `src/styles/themes.css` introducing a soft, aesthetic pastel color scheme inspired by cozy anime visuals.
+- In-Place Theme Palette Swapping: Seamlessly swaps tier colors and glows between default neon and pastel palettes (Sakura Pink, Peach Custard, Butter Mochi, Matcha Milk, Boba Sky, Lavender Dream, Taro, etc.) without mutating object references or disrupting in-flight physics.
+- Dynamic Sprite Cache Purge: Flushes pre-rendered ball canvas sprites via `spriteCache.clear()` and emits `theme:changed` and `next:update` events for instantaneous visual re-rendering.
+- Header Theme Toggle Button: Added `#themeToggleBtn` (`🌸` / `⚡`) in the header actions bar with multi-touch event bindings (`pointerup`, `touchend`, `click`) and local storage persistence.
+- Pastel Modal & HUD Overrides: Styled overlays, high-score celebration screens, milestone dared cards, score counters, and combo banners to seamlessly match the cozy pastel anime aesthetic.
+
 ## [1.14.1] - 2026-11-23
 ### Fixed
 - High Score Modal Duplicate Triggering: Relocated record-break evaluation into `Engine.handleMerge()`, tracking `sessionStartBest` and strictly latching `hasCelebratedBest = true` on the engine state so the celebration fires exactly once per round.
