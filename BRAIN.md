@@ -4,6 +4,11 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Theme Manager & Cozy Pastel Anime Theme (`src/core/themeManager.js`, `src/config/tierThemes.js`, `src/ui/themeToggle.js`, `src/styles/themes.css`)**:
+  - In-place palette transformation: Mutates existing `TIERS` array references in place using `applyThemeToTiers()`, switching between default neon and cozy pastel palettes (Sakura Pink, Peach Custard, Butter Mochi, Matcha Milk, Boba Sky, Lavender Cloud, Taro Dream) with zero reload and zero physics interruption.
+  - Zero-FOUC theme persistence: Stores active theme in `storage.getTheme()` (`blobdrop_theme`) and applies `data-theme="pastel"` to the document root before canvas initialization.
+  - High-performance cache clearing: Calls `spriteCache.clear()` on theme switch so all procedural ball textures dynamically regenerate on next frame with matching glow and pastel shades.
+  - Header toggle control: Icon button `#themeToggleBtn` toggles between `🌸` and `⚡` with tactile click blop audio and multi-touch support.
 - **New High Score Celebration Screen (`src/ui/highScoreModal.js`, `src/styles/highscore.css`, `src/ui/uiManager.js`)**:
   - Deterministic single-trigger record recognition: Evaluated in `Engine.handleMerge()` against `sessionStartBest`, strictly latching `hasCelebratedBest = true` so the celebration fires exactly once per round.
   - Spaced golden crown modal with cross-promos: Features `#highScoreOverlay` with generous `28px 18px 24px` padding, radiant gold borders, bouncing crown badge, clean score readout, an integrated `.promo-slot-wrap` banner, and a prominent "KEEP GOING 🚀" multi-touch resume button.

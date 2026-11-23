@@ -8,10 +8,14 @@ import { TutorialController } from './game/tutorial.js';
 import { initPwaPrompt } from './ui/pwaPrompt.js';
 import { TIERS } from './config/tiers.js';
 import { eventBus } from './core/eventBus.js';
+import { themeManager } from './core/themeManager.js';
+import { initThemeToggle } from './ui/themeToggle.js';
 import { Capacitor } from '@capacitor/core';
 
 initErrorBoundary();
 storage.initPersistence();
+themeManager.init();
+initThemeToggle();
 
 if ('serviceWorker' in navigator) {
   const isNative = Capacitor.isNativePlatform();

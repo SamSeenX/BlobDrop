@@ -1,7 +1,8 @@
 const STORAGE_KEYS = {
   HIGH_SCORE: 'blobdrop_highscore',
   SOUND_ENABLED: 'blobdrop_sound',
-  GAME_STATE: 'blobdrop_gamestate'
+  GAME_STATE: 'blobdrop_gamestate',
+  THEME: 'blobdrop_theme'
 };
 
 export const storage = {
@@ -69,6 +70,22 @@ export const storage = {
   clearGameState() {
     try {
       localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
+    } catch {
+      // Storage unavailable
+    }
+  },
+
+  getTheme() {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.THEME) || 'default';
+    } catch {
+      return 'default';
+    }
+  },
+
+  setTheme(theme) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.THEME, theme);
     } catch {
       // Storage unavailable
     }
