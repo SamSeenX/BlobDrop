@@ -1,0 +1,69 @@
+/* New High Score Celebration Screen */
+.highscore-modal {
+  border: 2px solid rgba(251, 191, 36, 0.85);
+  box-shadow: 0 0 35px rgba(251, 191, 36, 0.35), 0 10px 40px rgba(0, 0, 0, 0.7);
+  background: radial-gradient(circle at 50% 20%, rgba(30, 27, 75, 0.95), rgba(15, 23, 42, 0.98));
+}
+
+.highscore-badge {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  box-shadow: 0 0 24px rgba(251, 191, 36, 0.6);
+  animation: highscore-crown-pulse 1.8s infinite ease-in-out;
+}
+
+@keyframes highscore-crown-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08) rotate(3deg); }
+}
+
+.highscore-title {
+  font-size: 1.7rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #fef08a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+}
+
+.highscore-sub {
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-bottom: 14px;
+}
+
+.highscore-score-box {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 10px 20px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.highscore-score-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
+
+.highscore-score-val {
+  font-family: var(--font-display, inherit);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.highscore-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+}
+
+.highscore-btn:hover {
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.6);
+}

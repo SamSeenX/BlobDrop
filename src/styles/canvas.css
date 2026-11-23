@@ -52,6 +52,37 @@
   display: block;
 }
 
+.combo-badge {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(245, 158, 11, 0.95));
+  border: 1.5px solid rgba(254, 240, 138, 0.85);
+  box-shadow: 0 4px 18px rgba(239, 68, 68, 0.5), 0 0 16px rgba(245, 158, 11, 0.4);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display, inherit);
+  font-size: 13px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  z-index: 12;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.25s ease-out;
+}
+
+.combo-badge.combo-pop {
+  animation: combo-bounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes combo-bounce {
+  0% { transform: translateX(-50%) scale(0.6); opacity: 0; }
+  60% { transform: translateX(-50%) scale(1.18); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
 .game-footer {
   width: 100%;
   max-width: 440px;

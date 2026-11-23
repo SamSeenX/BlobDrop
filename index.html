@@ -52,16 +52,12 @@
     </div>
   </header>
 
-  <!-- Next Element Preview Bar & Combo Counter -->
+  <!-- Next Element Preview Bar & Action Buttons -->
   <div class="status-bar">
     <div class="next-pill">
       <span class="next-label">Next:</span>
       <div id="nextPreviewCircle" class="next-circle"></div>
       <span id="nextPreviewName" class="next-name">2</span>
-    </div>
-
-    <div id="comboBadge" class="combo-badge hidden animate-bounce">
-      🔥 COMBO x2
     </div>
 
     <div class="status-actions">
@@ -84,6 +80,7 @@
   <main class="game-main">
     <div id="canvasWrapper" class="canvas-wrapper">
       <div id="dangerLine" class="danger-line"></div>
+      <div id="comboBadge" class="combo-badge hidden pointer-events-none">🔥 COMBO x2</div>
       <canvas id="gameCanvas"></canvas>
 
       <!-- Interactive Phantom Hand / Demonstration -->
@@ -151,6 +148,25 @@
           </div>
           <button id="milestoneContinueBtn" class="action-btn continue-btn">
             CONTINUE
+          </button>
+        </div>
+      </div>
+
+      <!-- New High Score Celebration Modal Overlay -->
+      <div id="highScoreOverlay" class="game-overlay hidden opacity-0 pointer-events-none">
+        <canvas id="highScoreConfettiCanvas" class="confetti-canvas"></canvas>
+        <div id="highScoreContent" class="overlay-modal highscore-modal">
+          <div class="overlay-icon-wrap highscore-badge">
+            <span>👑</span>
+          </div>
+          <h2 class="display-font highscore-title">NEW HIGH SCORE!</h2>
+          <p class="highscore-sub">You shattered your previous best!</p>
+          <div class="highscore-score-box">
+            <span class="highscore-score-label">NEW RECORD</span>
+            <span id="highScoreModalValue" class="highscore-score-val">0</span>
+          </div>
+          <button id="highScoreContinueBtn" class="action-btn continue-btn highscore-btn">
+            KEEP GOING 🚀
           </button>
         </div>
       </div>

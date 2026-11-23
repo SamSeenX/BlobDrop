@@ -39,16 +39,6 @@
   color: #fff;
 }
 
-.combo-badge {
-  background: rgba(244, 63, 94, 0.2);
-  border: 1px solid rgba(244, 63, 94, 0.5);
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  font-size: 11px;
-  font-weight: 900;
-  color: var(--accent-rose);
-}
-
 .status-actions {
   display: flex;
   align-items: center;

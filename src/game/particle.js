@@ -58,6 +58,42 @@ export class Shockwave {
   }
 }
 
+export class FloatingScore {
+  constructor(x, y, text, color = '#fde047', scale = 1) {
+    this.x = x;
+    this.y = y;
+    this.text = text;
+    this.color = color;
+    this.scale = scale;
+    this.vy = -1.8 * scale;
+    this.alpha = 1;
+    this.decay = 0.022;
+    this.fontSize = Math.round(18 * scale);
+  }
+
+  update() {
+    this.y += this.vy;
+    this.vy *= 0.95;
+    this.alpha -= this.decay;
+  }
+
+  draw(ctx) {
+    if (this.alpha <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+    ctx.font = `900 ${this.fontSize}px Outfit, Fredoka, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.strokeStyle = '#020617';
+    ctx.lineWidth = 3.5 * this.scale;
+    ctx.lineJoin = 'round';
+    ctx.strokeText(this.text, this.x, this.y);
+    ctx.fillStyle = this.color;
+    ctx.fillText(this.text, this.x, this.y);
+    ctx.restore();
+  }
+}
+
 export function updateParticles(particles) {
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update();
