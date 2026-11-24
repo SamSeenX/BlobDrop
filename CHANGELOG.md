@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.0] - 2026-11-24
+### Added
+- Explicit Resume or New Game Choice on Launch: Players resuming the app or refreshing the browser with an active game in progress are presented with a clear start choice overlay featuring a prominent "RESUME (<score>) 🚀" button alongside a secondary "NEW GAME" button instead of silently auto-launching into physics.
+- Dedicated Start Overlay Controller: Created `src/ui/startOverlay.js` to inspect saved game snapshots via `hasSavedGame()`, display the previous score, toggle action button states, and cleanly route user selections.
+- Tutorial Demo Collision Guard: Added safety check in `TutorialController.startDemo()` to prevent phantom tutorial demonstration drops from replaying over restored active boards.
+- Responsive Dual Action Button Styling: Styled `.overlay-actions`, `.action-btn.resume-btn`, and `.action-btn.secondary-btn` across both pastel and dark themes while maintaining compliance with the strict 180-line modular limit.
+
 ## [1.18.2] - 2026-11-23
 ### Fixed
 - Realistic Shiny Gloss Balls in Dark Theme: Restored the clean, smooth 3D spherical gradient with soft specular gloss and clean dark typography in `src/game/spriteCache.js` for the dark theme, removing the harsh black outer rim and stroke.

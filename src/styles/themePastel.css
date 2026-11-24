@@ -159,15 +159,16 @@
   box-shadow: 0 4px 14px rgba(244, 114, 182, 0.15);
 }
 
-[data-theme="pastel"] .cross-promo-title {
-  color: var(--text-main);
-}
-
-[data-theme="pastel"] .cross-promo-desc {
-  color: var(--text-muted);
-}
+[data-theme="pastel"] .cross-promo-title { color: var(--text-main); }
+[data-theme="pastel"] .cross-promo-desc { color: var(--text-muted); }
 
 [data-theme="pastel"] .promo-placeholder {
   background: rgba(255, 255, 255, 0.85);
   border: 1.5px dashed rgba(244, 114, 182, 0.45);
+}
+
+[data-theme="pastel"] .action-btn.secondary-btn {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(244, 114, 182, 0.45);
+  color: #9d174d;
 }

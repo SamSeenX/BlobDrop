@@ -27,6 +27,7 @@ export class TutorialController {
   startDemo() {
     this.stopDemo();
     if (!this.container || !this.hand || this.engine.gameState !== 'PLAYING') return;
+    if (this.engine.balls.length > 0) return;
 
     this.isRunning = true;
     this.dropCount = 0;
