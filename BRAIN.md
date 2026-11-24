@@ -4,6 +4,10 @@
 BlobDrop is a viral physics-based 4096 number-merge puzzle built with high performance, tactile squishy jelly physics, and zero external runtime dependencies. It adheres strictly to modern web standards, modular Vanilla ES2022 JavaScript, and native Vanilla CSS variables.
 
 ## Core Modules & Design
+- **Session Resume & Start Overlay Control (`src/ui/startOverlay.js`, `src/game/stateStorage.js`, `src/styles/overlay.css`)**:
+  - Explicit resume confirmation: When the app launches with an existing saved game snapshot in `storage.getGameState()`, the game overlay presents an explicit choice between "RESUME (<score>) 🚀" and a secondary "NEW GAME" button rather than silently resuming into the physics loop.
+  - Safe tutorial guard: `TutorialController.startDemo()` verifies that `engine.balls.length === 0` before initiating onboarding phantom drops, ensuring restored live boards remain undisturbed.
+  - State lifecycle decoupling: Separated `restoreGameState()` invocation from `Engine` constructor into an explicit `engine.resumeSaved()` method called upon user resume selection.
 - **Theme Manager & Multi-Theme Architecture (`src/core/themeManager.js`, `src/config/tierThemes.js`, `src/ui/themeToggle.js`, `src/styles/themePastel.css`, `src/styles/themeDark.css`, `src/game/animeSprite.js`)**:
   - Cozy pastel anime as primary default: `storage.getTheme()` defaults to `'pastel'`, loading soft pink/cream aesthetics, chibi balls, and pastel HUD elements automatically on startup.
   - High-flair cyberpunk neon dark secondary theme: Features luminous cyan outer border glows, inner crimson ambient shadows, frosted cyber glass cards with electric neon score readouts, laser danger beams, and cyan playfield grid lines.

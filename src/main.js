@@ -5,6 +5,7 @@ import { Engine } from './game/engine.js';
 import { UIManager } from './ui/uiManager.js';
 import { ConfirmModal } from './ui/confirmModal.js';
 import { TutorialController } from './game/tutorial.js';
+import { StartOverlay } from './ui/startOverlay.js';
 import { initPwaPrompt } from './ui/pwaPrompt.js';
 import { TIERS } from './config/tiers.js';
 import { eventBus } from './core/eventBus.js';
@@ -44,6 +45,10 @@ const confirmModal = new ConfirmModal();
 const renderer = new Renderer(canvas, ctx);
 const engine = new Engine({ canvas, wrapper, renderer });
 const tutorialController = new TutorialController(engine);
+const startOverlay = new StartOverlay({
+  onResume: () => engine.resumeSaved(),
+  onNewGame: () => engine.start()
+});
 initPwaPrompt();
 
 import('./ui/promoManager.js')

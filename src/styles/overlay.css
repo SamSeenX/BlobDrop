@@ -77,6 +77,15 @@
   font-weight: 600;
 }
 
+.overlay-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 250px;
+  align-items: center;
+}
+
 .action-btn {
   width: 100%;
   max-width: 250px;
@@ -95,6 +104,21 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.action-btn.secondary-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-soft);
+  box-shadow: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 10px 20px;
+}
+
+.action-btn.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .action-btn:hover {

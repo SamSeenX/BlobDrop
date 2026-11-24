@@ -52,6 +52,16 @@ export function restoreGameState(engine) {
   return true;
 }
 
+export function hasSavedGame() {
+  const saved = storage.getGameState();
+  return Boolean(saved && Array.isArray(saved.balls) && saved.balls.length > 0);
+}
+
+export function getSavedGameScore() {
+  const saved = storage.getGameState();
+  return saved?.score || 0;
+}
+
 export function clearSavedGameState() {
   storage.clearGameState();
 }

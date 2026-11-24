@@ -23,14 +23,11 @@ export class Engine {
 
     this.dangerEl = document.getElementById('dangerLine');
     this.input = new InputHandler({ canvas: this.canvas, onAim: (x, y) => this.handleAim(x, y), onDrop: () => this.handleLaunch() });
-    eventBus.on('game:resume', () => this.resume());
-    eventBus.on('game:pause:toggle', () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()));
-    eventBus.on('game:reset', () => this.handleReset());
-    eventBus.on('game:reset:confirmed', () => this.start());
+    const bus = { 'game:resume': () => this.resume(), 'game:pause:toggle': () => (this.gameState === 'PLAYING' ? this.pause() : this.resume()), 'game:reset': () => this.handleReset(), 'game:reset:confirmed': () => this.start() };
+    Object.entries(bus).forEach(([ev, fn]) => eventBus.on(ev, fn));
     ['beforeunload', 'visibilitychange'].forEach(ev => window.addEventListener(ev, () => { if (!document.hidden && ev === 'visibilitychange') return; saveGameState(this); }));
     window.addEventListener('resize', () => this.resizeCanvas());
     this.resizeCanvas();
-    restoreGameState(this);
   }
 
   handleAim(x, y) {
@@ -68,6 +65,10 @@ export class Engine {
     const wasPlaying = this.gameState === 'PLAYING';
     if (wasPlaying) this.pause();
     eventBus.emit('confirm:reset:open', { wasPlaying });
+  }
+
+  resumeSaved() {
+    if (!restoreGameState(this)) this.start();
   }
 
   start() {
@@ -118,11 +119,8 @@ export class Engine {
     const m = checkMilestone(newTier, this.unlockedMilestones);
     if (!m.isMilestone) return;
     this.pause();
-    eventBus.emit('milestone:unlocked', {
-      currentTier: TIERS[m.currentTierIndex],
-      nextTier: m.nextMilestoneIndex !== null ? TIERS[m.nextMilestoneIndex] : null,
-      isWin4096: m.isWin4096, isGodlike8192: m.isGodlike8192
-    });
+    const nextTier = m.nextMilestoneIndex !== null ? TIERS[m.nextMilestoneIndex] : null;
+    eventBus.emit('milestone:unlocked', { currentTier: TIERS[m.currentTierIndex], nextTier, isWin4096: m.isWin4096, isGodlike8192: m.isGodlike8192 });
   }
 
   handleLaunch() {
