@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.19.1] - 2026-11-24
+### Fixed
+- Modal & Overlay Title Contrast: Added bold anime text strokes (`-webkit-text-stroke: 1.25px #831843`) with `paint-order: stroke fill` and warm ambient drop shadows to `.overlay-title`, `.milestone-title`, and `.milestone-current` in the cozy pastel theme, resolving low contrast on light backgrounds.
+- Action Button Text Readability: Added subtle text shadow to `.action-btn` to make white text razor sharp against the pastel gradient.
+- High-Contrast Subtitle Text: Styled `.overlay-sub` with rich berry color (`#831843`) and bold weight (`600`) for effortless readability.
+
 ## [1.19.0] - 2026-11-24
 ### Added
 - Explicit Resume or New Game Choice on Launch: Players resuming the app or refreshing the browser with an active game in progress are presented with a clear start choice overlay featuring a prominent "RESUME (<score>) 🚀" button alongside a secondary "NEW GAME" button instead of silently auto-launching into physics.
