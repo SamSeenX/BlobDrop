@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.0] - 2026-11-28
+### Added
+- Snappy Bubble Pop Merge Sound: Synthesized a crisp, organic bubble burst sound in `src/audio/sound.js` using a rapid 25ms upward chirp from 420 Hz to 1350 Hz with 75ms exponential gain decay, perfectly matching the visual popping shockwave.
+- Velocity-Damped Ball Collision Tap: Added subtle tactile collision sounds when balls strike each other with significant closing speed (> 1.8 px/frame), ignoring resting contacts. Includes an 80ms global debounce to prevent machine-gun audio clutter during cluster collapses.
+- Non-Intrusive Haptic Isolation: Explicitly silenced vibration motors on standard ball bounces in `src/audio/haptics.js`, preserving haptic fidelity strictly for deliberate user drops and merges.
+
 ## [1.19.1] - 2026-11-24
 ### Fixed
 - Modal & Overlay Title Contrast: Added bold anime text strokes (`-webkit-text-stroke: 1.25px #831843`) with `paint-order: stroke fill` and warm ambient drop shadows to `.overlay-title`, `.milestone-title`, and `.milestone-current` in the cozy pastel theme, resolving low contrast on light backgrounds.

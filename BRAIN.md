@@ -36,7 +36,9 @@ BlobDrop is a viral physics-based 4096 number-merge puzzle built with high perfo
   - Tri-event input binding: Primary interactive buttons bind `pointerup`, `touchend`, and `click` with execution debouncing to eliminate 300ms mobile touch delays and avoid dropped taps on Android WebViews.
   - Complete layout tree detachment: Overlays apply `display: none` (`.hidden`) after transition animations rather than relying solely on `pointer-events: none`, preventing backdrop-filter compositing layers from capturing canvas gestures.
 - **Tactile Haptic Feedback & Audio Sync (`src/audio/haptics.js`, `src/audio/sound.js`)**:
-  - Dual-platform tactile response: Native `@capacitor/haptics` impacts and notifications on mobile, coupled with standard `navigator.vibrate` pulse patterns on browsers.
+  - Snappy bubble pop synthesis: Replaced the slow triangle frequency slide with an authentic 75ms bubble pop (420 Hz -> 1350 Hz chirp with exponential volume decay) aligned with shockwave visual bursts.
+  - Velocity-damped ball impact acoustics: Intercepts closing normal velocities in `src/game/physics.js` during the initial solver iteration, triggering soft rubbery tap tones only when balls collide with noticeable momentum (> 1.8 px/frame) rather than resting or rolling. Debounced with an 80ms window to prevent sound fatigue.
+  - Dual-platform tactile response: Native `@capacitor/haptics` impacts and notifications on mobile, coupled with standard `navigator.vibrate` pulse patterns on browsers. Ball bounces remain strictly audio to avoid motor wear.
   - Distinct event vibrations: Light impact on blob launch and drop, medium impact on blob merges, fanfare vibration sequence on milestone unlocks, and dual pulse on game over.
   - Non-blocking execution: Haptic triggers fire asynchronously without impacting the 60 FPS deterministic physics accumulator loop.
 - **Native Android Adaptive Launcher Assets (`android/app/src/main/res/`, `public/`)**:
