@@ -33,7 +33,8 @@ class AudioManager {
     const now = this.audioCtx.currentTime;
 
     if (type === 'bounce') {
-      const closingSpeed = typeof arg === 'number' ? arg : 2;
+      const closingSpeed = typeof arg === 'object' ? (arg.speed || 2) : (typeof arg === 'number' ? arg : 2);
+      const tierSum = typeof arg === 'object' ? (arg.tierSum || 0) : 0;
       if (now - this.lastBounceTime < 0.08) return;
       this.lastBounceTime = now;
 
@@ -42,14 +43,17 @@ class AudioManager {
       osc.connect(gain);
       gain.connect(this.audioCtx.destination);
 
-      const vol = Math.min(0.16, Math.max(0.03, closingSpeed * 0.015));
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(210, now);
-      osc.frequency.exponentialRampToValueAtTime(75, now + 0.035);
+      const freq = Math.max(160, 740 - tierSum * 26);
+      const dur = Math.min(0.045, Math.max(0.024, 0.026 + tierSum * 0.0008));
+      const vol = Math.min(0.2, Math.max(0.04, closingSpeed * 0.018));
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq * 1.35, now);
+      osc.frequency.exponentialRampToValueAtTime(freq, now + 0.006);
       gain.gain.setValueAtTime(vol, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
       osc.start(now);
-      osc.stop(now + 0.035);
+      osc.stop(now + dur);
       return;
     }
 
