@@ -1,6 +1,6 @@
 import { TIERS } from '../config/tiers.js';
 import { Ball } from './ball.js';
-import { resolveCollisions } from './physics.js';
+import { resolveCollisions, clearActiveContacts } from './physics.js';
 import { audioManager } from '../audio/sound.js';
 import { eventBus } from '../core/eventBus.js';
 import { storage } from '../core/storage.js';
@@ -72,7 +72,7 @@ export class Engine {
   }
 
   start() {
-    clearSavedGameState();
+    clearSavedGameState(); clearActiveContacts();
     Object.assign(this, {
       balls: [], particles: [], score: 0, highestTier: 0, comboMultiplier: 1, comboTimer: 0,
       dangerTimer: 0, isMuzzleBlocked: false, gameState: 'PLAYING', canDrop: true,

@@ -5,6 +5,11 @@ import { audioManager } from '../audio/sound.js';
 
 const SOLVER_ITERATIONS = 4;
 const FRICTION = 0.22;
+const activeContacts = new Set();
+
+export function clearActiveContacts() {
+  activeContacts.clear();
+}
 
 function detectMerges(balls, scale = 1) {
   const n = balls.length;
@@ -23,11 +28,17 @@ function detectMerges(balls, scale = 1) {
       if (Math.abs(dx) > contactDist || Math.abs(dy) > contactDist) continue;
 
       if (dx * dx + dy * dy <= contactDist * contactDist) {
+        const pairKey = b1.id < b2.id ? `${b1.id}_${b2.id}` : `${b2.id}_${b1.id}`;
+        const isSeparated = !activeContacts.has(pairKey);
+        activeContacts.add(pairKey);
+
         const targetX = (b1.x + b2.x) / 2, targetY = (b1.y + b2.y) / 2;
         const sharedVx = ((b1.vx + b2.vx) * 0.5) * 0.85;
         const sharedVy = ((b1.vy + b2.vy) * 0.5) * 0.85;
         const speed = Math.max(1.8, Math.hypot(b2.vx - b1.vx, b2.vy - b1.vy));
-        audioManager.play('bounce', { speed, tierSum: b1.tierIndex + b2.tierIndex });
+        if (isSeparated) {
+          audioManager.play('bounce', { speed, tierSum: b1.tierIndex + b2.tierIndex });
+        }
         b1.startMerge(targetX, targetY, b1.tierIndex + 1, true, sharedVx, sharedVy, b2);
         b2.startMerge(targetX, targetY, b1.tierIndex + 1, false, sharedVx, sharedVy, b1);
         break;
@@ -40,12 +51,8 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
   const newBalls = [], n = balls.length;
   detectMerges(balls, scale);
   const restitutionThreshold = 0.6 * scale;
-
-  for (let i = 0; i < n; i++) {
-    const b = balls[i];
-    b.prevTouching = b.currentTouching || new Set();
-    b.currentTouching = new Set();
-  }
+  const nextContacts = new Set();
+  const contactZoneGap = 4.0 * scale;
 
   for (let iter = 0; iter < SOLVER_ITERATIONS; iter++) {
     for (let i = 0; i < n; i++) {
@@ -58,16 +65,20 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
 
         const minDist = b1.radius + b2.radius;
         const dx = b2.x - b1.x, dy = b2.y - b1.y;
-        if (Math.abs(dx) >= minDist || Math.abs(dy) >= minDist) continue;
+        const contactZone = minDist + contactZoneGap;
+        if (Math.abs(dx) >= contactZone || Math.abs(dy) >= contactZone) continue;
 
         const distSq = dx * dx + dy * dy;
-        if (distSq >= minDist * minDist || distSq === 0) continue;
+        if (distSq >= contactZone * contactZone || distSq === 0) continue;
+
+        const pairKey = b1.id < b2.id ? `${b1.id}_${b2.id}` : `${b2.id}_${b1.id}`;
+        if (iter === 0) nextContacts.add(pairKey);
+
+        if (distSq >= minDist * minDist) continue;
 
         const dist = Math.sqrt(distSq), overlap = minDist - dist;
         const nx = dx / dist, ny = dy / dist;
-        const wasTouching = b1.prevTouching && b1.prevTouching.has(b2.id);
-        b1.currentTouching.add(b2.id);
-        b2.currentTouching.add(b1.id);
+        const isSeparated = !activeContacts.has(pairKey);
 
         const totalMass = b1.mass + b2.mass;
         const invM1 = b2.mass / totalMass, invM2 = b1.mass / totalMass;
@@ -94,7 +105,7 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
         const velAlongNormal = rvx * nx + rvy * ny;
 
         if (velAlongNormal < 0) {
-          if (iter === 0 && !wasTouching && -velAlongNormal > 0.45 * scale) {
+          if (iter === 0 && isSeparated && -velAlongNormal > 0.6 * scale) {
             audioManager.play('bounce', { speed: -velAlongNormal, tierSum: b1.tierIndex + b2.tierIndex });
           }
           const massDisparity = Math.max(b1.mass, b2.mass) / Math.min(b1.mass, b2.mass);
@@ -159,5 +170,7 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
     }
   }
 
+  activeContacts.clear();
+  for (const k of nextContacts) activeContacts.add(k);
   return balls.filter(b => !b.toRemove).concat(newBalls);
 }
