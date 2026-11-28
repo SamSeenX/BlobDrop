@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.6] - 2026-11-28
+### Changed
+- Expanded Tonal Range for Ball Collisions: Lowered the fundamental collision frequency for smallest balls from 860 Hz down to 520 Hz with a mellowed 2.15 overtone ratio in `src/audio/sound.js`, eliminating shrill piercing tones while keeping a crisp ceramic clack.
+- Deep Mass-Responsive Thuds: Removed the 220 Hz low clamp, allowing massive balls (tiers 256 through 4096+) to plunge down to 90-95 Hz with Fletcher-Munson bass gain compensation and extended resonance decay, providing distinct weighty wooden thuds for large blobs.
+
 ## [1.20.5] - 2026-11-28
 ### Fixed
 - 4px Contact Zone Hysteresis Dampening: Eliminated persistent phantom ticking caused by iterative solver sub-pixel jitter in resting ball piles. In `src/game/physics.js`, balls within a `minDist + 4.0 * scale` proximity zone maintain continuous active contact state, making re-triggering physically impossible until balls fully separate by more than 4 pixels.
