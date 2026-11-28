@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.5] - 2026-11-28
+### Fixed
+- 4px Contact Zone Hysteresis Dampening: Eliminated persistent phantom ticking caused by iterative solver sub-pixel jitter in resting ball piles. In `src/game/physics.js`, balls within a `minDist + 4.0 * scale` proximity zone maintain continuous active contact state, making re-triggering physically impossible until balls fully separate by more than 4 pixels.
+- Zero-Delay Direct Hits with Sliding Silence: Ball collisions only fire when transitioning from a separated state (> 4px gap) with direct normal impact velocity, keeping tangential sliding completely silent.
+
 ## [1.20.4] - 2026-11-28
 ### Added
 - Pre-Merge Physical Impact Clack: In `src/game/physics.js` `detectMerges()`, added an immediate tactile contact sound on the exact frame two matching balls first touch, giving physical impact feedback before the suction animation and pop.
