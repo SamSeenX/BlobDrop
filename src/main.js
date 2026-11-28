@@ -18,6 +18,11 @@ storage.initPersistence();
 themeManager.init();
 initThemeToggle();
 
+const unlockAudio = () => audioManager.initAudio();
+['pointerdown', 'touchstart', 'keydown'].forEach(ev => {
+  window.addEventListener(ev, unlockAudio, { once: true, passive: true });
+});
+
 if ('serviceWorker' in navigator) {
   const isNative = Capacitor.isNativePlatform();
   if (isNative || import.meta.env.DEV) {
