@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.2] - 2026-11-28
+### Changed
+- Authentic Ceramic & Wood Inharmonic Modal Acoustics: Replaced electronic synthetic sweeps with a two-oscillator modal resonance model ($f_0$ fundamental body plus $2.76 f_0$ ceramic surface snap) in `src/audio/sound.js`, delivering genuine physical ceramic/wood impact clacks without synthetic artifacting.
+- Zero-Delay Audio Synchronization: Configured `latencyHint: 'interactive'` on AudioContext, pre-warmed audio on first user touch in `src/main.js`, and tuned solver impact detection threshold in `src/game/physics.js` to `0.8 * scale` so contact audio fires instantaneously on the exact frame of visual collision.
+- Slimmer, Refined Anime Ball Outlines: Decreased cel-ink outline thickness in `src/game/animeSprite.js` from `0.075r` down to `Math.max(1.2, Math.min(3.2, r * 0.042))` and streamlined sticker text outlines, eliminating heavy, clunky borders across mobile devices.
+
 ## [1.20.1] - 2026-11-28
 ### Changed
 - Mass-Responsive Collision Acoustics: Scaled ball collision audio dynamically to the combined tier mass of colliding pairs in `src/audio/sound.js` and `src/game/physics.js`. Small blobs produce crisp, high-frequency marble taps (up to 740 Hz), while massive blobs produce deep, heavy wooden knocks (down to 160 Hz).

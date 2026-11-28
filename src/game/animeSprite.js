@@ -23,7 +23,7 @@ export function drawAnimeBall(ctx, tier, r, center) {
   ctx.beginPath();
   ctx.arc(center, center + r * 0.1, r * 0.95, 0, Math.PI * 2);
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
-  ctx.lineWidth = Math.max(1.5, r * 0.08);
+  ctx.lineWidth = Math.max(1, r * 0.04);
   ctx.stroke();
   ctx.restore();
 
@@ -61,7 +61,7 @@ export function drawAnimeBall(ctx, tier, r, center) {
   ctx.beginPath();
   ctx.arc(center, center, r, 0, Math.PI * 2);
   ctx.strokeStyle = '#3b1d38';
-  ctx.lineWidth = Math.max(2, r * 0.075);
+  ctx.lineWidth = Math.max(1.2, Math.min(3.2, r * 0.042));
   ctx.stroke();
 
   // 6. Anime Sticker Number Label
@@ -72,7 +72,7 @@ export function drawAnimeBall(ctx, tier, r, center) {
 
   // Sticker white outline
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
-  ctx.lineWidth = Math.max(3, r * 0.12);
+  ctx.lineWidth = Math.max(1.8, Math.min(4, r * 0.065));
   ctx.lineJoin = 'round';
   ctx.strokeText(tier.name, center, center + 1);
 

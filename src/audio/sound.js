@@ -11,7 +11,9 @@ class AudioManager {
   initAudio() {
     if (!this.audioCtx) {
       const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtxClass) this.audioCtx = new AudioCtxClass();
+      if (AudioCtxClass) {
+        this.audioCtx = new AudioCtxClass({ latencyHint: 'interactive' });
+      }
     }
     if (this.audioCtx && this.audioCtx.state === 'suspended') {
       this.audioCtx.resume();
@@ -25,7 +27,7 @@ class AudioManager {
   }
 
   play(type, arg) {
-    hapticManager.trigger(type);
+    if (type !== 'bounce') hapticManager.trigger(type);
     if (!this.soundEnabled) return;
     this.initAudio();
     if (!this.audioCtx) return;
@@ -35,25 +37,37 @@ class AudioManager {
     if (type === 'bounce') {
       const closingSpeed = typeof arg === 'object' ? (arg.speed || 2) : (typeof arg === 'number' ? arg : 2);
       const tierSum = typeof arg === 'object' ? (arg.tierSum || 0) : 0;
-      if (now - this.lastBounceTime < 0.08) return;
+      if (now - this.lastBounceTime < 0.065) return;
       this.lastBounceTime = now;
 
-      const osc = this.audioCtx.createOscillator();
-      const gain = this.audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+      const f0 = Math.max(220, 860 - tierSum * 28);
+      const f1 = f0 * 2.76;
+      const vol = Math.min(0.22, Math.max(0.04, closingSpeed * 0.018));
+      const dur = Math.min(0.038, Math.max(0.018, 0.02 + tierSum * 0.0007));
 
-      const freq = Math.max(160, 740 - tierSum * 26);
-      const dur = Math.min(0.045, Math.max(0.024, 0.026 + tierSum * 0.0008));
-      const vol = Math.min(0.2, Math.max(0.04, closingSpeed * 0.018));
+      // Primary wood/ceramic body resonance
+      const osc1 = this.audioCtx.createOscillator();
+      const gain1 = this.audioCtx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(f0, now);
+      osc1.connect(gain1);
+      gain1.connect(this.audioCtx.destination);
+      gain1.gain.setValueAtTime(vol * 0.75, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + dur);
+      osc1.start(now);
+      osc1.stop(now + dur);
 
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq * 1.35, now);
-      osc.frequency.exponentialRampToValueAtTime(freq, now + 0.006);
-      gain.gain.setValueAtTime(vol, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-      osc.start(now);
-      osc.stop(now + dur);
+      // Inharmonic ceramic surface snap (fast 11ms decay)
+      const osc2 = this.audioCtx.createOscillator();
+      const gain2 = this.audioCtx.createGain();
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(f1, now);
+      osc2.connect(gain2);
+      gain2.connect(this.audioCtx.destination);
+      gain2.gain.setValueAtTime(vol * 0.35, now);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.011);
+      osc2.start(now);
+      osc2.stop(now + 0.011);
       return;
     }
 
