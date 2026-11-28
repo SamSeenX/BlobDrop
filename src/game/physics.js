@@ -83,6 +83,9 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
         const velAlongNormal = rvx * nx + rvy * ny;
 
         if (velAlongNormal < 0) {
+          if (iter === 0 && -velAlongNormal > 1.8 * scale) {
+            audioManager.play('bounce', -velAlongNormal);
+          }
           const massDisparity = Math.max(b1.mass, b2.mass) / Math.min(b1.mass, b2.mass);
           const baseRestitution = massDisparity > 2.5 ? 0.38 : 0.20;
           const restitution = Math.abs(velAlongNormal) > restitutionThreshold ? baseRestitution : 0.0;

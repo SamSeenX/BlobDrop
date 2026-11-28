@@ -5,6 +5,7 @@ class AudioManager {
   constructor() {
     this.soundEnabled = storage.getSoundEnabled();
     this.audioCtx = null;
+    this.lastBounceTime = 0;
   }
 
   initAudio() {
@@ -23,13 +24,34 @@ class AudioManager {
     return this.soundEnabled;
   }
 
-  play(type) {
+  play(type, arg) {
     hapticManager.trigger(type);
     if (!this.soundEnabled) return;
     this.initAudio();
     if (!this.audioCtx) return;
 
     const now = this.audioCtx.currentTime;
+
+    if (type === 'bounce') {
+      const closingSpeed = typeof arg === 'number' ? arg : 2;
+      if (now - this.lastBounceTime < 0.08) return;
+      this.lastBounceTime = now;
+
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      const vol = Math.min(0.16, Math.max(0.03, closingSpeed * 0.015));
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(210, now);
+      osc.frequency.exponentialRampToValueAtTime(75, now + 0.035);
+      gain.gain.setValueAtTime(vol, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+      osc.start(now);
+      osc.stop(now + 0.035);
+      return;
+    }
 
     if (type === 'milestone' || type === 'victory') {
       const notes = type === 'victory'
@@ -67,13 +89,14 @@ class AudioManager {
       osc.start(now);
       osc.stop(now + 0.12);
     } else if (type === 'merge') {
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(300 + Math.random() * 250, now);
-      osc.frequency.exponentialRampToValueAtTime(750, now + 0.22);
-      gain.gain.setValueAtTime(0.25, now);
-      gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(1350, now + 0.025);
+      osc.frequency.exponentialRampToValueAtTime(380, now + 0.075);
+      gain.gain.setValueAtTime(0.32, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
       osc.start(now);
-      osc.stop(now + 0.22);
+      osc.stop(now + 0.075);
     } else if (type === 'gameover') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(220, now);

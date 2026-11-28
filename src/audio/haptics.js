@@ -7,6 +7,7 @@ class HapticManager {
   }
 
   async trigger(type) {
+    if (type === 'bounce') return;
     if (this.isNative) {
       try {
         switch (type) {
