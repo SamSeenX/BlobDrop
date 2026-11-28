@@ -40,10 +40,11 @@ class AudioManager {
       if (now - this.lastBounceTime < 0.045) return;
       this.lastBounceTime = now;
 
-      const f0 = Math.max(220, 860 - tierSum * 28);
-      const f1 = f0 * 2.76;
-      const vol = Math.min(0.22, Math.max(0.04, closingSpeed * 0.018));
-      const dur = Math.min(0.038, Math.max(0.018, 0.02 + tierSum * 0.0007));
+      const f0 = Math.max(90, Math.round(520 - tierSum * 21.5));
+      const f1 = f0 * 2.15;
+      const massBoost = 1 + (tierSum / 24) * 0.35;
+      const vol = Math.min(0.26, Math.max(0.045, closingSpeed * 0.018 * massBoost));
+      const dur = Math.min(0.048, Math.max(0.022, 0.022 + tierSum * 0.0011));
 
       // Primary wood/ceramic body resonance
       const osc1 = this.audioCtx.createOscillator();
