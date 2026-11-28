@@ -37,7 +37,7 @@ class AudioManager {
     if (type === 'bounce') {
       const closingSpeed = typeof arg === 'object' ? (arg.speed || 2) : (typeof arg === 'number' ? arg : 2);
       const tierSum = typeof arg === 'object' ? (arg.tierSum || 0) : 0;
-      if (now - this.lastBounceTime < 0.065) return;
+      if (now - this.lastBounceTime < 0.045) return;
       this.lastBounceTime = now;
 
       const f0 = Math.max(220, 860 - tierSum * 28);

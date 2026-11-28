@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.4] - 2026-11-28
+### Added
+- Pre-Merge Physical Impact Clack: In `src/game/physics.js` `detectMerges()`, added an immediate tactile contact sound on the exact frame two matching balls first touch, giving physical impact feedback before the suction animation and pop.
+- Snappier Merge Transition: Shortened merge animation duration from 18 frames (300ms) to 12 frames (200ms) in `src/game/ball.js`, tightening the delay between initial contact and the pop shockwave.
+- Ultra-Low Latency Collision Threshold: Reduced contact velocity threshold in `src/game/physics.js` to `0.45 * scale` and lowered debounce cooldown to 45ms, eliminating perceived audio lag on initial physical hits.
+
 ## [1.20.3] - 2026-11-28
 ### Fixed
 - Distance-Based Contact Pair Tracking: Resolved continuous phantom ticking in settled ball piles by implementing inter-frame contact tracking (`prevTouching` / `currentTouching`) on `Ball` instances. Re-contact sounds strictly require balls to transition from separated ($d > r_1 + r_2$) to colliding, permanently muting resting and micro-vibrating balls.

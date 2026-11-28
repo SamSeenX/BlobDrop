@@ -26,6 +26,8 @@ function detectMerges(balls, scale = 1) {
         const targetX = (b1.x + b2.x) / 2, targetY = (b1.y + b2.y) / 2;
         const sharedVx = ((b1.vx + b2.vx) * 0.5) * 0.85;
         const sharedVy = ((b1.vy + b2.vy) * 0.5) * 0.85;
+        const speed = Math.max(1.8, Math.hypot(b2.vx - b1.vx, b2.vy - b1.vy));
+        audioManager.play('bounce', { speed, tierSum: b1.tierIndex + b2.tierIndex });
         b1.startMerge(targetX, targetY, b1.tierIndex + 1, true, sharedVx, sharedVy, b2);
         b2.startMerge(targetX, targetY, b1.tierIndex + 1, false, sharedVx, sharedVy, b1);
         break;
@@ -92,7 +94,7 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
         const velAlongNormal = rvx * nx + rvy * ny;
 
         if (velAlongNormal < 0) {
-          if (iter === 0 && !wasTouching && -velAlongNormal > 0.9 * scale) {
+          if (iter === 0 && !wasTouching && -velAlongNormal > 0.45 * scale) {
             audioManager.play('bounce', { speed: -velAlongNormal, tierSum: b1.tierIndex + b2.tierIndex });
           }
           const massDisparity = Math.max(b1.mass, b2.mass) / Math.min(b1.mass, b2.mass);
