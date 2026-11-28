@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.1] - 2026-11-28
+### Changed
+- Mass-Responsive Collision Acoustics: Scaled ball collision audio dynamically to the combined tier mass of colliding pairs in `src/audio/sound.js` and `src/game/physics.js`. Small blobs produce crisp, high-frequency marble taps (up to 740 Hz), while massive blobs produce deep, heavy wooden knocks (down to 160 Hz).
+- De-muddied Impact Transient: Switched bounce waveform to clean harmonic triangle oscillators with a fast 6ms transient pitch snap (`freq * 1.35` -> `freq`), eliminating low-end muddiness and muddy bass rumble.
+
 ## [1.20.0] - 2026-11-28
 ### Added
 - Snappy Bubble Pop Merge Sound: Synthesized a crisp, organic bubble burst sound in `src/audio/sound.js` using a rapid 25ms upward chirp from 420 Hz to 1350 Hz with 75ms exponential gain decay, perfectly matching the visual popping shockwave.
