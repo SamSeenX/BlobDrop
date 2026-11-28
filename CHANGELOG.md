@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.20.3] - 2026-11-28
+### Fixed
+- Distance-Based Contact Pair Tracking: Resolved continuous phantom ticking in settled ball piles by implementing inter-frame contact tracking (`prevTouching` / `currentTouching`) on `Ball` instances. Re-contact sounds strictly require balls to transition from separated ($d > r_1 + r_2$) to colliding, permanently muting resting and micro-vibrating balls.
+- Direct Impact vs Slide Differentiation: Isolated contact acoustics strictly to normal closing velocities (`-velAlongNormal > 0.9 * scale`), ensuring balls sliding or rolling across adjacent surfaces remain completely silent while direct physical impacts play with instantaneous frame-zero timing.
+
 ## [1.20.2] - 2026-11-28
 ### Changed
 - Authentic Ceramic & Wood Inharmonic Modal Acoustics: Replaced electronic synthetic sweeps with a two-oscillator modal resonance model ($f_0$ fundamental body plus $2.76 f_0$ ceramic surface snap) in `src/audio/sound.js`, delivering genuine physical ceramic/wood impact clacks without synthetic artifacting.

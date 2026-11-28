@@ -2,8 +2,13 @@ import { TIERS } from '../config/tiers.js';
 import { spriteCache } from './spriteCache.js';
 import { updateMergeAnimation } from './ballMerge.js';
 
+let nextBallId = 1;
+
 export class Ball {
   constructor(x, y, tierIndex, isSpawning = false, initialVx = 0, initialVy = 0, scale = 1) {
+    this.id = ++nextBallId;
+    this.currentTouching = new Set();
+    this.prevTouching = new Set();
     this.x = x;
     this.y = y;
     this.tierIndex = tierIndex;
