@@ -39,6 +39,12 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
   detectMerges(balls, scale);
   const restitutionThreshold = 0.6 * scale;
 
+  for (let i = 0; i < n; i++) {
+    const b = balls[i];
+    b.prevTouching = b.currentTouching || new Set();
+    b.currentTouching = new Set();
+  }
+
   for (let iter = 0; iter < SOLVER_ITERATIONS; iter++) {
     for (let i = 0; i < n; i++) {
       const b1 = balls[i];
@@ -57,6 +63,9 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
 
         const dist = Math.sqrt(distSq), overlap = minDist - dist;
         const nx = dx / dist, ny = dy / dist;
+        const wasTouching = b1.prevTouching && b1.prevTouching.has(b2.id);
+        b1.currentTouching.add(b2.id);
+        b2.currentTouching.add(b1.id);
 
         const totalMass = b1.mass + b2.mass;
         const invM1 = b2.mass / totalMass, invM2 = b1.mass / totalMass;
@@ -83,7 +92,7 @@ export function resolveCollisions({ balls, particles, width, height, scale = 1, 
         const velAlongNormal = rvx * nx + rvy * ny;
 
         if (velAlongNormal < 0) {
-          if (iter === 0 && -velAlongNormal > 0.8 * scale) {
+          if (iter === 0 && !wasTouching && -velAlongNormal > 0.9 * scale) {
             audioManager.play('bounce', { speed: -velAlongNormal, tierSum: b1.tierIndex + b2.tierIndex });
           }
           const massDisparity = Math.max(b1.mass, b2.mass) / Math.min(b1.mass, b2.mass);
