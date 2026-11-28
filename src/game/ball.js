@@ -30,8 +30,8 @@ export class Ball {
     this.isMergeLeader = false;
     this.mergePartner = null;
     this.mergeFrame = 0;
-    this.wobbleDuration = 8;
-    this.mergeDuration = 18;
+    this.wobbleDuration = 6;
+    this.mergeDuration = 12;
     this.offsetX = 0;
     this.offsetY = 0;
     this.targetX = x;
